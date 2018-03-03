@@ -1,0 +1,6 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${SHAIRPORT_USER:=nobody}
+: ${SHAIRPORT_GROUP:=nobody}
+exec chpst -u ${SHAIRPORT_USER}:${SHAIRPORT_GROUP} \
+	 /usr/local/bin/shairport-sync ${OPTS} 2>&1
