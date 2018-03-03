@@ -1,6 +1,7 @@
 #!/bin/sh
 tty=${PWD##*-}
 [ -r conf ] && . ./conf
-: ${OPTS:=Pc}
+: ${TYPE:=Pc}
 : ${TERM:=xterm}
-exec /usr/libexec/getty ${OPTS} "${tty}"
+export TERM
+exec /usr/libexec/getty ${TYPE} "${tty}"
