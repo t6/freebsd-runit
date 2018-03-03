@@ -1,0 +1,4 @@
+#!/bin/sh
+/usr/local/bin/dbus-uuidgen --ensure
+mkdir -p /var/run/dbus
+exec /usr/local/bin/dbus-daemon --system --nofork --nopidfile

@@ -1,0 +1,3 @@
+#!/bin/sh
+. whichtty
+exec utmpset -w $tty

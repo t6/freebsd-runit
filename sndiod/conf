@@ -1,0 +1,1 @@
+OPTS="-d -U 15 -f rsnd/$(sysctl -n hw.snd.default_unit) -m play -w off -v 127 -s default -m mon -s monitor -L -"

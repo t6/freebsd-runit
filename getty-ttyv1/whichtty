@@ -1,0 +1,5 @@
+realpath=`realpath $0`
+dirname=`dirname $realpath`
+dirname=`basename $dirname`
+tty=`expr $dirname : 'getty-\(ttyv[0-9]\)'`
+[ -z "${tty%0}" ] && echo "Name of directory must be getty-ttyvx, where x is 0-9" && exit 1

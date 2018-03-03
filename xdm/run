@@ -1,0 +1,3 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+exec /usr/local/bin/xdm -nodaemon $OPTS 2>&1

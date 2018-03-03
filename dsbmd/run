@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/local/libexec/dsbmd -f 2>&1

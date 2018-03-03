@@ -1,0 +1,4 @@
+#!/bin/sh
+export TERM=xterm
+. whichtty
+exec /usr/libexec/getty Pc $tty
