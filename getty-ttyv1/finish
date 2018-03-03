@@ -1,3 +1,3 @@
 #!/bin/sh
-. whichtty
+tty=${PWD##*-}
 exec utmpset -w $tty

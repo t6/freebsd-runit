@@ -1,4 +1,6 @@
 #!/bin/sh
-export TERM=xterm
-. whichtty
-exec /usr/libexec/getty Pc $tty
+tty=${PWD##*-}
+[ -r conf ] && . ./conf
+: ${OPTS:=Pc}
+: ${TERM:=xterm}
+exec /usr/libexec/getty ${OPTS} "${tty}"
