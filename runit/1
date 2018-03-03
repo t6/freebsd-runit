@@ -1,28 +1,23 @@
 #!/bin/sh
-# vim: set ts=4 sw=4 et:
 
-PATH=/usr/bin:/usr/sbin
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-. /etc/runit/functions
+. /usr/local/etc/runit/functions
 
-msg "Welcome to Void!"
+msg "Welcome to FreeBSD!"
 
 [ -r /etc/rc.conf ] && . /etc/rc.conf
 
 # Start core services: one-time system tasks.
 detect_virt
-for f in /etc/runit/core-services/*.sh; do
-    [ -r $f ] && . $f
+for f in /usr/local/etc/runit/core-services/*.sh; do
+	[ -r $f ] && . $f
 done
 
-dmesg >/var/log/dmesg.log
-if [ $(sysctl -n kernel.dmesg_restrict 2>/dev/null) -eq 1 ]; then
-	chmod 0600 /var/log/dmesg.log
-else
-	chmod 0644 /var/log/dmesg.log
-fi
+rm -r /var/run/dmesg.boot
+( umask 022 ; /sbin/dmesg > /var/run/dmesg.boot )
 
-mkdir -p /run/runit
-install -m100 /dev/null /run/runit/stopit
+mkdir -p /var/run/runit
+install -m100 /dev/null /var/run/runit/stopit
 
 msg "Initialization complete, running stage 2..."
