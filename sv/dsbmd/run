@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /usr/local/libexec/dsbmd -f 2>&1
+exec /usr/local/libexec/dsbmd -f > /dev/null 2>&1
