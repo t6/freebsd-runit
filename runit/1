@@ -6,8 +6,8 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 msg "Welcome to FreeBSD!"
 
-if kenv -q boot_single; then
-	if [ "$(kenv boot_single)" = "YES" ]; then
+if kenv -q boot_single > /dev/null; then
+	if [ "x$(kenv boot_single)" = "xYES" ]; then
 		emergency_shell
 	fi
 fi
