@@ -1,3 +1,0 @@
-#!/bin/sh
-[ -r conf ] && . ./conf
-exec /sbin/devd -d $OPTS 2>&1
