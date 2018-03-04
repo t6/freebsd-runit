@@ -14,7 +14,8 @@ fi
 [ -x /etc/rc.local ] && /etc/rc.local
 
 runsvchdir "${runlevel}" || emergency_shell
+rm -rf /var/run/runit/runsvdir
 mkdir -p /var/run/runit/runsvdir
-ln -sf /usr/local/etc/runit/runsvdir/current /var/run/runit/runsvdir/current
+ln -s /usr/local/etc/runit/runsvdir/current /var/run/runit/runsvdir/current
 
 exec env - PATH=$PATH runsvdir -P /var/run/runit/runsvdir/current 'log: ...........................................................................................................................................................................................................................................................................................................................................................................................................'

@@ -10,3 +10,8 @@ if [ -n "${hostname}" ]; then
 else
 	msg_warn "Didn't setup a hostname!"
 fi
+
+[ -n "$VIRTUALIZATION" ] && return 0
+
+msg "Starting devd..."
+devd ${devd_flags}
