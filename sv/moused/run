@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${OPTS:=-p /dev/psm0 -t auto}
+exec /usr/sbin/moused -f ${OPTS} > /dev/null 2>&1
