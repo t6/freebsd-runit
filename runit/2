@@ -3,8 +3,8 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 runlevel=default
-if kenv -q runlevel > /dev/null; then
-	arg=$(/bin/kenv runlevel)
+if kenv -q runit.runlevel > /dev/null; then
+	arg=$(kenv runit.runlevel)
 	if [ -d /usr/local/etc/runit/runsvdir/"$arg" ]; then
 		echo "Runlevel detected: '$arg' (via kernel environment)"
 		runlevel="$arg"
