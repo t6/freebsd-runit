@@ -1,4 +1,4 @@
 #!/bin/sh
 kldload autofs > /dev/null 2>&1 || true
 [ -r conf ] && . ./conf
-exec /usr/sbin/automountd -d ${OPTS} 2>&1
+exec /usr/sbin/automountd -d ${OPTS} > /dev/null 2>&1
