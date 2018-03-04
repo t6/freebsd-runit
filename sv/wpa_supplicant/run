@@ -1,7 +1,6 @@
 #!/bin/sh
 [ -r ./conf ] && . ./conf
 : ${CONF_FILE:=/etc/wpa_supplicant.conf}
-: ${OPTS:=-s}
 : ${WPA_INTERFACE:=wlan0}
 
 # Wait for interface
@@ -9,4 +8,4 @@ while ! ifconfig ${WPA_INTERFACE} > /dev/null 2>&1; do
 	sleep 1
 done
 exec 2>&1
-exec wpa_supplicant -Dbsd -c ${CONF_FILE} -i ${WPA_INTERFACE:=wlan0} ${OPTS}
+exec wpa_supplicant -Dbsd -c ${CONF_FILE} -i ${WPA_INTERFACE:=wlan0} -s ${OPTS}
