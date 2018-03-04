@@ -6,6 +6,12 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 msg "Welcome to FreeBSD!"
 
+if kenv -q boot_single; then
+	if [ "$(kenv boot_single)" = "YES" ]; then
+		emergency_shell
+	fi
+fi
+
 [ -r /etc/rc.conf ] && . /etc/rc.conf
 
 # Start core services: one-time system tasks.
