@@ -1,0 +1,8 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+intf=${PWD##*-}
+# Wait for interface
+while ! ifconfig ${intf} > /dev/null 2>&1; do
+        sleep 1
+done
+exec dhclient -d ${intf}
