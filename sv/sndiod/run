@@ -1,3 +1,4 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
+: ${OPTS:=-f rsnd/$(sysctl -n hw.snd.default_unit)}
 exec sndiod -d $OPTS 2>&1
