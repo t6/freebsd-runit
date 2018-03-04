@@ -13,7 +13,7 @@ fi
 
 [ -x /etc/rc.local ] && /etc/rc.local
 
-runsvchdir "${runlevel}"
+runsvchdir "${runlevel}" || emergency_shell
 mkdir -p /var/run/runit/runsvdir
 ln -sf /usr/local/etc/runit/runsvdir/current /var/run/runit/runsvdir/current
 
