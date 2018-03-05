@@ -10,14 +10,13 @@ TAR?=		tar
 PREFIX?=	/usr/local
 RUNITDIR?=	${DESTDIR}${PREFIX}/etc/runit
 SVDIR?=		${DESTDIR}${PREFIX}/etc/sv
-SVLOCALDIR?=	${DESTDIR}${PREFIX}/etc/sv-local
 
 GETTYSV=	ttyv0 ttyv2 ttyv3 ttyv4 ttyv5 ttyv6 ttyv7 ttyv8
 GETTYSU=	ttyu0 ttyu1 ttyu2 ttyu3
 NETIFS=		bge bridge em fxp gem igb lagg re rl vtnet wlan
 
 install:
-	@${MKDIR} ${RUNITDIR} ${SVDIR} ${SVLOCALDIR}
+	@${MKDIR} ${RUNITDIR} ${SVDIR}
 	@${TAR} -C runit --exclude .gitkeep -cf - . | ${TAR} -C ${RUNITDIR} -xf -
 	@${TAR} -C sv -cf - . | ${TAR} -C ${SVDIR} -xf -
 	@${FIND} ${RUNITDIR} -type f -exec ${SED} -i '' -e 's,/usr/local/,${PREFIX}/,g' {} \;
