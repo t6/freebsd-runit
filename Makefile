@@ -16,6 +16,14 @@ install:
 	@${TAR} -C sv -cf - . | ${TAR} -C ${SVDIR} -xf -
 	@${FIND} ${RUNITDIR} -type f -exec ${SED} -i '' -e 's,/usr/local/,${PREFIX}/,g' {} \;
 	@${FIND} ${SVDIR} -type f -exec ${SED} -i '' -e 's,/usr/local/,${PREFIX}/,g' {} \;
+# Link supervise dir of services to /var/run/runit to potentially
+# support systems with read-only filesystems.
+	@cd ${SVDIR} && ${FIND} -d . -type d -exec /bin/sh -euc '\
+		dir=$${1#./*}; \
+		[ "$${dir}" = "." ] && exit 0; \
+		ln -s /var/run/runit/supervise.$$(echo $${dir} | sed "s,/,-,g") \
+			$${dir}/supervise' \
+		SUPERVISE {} \;
 
 archive:
 	@tag=$$(${GIT} tag); ver=$${tag#v*}; \
