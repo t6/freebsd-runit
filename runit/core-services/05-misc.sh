@@ -1,9 +1,6 @@
 msg "Pruning nextboot configuration..."
 /sbin/nextboot -D
 
-msg "Initializing random seed..."
-service random onestart
-
 msg "Configuring the shared library cache..."
 service ldconfig onestart
 

@@ -6,6 +6,7 @@ msg "Setting system defaults..."
 # - Make FreeBSD installer security options opt-out
 # - Adapt the good bits from https://vez.mrsk.me/freebsd-defaults.txt
 # - Use a better congestion control algorithm than newreno
+# - Setup entropy harvesting (see random(4))
 kldload cc_cubic > /dev/null 2>&1 || true
 sysctl \
 	net.inet.tcp.cc.algorithm=cubic \
@@ -26,7 +27,9 @@ sysctl \
 	net.inet.tcp.icmp_may_rst=0 \
 	net.inet.udp.blackhole=1 \
 	security.bsd.hardlink_check_gid=1 \
-	security.bsd.hardlink_check_uid=1
+	security.bsd.hardlink_check_uid=1 \
+	kern.random.harvest.mask=511 \
+	> /dev/null
 
 # XXX: Check if the hardlink_check options really break Poudriere builds
 
