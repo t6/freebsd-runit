@@ -1,11 +1,11 @@
 # Force different defaults than what FreeBSD has.  Can be overwritten
 # again via /etc/sysctl.conf
 
-# msg "Setting system defaults..."
+msg "Setting system defaults..."
 
 # - Let network interfaces accept router advertisments by default
 # - Make FreeBSD installer security options opt-out
-# - Adapted the good bits from https://vez.mrsk.me/freebsd-defaults.txt
+# - Adapt the good bits from https://vez.mrsk.me/freebsd-defaults.txt
 # - Use a better congestion control algorithm than newreno
 kldload cc_cubic > /dev/null 2>&1 || true
 sysctl \
