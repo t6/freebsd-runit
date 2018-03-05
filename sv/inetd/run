@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${OPTS:=-wW -C 60}
+exec /usr/sbin/inetd -d ${OPTS} > /dev/null 2>&1
