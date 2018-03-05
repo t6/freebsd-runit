@@ -22,6 +22,3 @@ if [ -e "/etc/pf.conf" ]; then
 	msg "Loading PF ruleset from '/etc/pf.conf'..."
 	pfctl -f /etc/pf.conf $(conf pfctl_flags)
 fi
-
-msg "Starting devd..."
-devd $(conf devd_flags) || emergency_shell
