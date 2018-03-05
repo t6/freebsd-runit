@@ -12,9 +12,8 @@ RUNITDIR?=	${DESTDIR}${PREFIX}/etc/runit
 SVDIR?=		${DESTDIR}${PREFIX}/etc/sv
 SVLOCALDIR?=	${DESTDIR}${PREFIX}/etc/sv-local
 
-GETTYSV=	getty-ttyv0 getty-ttyv2 getty-ttyv3 getty-ttyv4 getty-ttyv5 \
-		getty-ttyv6 getty-ttyv7 getty-ttyv8
-GETTYSU=	getty-ttyu0 getty-ttyu1 getty-ttyu2 getty-ttyu3
+GETTYSV=	ttyv0 ttyv2 ttyv3 ttyv4 ttyv5 ttyv6 ttyv7 ttyv8
+GETTYSU=	ttyu0 ttyu1 ttyu2 ttyu3
 NETIFS=		bge bridge em fxp gem igb lagg re rl vtnet wlan
 
 install:
@@ -32,14 +31,14 @@ install:
 .endfor
 # Create convenient getty services for every terminal device that is
 # by default in /etc/ttys
-.for getty in ${GETTYSV} ${GETTYSU}
-	@${MKDIR} ${SVDIR}/${getty}
-	@cd ${SVDIR}/${getty} && \
+.for tty in ${GETTYSV} ${GETTYSU}
+	@${MKDIR} ${SVDIR}/getty-${tty}
+	@cd ${SVDIR}/getty-${tty} && \
 		${LN} -sf ../getty-ttyv1/run && \
 		${LN} -sf ../getty-ttyv1/finish
 .endfor
-.for getty in ${GETTYSU}
-	@${PRINTF} "TERM='vt100'\nTYPE='3wire'\n" > ${SVDIR}/${getty}/conf
+.for tty in ${GETTYSU}
+	@${PRINTF} "TERM='vt100'\nTYPE='3wire'\n" > ${SVDIR}/getty-${tty}/conf
 .endfor
 # Link supervise dir of services to /var/run/runit to potentially
 # support systems with read-only filesystems.
