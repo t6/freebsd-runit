@@ -1,5 +1,5 @@
 #!/bin/sh
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/rescue
 
 runlevel=default
 if kenv -q runit.runlevel > /dev/null; then

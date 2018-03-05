@@ -1,9 +1,9 @@
 #!/bin/sh
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/rescue
 
 . /usr/local/etc/runit/functions
 
-msg "Welcome to FreeBSD!"
+msg "Welcome to $(sysctl -n kern.ostype)!"
 
 if kenv -q boot_single > /dev/null; then
 	if [ "x$(kenv boot_single)" = "xYES" ]; then
