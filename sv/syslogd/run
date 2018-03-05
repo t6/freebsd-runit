@@ -1,3 +1,4 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
+: ${OPTS:=-ss}
 exec /usr/sbin/syslogd -F $OPTS 2>&1
