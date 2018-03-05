@@ -3,14 +3,12 @@
 
 msg "Setting system defaults..."
 
-# - Let network interfaces accept router advertisments by default
 # - Make FreeBSD installer security options opt-out
 # - Adapt the good bits from https://vez.mrsk.me/freebsd-defaults.txt
 # - Use a better congestion control algorithm than newreno
 kldload cc_cubic > /dev/null 2>&1 || true
 sysctl \
 	net.inet.tcp.cc.algorithm=cubic \
-	net.inet6.ip6.accept_rtadv=1 \
 	security.bsd.see_other_gids=0 \
 	security.bsd.see_other_uids=0 \
 	security.bsd.stack_guard_page=1 \
