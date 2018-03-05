@@ -32,8 +32,3 @@ sysctl \
 
 msg "Loading '/etc/sysctl.conf'..."
 [ -e /etc/sysctl.conf ] && sysctl -qf /etc/sysctl.conf > /dev/null
-
-if sysrc -c hostid_enable=YES; then
-	msg "Generating unique host ID..."
-	service hostid start
-fi
