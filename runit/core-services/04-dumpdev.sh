@@ -2,14 +2,18 @@
 
 msg "Enabling dump device..."
 
-dumpdev=$(sysrc -qn dumpdev)
+dumpdev=auto
 
 dumpon_try()
 {
 	local flags
 
-	flags=$(sysrc -qn dumpon_flags)
-	/sbin/dumpon ${flags} "${1}"
+	if check_osver_major 12; then
+		# On FreeBSD 12 encrypt dump and compress with ZSTD
+		/sbin/dumpon -k /etc/dumppubkey -Z "${1}"
+	else
+		/sbin/dumpon "${1}"
+	fi
 	if [ $? -eq 0 ]; then
 		# Make a symlink in devfs for savecore
 		ln -fs "${1}" /dev/dumpdev
@@ -22,24 +26,15 @@ dumpon_try()
 # Enable dumpdev so that savecore can see it. Enable it
 # early so a crash early in the boot process can be caught.
 #
-case ${dumpdev} in
-[Nn][Oo] | '')
-	;;
-[Aa][Uu][Tt][Oo])
-	dev=$(/bin/kenv -q dumpdev)
-	if [ -n "${dev}" ] ; then
-		dumpon_try "${dev}"
-		return $?
-	fi
-	while read dev mp type more ; do
-		[ "${type}" = "swap" ] || continue
-		[ -c "${dev}" ] || continue
-		dumpon_try "${dev}" 2>/dev/null && return 0
-	done </etc/fstab
-	echo "No suitable dump device was found." 1>&2
-	return 1
-	;;
-*)
-	dumpon_try "${dumpdev}"
-	;;
-esac
+dev=$(/bin/kenv -q dumpdev)
+if [ -n "${dev}" ] ; then
+	dumpon_try "${dev}"
+	return $?
+fi
+while read dev mp type more ; do
+	[ "${type}" = "swap" ] || continue
+	[ -c "${dev}" ] || continue
+	dumpon_try "${dev}" 2>/dev/null && return 0
+done < /etc/fstab
+msg_warn "No suitable dump device was found."
+return 1
