@@ -7,6 +7,7 @@ PRINTF?=	printf
 SED?=		sed
 TAR?=		tar
 
+LOCALBASE?=	/usr/local
 PREFIX?=	/usr/local
 RUNITDIR?=	${DESTDIR}${PREFIX}/etc/runit
 SVDIR?=		${DESTDIR}${PREFIX}/etc/sv
@@ -19,8 +20,8 @@ install:
 	@${MKDIR} ${RUNITDIR} ${SVDIR}
 	@${TAR} -C runit --exclude .gitkeep -cf - . | ${TAR} -C ${RUNITDIR} -xf -
 	@${TAR} -C sv -cf - . | ${TAR} -C ${SVDIR} -xf -
-	@${FIND} ${RUNITDIR} -type f -exec ${SED} -i '' -e 's,/usr/local/,${PREFIX}/,g' {} \;
-	@${FIND} ${SVDIR} -type f -exec ${SED} -i '' -e 's,/usr/local/,${PREFIX}/,g' {} \;
+	@${FIND} ${RUNITDIR} -type f -exec ${SED} -i '' -e 's,/usr/local,${PREFIX},g' -e 's,//etc,/etc,' {} \;
+	@${FIND} ${SVDIR} -type f -exec ${SED} -i '' -e 's,/usr/local/,${LOCALBASE}/,g' {} \;
 .for netif in ${NETIFS}
 .for i in 0 1 2
 	@${MKDIR} ${SVDIR}/dhclient-${netif}${i}
