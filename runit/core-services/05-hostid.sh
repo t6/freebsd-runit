@@ -26,7 +26,7 @@
 #
 # $FreeBSD$
 #
-sysrc -c hostid_enable=YES || exit 0
+sysrc -c hostid_enable=YES || return 0
 
 hostid_file=$(sysrc -qn hostid_file)
 
@@ -116,7 +116,6 @@ if [ -r ${hostid_file} ]; then
 	read saved_hostid < ${hostid_file}
 	if valid_hostid ${saved_hostid}; then
 		hostid_set $(cat ${hostid_file})
-		exit 0
 	fi
 fi
 
