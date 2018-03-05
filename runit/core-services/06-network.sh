@@ -3,12 +3,7 @@ if sysrc -c netif_enable=YES; then
 	service routing onestart
 fi
 
-if sysrc -c pf_enable=YES; then
-	_pf_rules=$(sysrc -qn pf_rules)
-	msg "Loading '${_pf_rules}'..."
-	pfctl -f ${_pf_rules} $(sysrc -qn pf_flags)
-fi
-
-if sysrc -c firewall_enable=YES; then
-	service ipfw onestart
+if [ -e "/etc/pf.conf" ]; then
+	msg "Loading PF ruleset from '/etc/pf.conf'..."
+	pfctl -f /etc/pf.conf
 fi
