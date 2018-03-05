@@ -1,3 +1,6 @@
+msg "Pruning nextboot configuration..."
+/sbin/nextboot -D
+
 msg "Initializing random seed..."
 service random onestart
 
