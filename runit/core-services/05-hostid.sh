@@ -117,7 +117,7 @@ if [ -r ${hostid_file} ]; then
 	if valid_hostid ${saved_hostid}; then
 		hostid_set $(cat ${hostid_file})
 	fi
+else
+	# No hostid file, generate UUID.
+	hostid_generate
 fi
-
-# No hostid file, generate UUID.
-hostid_generate
