@@ -27,18 +27,6 @@ emergency_shell() {
     /bin/sh -p
 }
 
-detect_runlevel() {
-	RUNLEVEL=default
-	if [ -n "$VIRTUALIZATION" ] && kenv -q runit.runlevel > /dev/null; then
-		arg=$(kenv runit.runlevel)
-		if [ -d /usr/local/etc/runit/runsvdir/"$arg" ]; then
-			echo "Runlevel detected: '$arg' (via kernel environment)"
-			RUNLEVEL="$arg"
-		fi
-	fi
-	export RUNLEVEL
-}
-
 detect_virt() {
    # Detect jails
    if [ $(sysctl -n security.jail.jailed) -eq 1 ]; then

@@ -1,12 +1,19 @@
 #!/bin/sh
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
+[ -r /etc/rc.conf ] && . /etc/rc.conf
+
 runlevel=default
 if kenv -q runit.runlevel > /dev/null; then
 	arg=$(kenv runit.runlevel)
 	if [ -d /usr/local/etc/runit/runsvdir/"$arg" ]; then
-		echo "Runlevel detected: '$arg' (via kernel environment)"
+		echo "Runlevel detected via kenv: '$arg'"
 		runlevel="$arg"
+	fi
+elif [ -n "${runit_runlevel}" ]; then
+	if [ -d /usr/local/etc/runit/runsvdir/"${runit_runlevel}" ]; then
+		echo "Runlevel detected via /etc/conf: '${runit_runlevel}'"
+		runlevel="${runit_runlevel}"
 	fi
 fi
 
