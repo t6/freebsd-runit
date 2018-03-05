@@ -49,7 +49,7 @@ install:
 		SUPERVISE {} \;
 
 archive:
-	@tag=$$(${GIT} tag); ver=$${tag#v*}; \
+	@tag=$$(${GIT} tag --contains HEAD); ver=$${tag#v*}; \
 		${GIT} archive --format=tar \
 			--prefix=freebsd-runit-$$ver/ \
 			--output=freebsd-runit-$$ver.tar \

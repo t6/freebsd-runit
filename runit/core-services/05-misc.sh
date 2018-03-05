@@ -18,4 +18,4 @@ fi
 [ -n "$VIRTUALIZATION" ] && return 0
 
 msg "Starting devd..."
-devd $(sysrc -n devd_flags) || emergency_shell
+devd $(sysrc -qn devd_flags) || emergency_shell
