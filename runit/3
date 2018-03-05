@@ -13,4 +13,6 @@ msg "Waiting for services to stop..."
 sv force-stop /var/service/*
 sv exit /var/service/*
 
+/usr/sbin/utx shutdown
+
 [ -r /etc/rc.shutdown ] && . /etc/rc.shutdown
