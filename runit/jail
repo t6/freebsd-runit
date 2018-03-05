@@ -1,0 +1,5 @@
+#!/bin/sh
+# A convenient script to use as exec.start command when creating a new
+# jail that uses runit to start and supervise services.
+. /usr/local/etc/runit/1
+. /usr/local/etc/runit/2
