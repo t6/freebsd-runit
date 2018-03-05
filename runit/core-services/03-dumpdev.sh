@@ -3,17 +3,12 @@
 msg "Enabling dump device..."
 
 dumpdev=$(sysrc -qn dumpdev)
-dumppubkey=$(sysrc -qn dumppubkey)
 
 dumpon_try()
 {
 	local flags
 
 	flags=$(sysrc -qn dumpon_flags)
-	if [ -n "${dumppubkey}" ]; then
-		warn "The dumppubkey variable is deprecated.  Use dumpon_flags."
-		flags="${flags} -k ${dumppubkey}"
-	fi
 	/sbin/dumpon ${flags} "${1}"
 	if [ $? -eq 0 ]; then
 		# Make a symlink in devfs for savecore
