@@ -26,9 +26,7 @@
 #
 # $FreeBSD$
 #
-sysrc -c hostid_enable=YES || return 0
-
-hostid_file=$(sysrc -qn hostid_file)
+hostid_file=/etc/hostid
 
 hostid_set()
 {
