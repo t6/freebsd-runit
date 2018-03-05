@@ -12,7 +12,7 @@ if kenv -q boot_single > /dev/null; then
 fi
 
 # Start core services: one-time system tasks.
-detect_virt
+detect_jail
 for f in /usr/local/etc/runit/core-services/*.sh; do
 	[ -r $f ] && . $f
 done

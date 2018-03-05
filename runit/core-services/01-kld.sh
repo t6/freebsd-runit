@@ -1,4 +1,4 @@
-[ -n "$VIRTUALIZATION" ] && return 0
+[ -n "${JAILED}" ] && return 0
 
 msg "Loading kernel modules..."
 _kld_list=$(sysrc -qn kld_list)

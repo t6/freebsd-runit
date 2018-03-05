@@ -2,7 +2,7 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/rescue
 
 . /usr/local/etc/runit/functions
-detect_virt
+detect_jail
 
 if [ -e /var/run/runit/reboot ]; then
 	chmod 100 /var/run/runit/reboot

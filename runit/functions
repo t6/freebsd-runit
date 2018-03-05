@@ -32,10 +32,9 @@ check_osver_major() {
 	[ "${ver}" -eq "$1" ]
 }
 
-detect_virt() {
-   # Detect jails
+detect_jail() {
    if [ $(sysctl -n security.jail.jailed) -eq 1 ]; then
-       export VIRTUALIZATION=1
+       export JAILED=1
    fi
 }
 

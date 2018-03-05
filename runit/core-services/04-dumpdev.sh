@@ -1,4 +1,4 @@
-[ -n "$VIRTUALIZATION" ] && return 0
+[ -n "${JAILED}" ] && return 0
 
 msg "Enabling dump device..."
 
