@@ -3,7 +3,6 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 . /usr/local/etc/runit/functions
 detect_virt
-[ -r /etc/rc.conf ] && . /etc/rc.conf
 
 if [ -e /var/run/runit/reboot ]; then
 	chmod 100 /var/run/runit/reboot

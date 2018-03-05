@@ -11,8 +11,6 @@ if kenv -q boot_single > /dev/null; then
 	fi
 fi
 
-[ -r /etc/rc.conf ] && . /etc/rc.conf
-
 # Start core services: one-time system tasks.
 detect_virt
 for f in /usr/local/etc/runit/core-services/*.sh; do

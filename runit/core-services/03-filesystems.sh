@@ -10,8 +10,8 @@ msg "Mounting all non-network filesystems..."
 mount -a || emergency_shell
 
 msg "Starting automount daemons..."
-/usr/sbin/automountd ${automountd_flags} || emergency_shell
-/usr/sbin/autounmountd ${autounmountd_flags} || emergency_shell
+/usr/sbin/automountd $(sysrc -n automountd_flags) || emergency_shell
+/usr/sbin/autounmountd $(sysrc -n autounmountd_flags) || emergency_shell
 
 msg "Enabling autofs..."
-/usr/sbin/automount ${automount_flags} || emergency_shell
+/usr/sbin/automount $(sysrc -n automount_flags) || emergency_shell
