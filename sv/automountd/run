@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+/usr/sbin/automount
+exec /usr/sbin/automountd -d ${OPTS} > /dev/null 2>&1
