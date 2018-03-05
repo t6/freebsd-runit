@@ -1,2 +1,2 @@
-msg "Loading sysctl(8) settings..."
-sysctl -f /etc/sysctl.conf
+msg "Loading sysctl.conf(5)..."
+[ -e /etc/sysctl.conf ] && sysctl -qf /etc/sysctl.conf > /dev/null
