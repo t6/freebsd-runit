@@ -7,7 +7,7 @@ msg "Welcome to $(sysctl -n kern.ostype)!"
 
 detect_jail
 
-if [ -z "${JAILED}" ] && kenv -q boot_single > /dev/null; then
+if [ -z "${JAILED}" ] && [ -n "$(kenv boot_single 2> /dev/null)" ]; then
 	if [ "x$(kenv boot_single)" = "xYES" ]; then
 		emergency_shell
 	fi
