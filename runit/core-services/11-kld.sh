@@ -2,8 +2,10 @@
 
 if [ -r /usr/local/etc/runit/modules ]; then
 	msg "Loading kernel modules..."
-	_kld_list=$(cat /usr/local/etc/runit/modules)
-	for _kld in $_kld_list ; do
-		load_kld -e ${_kld}.ko $_kld
-	done
+	while read kld; do
+		case "${kld}" in
+		\#*|'') ;;
+		*) kldload "${kld}" ;;
+		esac
+	done < /usr/local/etc/runit/modules
 fi
