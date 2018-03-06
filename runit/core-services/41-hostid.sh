@@ -26,6 +26,7 @@
 #
 # $FreeBSD$
 #
+[ -n "${JAILED}" ] && return 0
 hostid_file=/etc/hostid
 
 hostid_set()

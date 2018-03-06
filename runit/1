@@ -5,14 +5,15 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin:/rescue
 
 msg "Welcome to $(sysctl -n kern.ostype)!"
 
-if kenv -q boot_single > /dev/null; then
+detect_jail
+
+if [ -z "${JAILED}" ] && kenv -q boot_single > /dev/null; then
 	if [ "x$(kenv boot_single)" = "xYES" ]; then
 		emergency_shell
 	fi
 fi
 
 # Start core services: one-time system tasks.
-detect_jail
 for f in /usr/local/etc/runit/core-services/*.sh; do
 	[ -r $f ] && . $f
 done
