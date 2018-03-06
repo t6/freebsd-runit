@@ -31,7 +31,7 @@ sysctl \
 	security.bsd.hardlink_check_uid=1 \
 	kern.random.harvest.mask=511 \
 	kern.racct.enable=1 \
-	> /dev/null
+	> /dev/null 2>&1
 
 # XXX: Check if the hardlink_check options really break Poudriere builds
 

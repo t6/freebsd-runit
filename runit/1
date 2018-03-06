@@ -17,10 +17,8 @@ for f in /usr/local/etc/runit/core-services/*.sh; do
 	[ -r $f ] && . $f
 done
 
-( umask 022 ; /sbin/dmesg > /var/run/dmesg.boot )
-
-mkdir -p /var/run/runit
-rm -rf /var/run/runit/*
-install -m100 /dev/null /var/run/runit/stopit
+if [ -z "${JAILED}" ]; then
+	( umask 022 ; /sbin/dmesg > /var/run/dmesg.boot )
+fi
 
 msg "Initialization complete, running stage 2..."
