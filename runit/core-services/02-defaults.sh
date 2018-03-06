@@ -7,6 +7,7 @@ msg "Setting system defaults..."
 # - Adapt the good bits from https://vez.mrsk.me/freebsd-defaults.txt
 # - Use a better congestion control algorithm than newreno
 # - Setup entropy harvesting (see random(4))
+# - Enable resource accounting by default
 kldload cc_cubic > /dev/null 2>&1 || true
 sysctl \
 	net.inet.tcp.cc.algorithm=cubic \
@@ -29,6 +30,7 @@ sysctl \
 	security.bsd.hardlink_check_gid=1 \
 	security.bsd.hardlink_check_uid=1 \
 	kern.random.harvest.mask=511 \
+	kern.racct.enable=1 \
 	> /dev/null
 
 # XXX: Check if the hardlink_check options really break Poudriere builds
