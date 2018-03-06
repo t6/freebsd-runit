@@ -1,4 +1,5 @@
 if [ -e "/etc/pf.conf" ]; then
 	msg "Loading PF ruleset from '/etc/pf.conf'..."
-	pfctl -f /etc/pf.conf $(conf pfctl_flags)
+	kldload pf
+	pfctl -q -F all -f /etc/pf.conf || emergency_shell
 fi
