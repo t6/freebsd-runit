@@ -1,5 +1,5 @@
-_hostname=$(sysrc -qn hostname)
-if [ -n "${_hostname}" ]; then
+if [ -r "/usr/local/etc/runit/hostname" ]; then
+	_hostname=$(cat /usr/local/etc/runit/hostname)
 	msg "Setting hostname to '${_hostname}'..."
 	hostname "${_hostname}"
 else
