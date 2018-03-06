@@ -51,7 +51,6 @@ case ${entropy_file_confirmed} in
 		;;
 esac
 umask ${oumask}
-;;
 
 msg 'Writing early boot entropy file...'
 rm -f /boot/entropy 2> /dev/null
