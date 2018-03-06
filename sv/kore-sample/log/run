@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r ../conf ] && . ../conf
+: ${NAME:=kore-sample}
+exec logger -t ${NAME}

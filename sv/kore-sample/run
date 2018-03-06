@@ -1,0 +1,5 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${CONFIG:=/dev/null}
+: ${KORE:=/usr/local/bin/kore}
+exec ${KORE} -f -c ${CONFIG} ${OPTS} 2>&1
