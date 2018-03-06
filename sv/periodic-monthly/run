@@ -1,0 +1,5 @@
+#!/bin/sh
+# Perform monthly maintenance.
+exec snooze -M 30 -H 5 -d 1 \
+     env PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin \
+     /usr/sbin/periodic monthly 2>&1

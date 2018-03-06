@@ -1,0 +1,3 @@
+#!/bin/sh
+# Save some entropy so that /dev/random can re-seed on boot.
+exec chpst -u operator snooze -M /11 -H '*' /usr/libexec/save-entropy
