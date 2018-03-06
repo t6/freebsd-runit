@@ -1,9 +1,6 @@
 msg "Pruning nextboot configuration..."
 /sbin/nextboot -D
 
-msg "Configuring the shared library cache..."
-service ldconfig onestart
-
 msg "Setting up loopback interface..."
 ifconfig lo0 inet 127.0.0.1/8 alias
 
