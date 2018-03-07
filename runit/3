@@ -19,7 +19,7 @@ sv exit /var/service/*
 msg "Saving soundcard mixer values..."
 for dev in /dev/mixer*; do 
 	if [ -r ${dev} ]; then
-		/usr/sbin/mixer -f ${dev} -s > /var/db/${dev}-state 2>/dev/null
+		/usr/sbin/mixer -f ${dev} -s > /var/db/${dev##*/}-state 2>/dev/null
 	fi
 done
 
