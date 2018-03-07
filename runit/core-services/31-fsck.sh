@@ -6,7 +6,7 @@ else
 	msg "Checking filesystems..."
 	fsck -F -p
 	err=$?
-	if [ ${err} -neq 0 ]; then
+	if [ ${err} -ne 0 ]; then
 		msg_error "fsck exited with status ${err}"
 		emergency_shell
 	fi
