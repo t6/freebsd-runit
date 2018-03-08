@@ -4,7 +4,7 @@
 
 # runit-faster, a runit based replacement for init(8) and rc(8) for your workstation
 
-Roughly based on the [init scripts from Void Linux](https://github.com/voidlinux/void-runit)
+Based on the [init scripts from Void Linux](https://github.com/voidlinux/void-runit)
 
 WARNING: This is only an experiment for now. Please do not take it too
 seriously. Also it might cripple your computer, eat your data, etc.
@@ -42,7 +42,7 @@ tasks:
 99-mount-late.sh      Mount all late filesystems
 ```
 
-The core sources will be sourced in lexicographic order.  Users can
+The core services will be sourced in lexicographic order.  Users can
 insert their own core services in the right places by creating a file
 with an even number prefix.
 
@@ -65,16 +65,17 @@ or from ports
 make -C /usr/ports/sysutils/runit-faster install
 ```
 
-The port normally assumes that `/usr/local` is located on the same
-partition as the root filesystem.  If that is not the case please
-compile the port with the `ROOT` option on.  Binaries and the
-necessary configuration files will then be installed into `/etc/runit`
-and `/sbin` instead of in `/usr/local/etc/runit` and
-`/usr/local/sbin`.  In the rest of this howto we will always refer to
-`/etc/runit` directly instead of `/usr/local/etc/runit` for brevity's
-sake.  Please adjust the paths below accordingly.
+The port by default assumes that `/usr/local` is located on the same
+partition as the root filesystem.  For systems where this is not the
+case, runit has to be compiled with the ROOT option on, to make that
+runit can properly bootstrap the system.  Binaries and the necessary
+configuration files will then be installed into `/etc/runit` and
+`/sbin` instead of in `/usr/local/etc/runit` and `/usr/local/sbin`.
+In this document we will always refer to `/etc/runit` directly instead
+of `/usr/local/etc/runit` for brevity's sake.  Please adjust paths
+accordingly.
 
-Adjust `/boot/loader.conf` and tell the kernel to attempt to use
+Edit `/boot/loader.conf` and tell the kernel to attempt to use
 `/sbin/runit-init` as PID 1
 
 ```
