@@ -240,11 +240,12 @@ $ ln -s /usr/local/etc/sv/xdm /var/service
 
 The keyboard layout and console font should be set directly via
 `kbdcontrol(1)` and `vidcontrol(1)` in either `/etc/runit/local` or a
-custom core service e.g. `/etc/runit/core-services/00-console.sh` to
-set the keyboard layout and console font as early as possible
+custom core service e.g. `/etc/runit/core-services/12-console.sh` to
+set the keyboard layout and console font as early as possible after
+loading kernel modules
 
 ```
-$ cat <<EOF > /etc/runit/core-services/00-console.sh
+$ cat <<EOF > /etc/runit/core-services/12-console.sh
 kdbcontrol -l us < /dev/ttyv0
 for ttyv in /dev/ttyv*; do
 	vidcontrol -f terminus-b32 < ${ttyv} > ${ttyv}
