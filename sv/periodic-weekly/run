@@ -1,5 +1,7 @@
 #!/bin/sh
 # Perform weekly maintenance.
 exec snooze -M 15 -H 4 -w 6 \
-     env PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin \
+     env \
+     HOME=/root \
+     PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin \
      /usr/sbin/periodic weekly 2>&1
