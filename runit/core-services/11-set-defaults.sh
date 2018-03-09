@@ -29,7 +29,7 @@ sysctl \
 	security.bsd.hardlink_check_gid=1 \
 	security.bsd.hardlink_check_uid=1 \
 	kern.random.harvest.mask=511 \
-	> /dev/null 2>&1
+	> /dev/null
 
 msg "Loading '/etc/sysctl.conf'..."
 [ -e /etc/sysctl.conf ] && sysctl -qf /etc/sysctl.conf > /dev/null
