@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+${OPTS:=/usr/local/etc/musicpd.conf}
+exec /usr/local/bin/musicpd --no-daemon ${OPTS}
