@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+mkdir -p /var/run/samba4
+exec smbd -F -S ${OPTS}
