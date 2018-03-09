@@ -1,0 +1,5 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${USER:=root}
+: ${OPTS:=-r -doss -r44100 -p1024 -n3 -w16}
+exec chpst -u ${USER} /usr/local/bin/jackd ${OPTS}
