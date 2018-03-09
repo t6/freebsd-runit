@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${USER:=netdata:netdata}
+exec chpst -u ${USER} /usr/local/sbin/netdata ${OPTS}
