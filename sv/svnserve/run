@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${USER:=svn:svn}
+exec chpst -u ${USER} /usr/local/bin/svnserve --foreground -d ${OPTS}
