@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+install -d -m700 -o mysql -g mysql /var/run/mysqld
+exec chpst -u mysql:mysql /usr/local/libexec/mysqld --user=mysql ${OPTS} 2>&1
