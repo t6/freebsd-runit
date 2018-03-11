@@ -5,4 +5,4 @@ intf=${PWD##*-}
 while ! ifconfig ${intf} > /dev/null 2>&1; do
         sleep 1
 done
-exec dhclient -d ${intf}
+exec dhclient -d ${intf} 2>&1
