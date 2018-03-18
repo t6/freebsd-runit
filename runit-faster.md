@@ -92,6 +92,13 @@ $ ln -s /usr/local/etc/sv/getty-ttyv0 /etc/runit/runsvdir/default
 $ ln -s /usr/local/etc/sv/syslogd /etc/runit/runsvdir/default
 ```
 
+For headless machines (or e.g. `bhyve(8)` virtual machines) with a
+serial port make sure to enable `getty-ttyu0` instead of `getty-ttyv0`
+
+```
+$ ln -s /usr/local/etc/sv/getty-ttyu0 /etc/runit/runsvdir/default
+```
+
 The runlevel can be selected via the `runit.runlevel` kenv.  If
 omitted a value of `default` is used.
 
