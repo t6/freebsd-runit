@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+name=${PWD##*-}
+exec jail ${OPTS} -r ${name} 2>&1

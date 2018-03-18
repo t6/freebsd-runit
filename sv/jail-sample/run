@@ -1,0 +1,7 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+# This assumes that the jail is configured to run /etc/runit/jail via
+# exec.start or command, or another command that doesn't fork into the
+# background.
+name=${PWD##*-}
+exec jail ${OPTS} -c ${name} 2>&1
