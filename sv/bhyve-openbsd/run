@@ -1,0 +1,37 @@
+#!/bin/sh
+set -eu
+[ -r conf ] && . ./conf
+#
+# The following variables must be defined in ./conf
+#
+# DISK:  Device or disk image to use as the VMs boot disk
+# MEM:   Max memory to use
+# CPUS:  Number of guest virtual CPUs
+# OPTS:  Pass through arbitrary arguments to bhyve(8)
+#
+: ${BHYVE:=/usr/sbin/bhyve}
+: ${BOOTROM:=/usr/local/share/uefi-firmware/BHYVE_UEFI.fd}
+: ${BRIDGE:=bhyve-bridge0}
+: ${OPTS:=}
+
+name=${PWD##*-}
+
+if ! ifconfig ${BRIDGE} > /dev/null 2>&1; then
+	ifconfig bridge create name ${BRIDGE} group runit-managed up
+fi
+kldload nmdm > /dev/null 2>&1 || true
+sysctl net.link.tap.up_on_open=1 > /dev/null
+
+intf=$(ifconfig tap create group bhyve-${name} group runit-managed)
+ifconfig ${BRIDGE} addm ${intf}
+exec ${BHYVE} -A -H -P \
+     	-s 0,hostbridge \
+	-c ${CPUS} \
+	-m ${MEM} \
+	-s 4,virtio-blk,${DISK} \
+	-s 5,virtio-net,${intf} \
+	-l com1,/dev/nmdm${name}A \
+	-l bootrom,${BOOTROM} \
+	-s 31,lpc \
+	${OPTS} \
+	${name}
