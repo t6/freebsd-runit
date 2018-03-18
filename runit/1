@@ -3,9 +3,8 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin:/rescue
 
 . /usr/local/etc/runit/functions
 
-msg "Welcome to $(sysctl -n kern.ostype)!"
-
 detect_jail
+msg "Welcome to $(sysctl -n kern.ostype)!"
 
 if [ -z "${JAILED}" ] && [ -n "$(kenv boot_single 2> /dev/null)" ]; then
 	if [ "x$(kenv boot_single)" = "xYES" ]; then
