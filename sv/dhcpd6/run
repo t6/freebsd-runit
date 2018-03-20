@@ -1,0 +1,9 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${OPTS:=-6 -q -user dhcpd -group dhcpd}
+mkdir -p /var/db/dhcpd
+touch /var/db/dhcpd/dhcpd.leases
+exec /usr/local/sbin/dhcpd -f \
+     -pf /var/run/dhcpd6.pid \
+     -lf /var/db/dhcpd/dhcpd.leases \
+     ${OPTS}
