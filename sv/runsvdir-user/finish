@@ -1,0 +1,5 @@
+#!/bin/sh
+USER=${PWD##*-}
+svdir=$(eval echo ~${USER%%:*}/service)
+sv force-stop ${svdir}/*
+sv exit ${svdir}/*
