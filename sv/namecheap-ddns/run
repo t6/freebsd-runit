@@ -1,0 +1,2 @@
+#!/bin/sh
+exec snooze -M '/5' -H '*' ./namecheap-ddns

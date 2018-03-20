@@ -1,0 +1,17 @@
+#!/bin/sh
+# Set the following variables in ./conf
+#
+# domain:   your domain
+# host:     subdomain to update; use @ for TLD
+# password: the password given to you by Namecheap's web interface
+#
+[ -r conf ] && . ./conf
+: ${FETCH:=fetch -qo -}
+out=$(${FETCH} "https://dynamicdns.park-your-domain.com/update?host=${host}&domain=${domain}&password=${password}")
+grep -q "<ErrCount>0</ErrCount>" <<EOF && exit 0
+${out}
+EOF
+cat <<EOF | logger -t namecheap-ddns
+${out}
+EOF
+exit 1
