@@ -1,6 +1,7 @@
 FIND?=		find
 GIT?=		git
 GZIP_CMD?=	gzip
+INSTALL_SCRIPT?=	install -m 555
 LN?=		ln
 MKDIR?=		mkdir -p
 PRINTF?=	printf
@@ -17,9 +18,10 @@ GETTYSU=	ttyu0 ttyu1 ttyu2 ttyu3
 NETIFS=		bge bridge em fxp gem igb lagg re rl vtnet wlan
 
 install:
-	@${MKDIR} ${DESTDIR}${RUNITDIR} ${DESTDIR}${SVDIR}
+	@${MKDIR} ${DESTDIR}${PREFIX}/bin ${DESTDIR}${RUNITDIR} ${DESTDIR}${SVDIR}
+	@${INSTALL_SCRIPT} bin/svclone ${DESTDIR}${PREFIX}/bin
 	@${TAR} -C runit --exclude .gitkeep -cf - . | ${TAR} -C ${DESTDIR}${RUNITDIR} -xf -
-	@${TAR} -C sv -cf - . | ${TAR} -C ${DESTDIR}${SVDIR} -xf -
+	@${TAR} -C sv --exclude supervise -cf - . | ${TAR} -C ${DESTDIR}${SVDIR} -xf -
 	@${FIND} ${DESTDIR}${RUNITDIR} -type f -exec ${SED} -i '' \
 		-e 's,/usr/local/etc/runit,${RUNITDIR},g' \
 		-e 's,//etc,/etc,' \

@@ -1,0 +1,39 @@
+#!/bin/sh
+set -eu
+
+new_service() {
+	if [ -r "$1" ]; then
+		echo "svclone: $1 already exists" 1>&2
+		exit 1
+	fi
+	mkdir -p "$1"/log
+	printf "#!/bin/sh\n[ -r conf ] && . ./conf\nexec ${1##*/}\n" > "$1/run"
+	printf "#!/bin/sh\nexec logger -t ${1##*/}\n" > "$1/log/run"
+	chmod 755 "$1/run" "$1/log/run"
+	ln -sf /var/run/runit/supervise.$(uuidgen) "$1/supervise"
+	ln -sf /var/run/runit/supervise.$(uuidgen) "$1/log/supervise"
+}
+
+clone_service() {
+	local source
+	local target
+	source="$1"
+	target="$2"
+	if [ -r "${target}" ]; then
+		echo "svclone: ${target} already exists" 1>&2
+		exit 1
+	fi
+	mkdir -p "${target}"
+	tar -C "${source}" --exclude supervise --exclude '*~' -cf - . | tar -C "${target}" -xf -
+	find -d "${target}" -type d | while read file; do
+		if [ -x "${file}/run" ]; then
+			ln -sf /var/run/runit/supervise.$(uuidgen) "${file}/supervise"
+		fi
+	done
+}
+
+if [ $# -eq 1 ]; then
+	new_service "$1"
+else
+	clone_service "$1" "$2"
+fi
