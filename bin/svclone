@@ -86,7 +86,7 @@ remove_supervise() {
 usage() {
 	echo "usage: svclone [-crs] svdir ..." 1>&2
 	echo "       svclone source target ..." 1>&2
-	exit 64
+	return 64
 }
 
 main() {
@@ -107,18 +107,17 @@ main() {
 	shift $((OPTIND - 1))
 
 	if [ -n "${cflag}" ]; then
-		create_services "$@" || exit 1
+		create_services "$@"
 	elif [ -n "${sflag}" ]; then
-		remove_supervise "$@" || exit 1
-		regen_supervise "$@" || exit 1
+		remove_supervise "$@"
+		regen_supervise "$@"
 	elif [ -n "${rflag}" ]; then
-		remove_supervise "$@" || exit 1
+		remove_supervise "$@"
 	elif [ $# -ge 2 ]; then
-		clone_services "$@" || exit 1
+		clone_services "$@"
 	else
 		usage
 	fi
 }
 
 main "$@"
-
