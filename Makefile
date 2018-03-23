@@ -17,6 +17,8 @@ GETTYSV=	ttyv0 ttyv2 ttyv3 ttyv4 ttyv5 ttyv6 ttyv7 ttyv8
 GETTYSU=	ttyu0 ttyu1 ttyu2 ttyu3
 NETIFS=		bge bridge em fxp gem igb lagg re rl vtnet wlan
 
+all: docs
+
 install:
 	@${MKDIR} ${DESTDIR}${PREFIX}/bin ${DESTDIR}${RUNITDIR} ${DESTDIR}${SVDIR}
 	@${INSTALL_SCRIPT} bin/svclone ${DESTDIR}${PREFIX}/bin
@@ -62,3 +64,10 @@ archive:
 			--output=freebsd-runit-$$ver.tar \
 			$$tag && \
 		${GZIP_CMD} freebsd-runit-$$ver.tar
+
+docs: docs/runit-faster.html
+
+docs/runit-faster.html: docs/runit-faster.md
+	cmark docs/runit-faster.md > docs/runit-faster.html
+
+.PHONY: all archive docs
