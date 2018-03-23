@@ -7,7 +7,7 @@ new_service() {
 		exit 1
 	fi
 	mkdir -p "$1"/log
-	printf "#!/bin/sh\n[ -r conf ] && . ./conf\nexec ${1##*/}\n" > "$1/run"
+	printf "#!/bin/sh\n[ -r conf ] && . ./conf\nexec ${1##*/} \${OPTS}\n" > "$1/run"
 	printf "#!/bin/sh\nexec logger -t ${1##*/}\n" > "$1/log/run"
 	chmod 755 "$1/run" "$1/log/run"
 	ln -sf /var/run/runit/supervise.$(uuidgen) "$1/supervise"
