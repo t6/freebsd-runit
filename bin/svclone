@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+SUPERVISE_PREFIX=/var/run/runit/supervise.
+
 is_service() {
 	[ -x "$1/run" ]
 }
@@ -16,8 +18,8 @@ create_services() {
 		printf "#!/bin/sh\n[ -r conf ] && . ./conf\nexec ${target##*/} \${OPTS}\n" > "${target}/run"
 		printf "#!/bin/sh\nexec logger -t ${target##*/}\n" > "${target}/log/run"
 		chmod 755 "${target}/run" "${target}/log/run"
-		ln -sf /var/run/runit/supervise.$(uuidgen) "${target}/supervise"
-		ln -sf /var/run/runit/supervise.$(uuidgen) "${target}/log/supervise"
+		ln -sf ${SUPERVISE_PREFIX}$(uuidgen) "${target}/supervise"
+		ln -sf ${SUPERVISE_PREFIX}$(uuidgen) "${target}/log/supervise"
 	done
 }
 
@@ -41,7 +43,7 @@ clone_services() {
 		tar -C "${source}" --exclude supervise --exclude '*~' -cf - . | tar -C "${target}" -xf -
 		find -d "${target}" -type d | while read file; do
 			if [ -x "${file}/run" ]; then
-				ln -sf /var/run/runit/supervise.$(uuidgen) "${file}/supervise"
+				ln -sf ${SUPERVISE_PREFIX}$(uuidgen) "${file}/supervise"
 			fi
 		done
 	done
@@ -59,7 +61,7 @@ regen_supervise() {
 		fi
 		find -d "${target}" -type d | while read file; do
 			if [ -x "${file}/run" ]; then
-				ln -sf /var/run/runit/supervise.$(uuidgen) "${file}/supervise"
+				ln -sf ${SUPERVISE_PREFIX}$(uuidgen) "${file}/supervise"
 			fi
 		done
 	done
@@ -96,11 +98,12 @@ main() {
 	cflag=
 	rflag=
 	sflag=
-	while getopts ":crs" arg; do
+	while getopts ":crsu" arg; do
 		case ${arg} in
 			c) cflag=1;;
 			r) rflag=1;;
 			s) sflag=1;;
+			u) SUPERVISE_PREFIX="${HOME}/.sv/supervise/";;
 			*) usage;;
 		esac
 	done
