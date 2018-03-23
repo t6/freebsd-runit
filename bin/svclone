@@ -103,7 +103,7 @@ main() {
 			c) cflag=1;;
 			r) rflag=1;;
 			s) sflag=1;;
-			u) SUPERVISE_PREFIX="${HOME}/.sv/supervise/";;
+			u) SUPERVISE_PREFIX="${HOME}/.runit-supervise/";;
 			*) usage;;
 		esac
 	done
