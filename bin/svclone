@@ -1,39 +1,124 @@
 #!/bin/sh
 set -eu
 
-new_service() {
-	if [ -r "$1" ]; then
-		echo "svclone: $1 already exists" 1>&2
-		exit 1
-	fi
-	mkdir -p "$1"/log
-	printf "#!/bin/sh\n[ -r conf ] && . ./conf\nexec ${1##*/} \${OPTS}\n" > "$1/run"
-	printf "#!/bin/sh\nexec logger -t ${1##*/}\n" > "$1/log/run"
-	chmod 755 "$1/run" "$1/log/run"
-	ln -sf /var/run/runit/supervise.$(uuidgen) "$1/supervise"
-	ln -sf /var/run/runit/supervise.$(uuidgen) "$1/log/supervise"
+is_service() {
+	[ -x "$1/run" ]
 }
 
-clone_service() {
-	local source
+create_services() {
 	local target
-	source="$1"
-	target="$2"
-	if [ -r "${target}" ]; then
-		echo "svclone: ${target} already exists" 1>&2
-		exit 1
-	fi
-	mkdir -p "${target}"
-	tar -C "${source}" --exclude supervise --exclude '*~' -cf - . | tar -C "${target}" -xf -
-	find -d "${target}" -type d | while read file; do
-		if [ -x "${file}/run" ]; then
-			ln -sf /var/run/runit/supervise.$(uuidgen) "${file}/supervise"
+	for target in "$@"; do
+		if [ -r "${target}" ]; then
+			echo "svclone: ${target} already exists" 1>&2
+			return 1
 		fi
+		mkdir -p "${target}/log"
+		printf "#!/bin/sh\n[ -r conf ] && . ./conf\nexec ${target##*/} \${OPTS}\n" > "${target}/run"
+		printf "#!/bin/sh\nexec logger -t ${target##*/}\n" > "${target}/log/run"
+		chmod 755 "${target}/run" "${target}/log/run"
+		ln -sf /var/run/runit/supervise.$(uuidgen) "${target}/supervise"
+		ln -sf /var/run/runit/supervise.$(uuidgen) "${target}/log/supervise"
 	done
 }
 
-if [ $# -eq 1 ]; then
-	new_service "$1"
-else
-	clone_service "$1" "$2"
-fi
+clone_services() {
+	local err
+	local source
+	local target
+	source="$1"
+	shift
+	if ! is_service "${source}"; then
+		echo "svclone: ${source} is not a service directory" 1>&2
+		return 1
+	fi
+	err=0
+	for target in "$@"; do
+		if [ -r "${target}" ]; then
+			echo "svclone: ${target} already exists" 1>&2
+			err=1
+		fi
+		mkdir -p "${target}"
+		tar -C "${source}" --exclude supervise --exclude '*~' -cf - . | tar -C "${target}" -xf -
+		find -d "${target}" -type d | while read file; do
+			if [ -x "${file}/run" ]; then
+				ln -sf /var/run/runit/supervise.$(uuidgen) "${file}/supervise"
+			fi
+		done
+	done
+	return ${err}
+}
+
+regen_supervise() {
+	local err
+	local target
+	err=0
+	for target in "$@"; do
+		if ! is_service "${target}"; then
+			echo "svclone: ${target} is not a service directory" 1>&2
+			err=1
+		fi
+		find -d "${target}" -type d | while read file; do
+			if [ -x "${file}/run" ]; then
+				ln -sf /var/run/runit/supervise.$(uuidgen) "${file}/supervise"
+			fi
+		done
+	done
+	return ${err}
+}
+
+remove_supervise() {
+	local err
+	local target
+	err=0
+	for target in "$@"; do
+		if ! is_service "${target}"; then
+			echo "svclone: ${target} is not a service directory" 1>&2
+			err=1
+		fi
+		find -d "${target}" -name supervise -and \( -type l -or -type d \) | \
+			while read file; do
+				rm -rf "${file}"
+			done
+	done
+	return ${err}
+}
+
+usage() {
+	echo "usage: svclone [-crs] svdir ..." 1>&2
+	echo "       svclone source target ..." 1>&2
+	exit 64
+}
+
+main() {
+	local cflag
+	local rflag
+	local sflag
+	cflag=
+	rflag=
+	sflag=
+	while getopts ":crs" arg; do
+		case ${arg} in
+			c) cflag=1;;
+			r) rflag=1;;
+			s) sflag=1;;
+			*) usage;;
+		esac
+	done
+	shift $((OPTIND - 1))
+
+	if [ -n "${cflag}" ]; then
+		create_services "$@" || exit 1
+	elif [ -n "${sflag}" ]; then
+		remove_supervise "$@" || exit 1
+		regen_supervise "$@" || exit 1
+	elif [ -n "${rflag}" ]; then
+		remove_supervise "$@" || exit 1
+	elif [ $# -ge 2 ]; then
+		clone_services "$@" || exit 1
+	else
+		usage
+	fi
+}
+
+main "$@"
+
