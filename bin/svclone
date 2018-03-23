@@ -40,7 +40,7 @@ clone_services() {
 			err=1
 		fi
 		mkdir -p "${target}"
-		tar -C "${source}" --exclude supervise --exclude '*~' -cf - . | tar -C "${target}" -xf -
+		tar -C "${source}" --exclude supervise --exclude '*~' -Lcf - . | tar -C "${target}" -xf -
 		find -d "${target}" -type d | while read file; do
 			if [ -x "${file}/run" ]; then
 				ln -sf ${SUPERVISE_PREFIX}$(uuidgen) "${file}/supervise"
