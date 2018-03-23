@@ -24,7 +24,7 @@ fi
 runsvchdir "${runlevel}" || emergency_shell
 rm -rf /var/run/runit/runsvdir
 mkdir -p /var/run/runit/runsvdir
-ln -s /usr/local/etc/runit/runsvdir/current /var/run/runit/runsvdir/current
+ln -sF /usr/local/etc/runit/runsvdir/current /var/run/runit/runsvdir/current
 
 /usr/sbin/utx boot
 
