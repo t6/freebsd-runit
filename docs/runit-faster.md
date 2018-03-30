@@ -260,6 +260,25 @@ done
 EOF
 ```
 
+# Autologin to Xfce
+
+For bash/oksh/sh add this to `~/.profile`:
+```
+if [ -z "$DISPLAY" ] && [ "$(tty)" == "/dev/ttyv0" ]; then
+	exec startxfce4
+fi
+```
+Create an autologin entry in `/etc/gettytab`:
+```
+al.Pctobias:\
+	:al=tobias:tc=Pc
+```
+Then setup getty to use it:
+```
+echo "TYPE=al.Pctobias" > /usr/local/etc/sv/getty-ttyv0/conf
+```
+Make sure to enable and/or restart `getty-ttyv0` afterwards.
+
 # Rebooting and powering off
 
 `reboot(8)`, `halt(8)`, `poweroff(8)`, `shutdown(8)` will not work
