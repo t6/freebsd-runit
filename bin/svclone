@@ -86,8 +86,8 @@ remove_supervise() {
 }
 
 usage() {
-	echo "usage: svclone [-crs] svdir ..." 1>&2
-	echo "       svclone source target ..." 1>&2
+	echo "usage: svclone [-crsu] svdir ..." 1>&2
+	echo "       svclone [-u] source target ..." 1>&2
 	return 64
 }
 
