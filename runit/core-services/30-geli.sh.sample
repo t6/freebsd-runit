@@ -1,0 +1,5 @@
+[ -n "${JAILED}" ] && return 0
+# Uncomment to decrypt ada2, ada3
+#for dev in ada2 ada3; do
+#	geli attach -p -k /etc/geli/${dev}.key ${dev}
+#done
