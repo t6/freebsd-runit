@@ -235,7 +235,7 @@ $ chmod +x /etc/runit/local
 
 # Desktop services
 
-Enable D-Bus, dsbmd, xdm:
+Enable D-Bus, DSBMD, xdm:
 
 ```
 $ ln -s /usr/local/etc/sv/dbus /var/service
@@ -278,6 +278,15 @@ Then setup getty to use it:
 echo "TYPE=al.Pctobias" > /usr/local/etc/sv/getty-ttyv0/conf
 ```
 Make sure to enable and/or restart `getty-ttyv0` afterwards.
+
+As services start concurrently it might be a good idea to check for
+service availability e.g. a running D-Bus and DSBMD before starting
+your X session to prevent situations where the daemons start after
+your X session.  Append this to `/usr/local/etc/sv/getty-ttyv0/conf`:
+```
+sv check dbus > /dev/null || exit 1
+sv check dsbmd > /dev/null || exit 1
+```
 
 # Rebooting and powering off
 
