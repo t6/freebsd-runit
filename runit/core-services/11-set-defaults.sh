@@ -5,6 +5,7 @@
 # - Adapt the good bits from https://vez.mrsk.me/freebsd-defaults.txt
 # - Use a better congestion control algorithm than newreno
 # - Setup entropy harvesting (see random(4))
+# - Turn off console bell
 if [ -z "${JAILED}"]; then
 	msg "Setting system defaults..."
 	kldload cc_cubic > /dev/null 2>&1 || true
@@ -30,6 +31,10 @@ if [ -z "${JAILED}"]; then
 		security.bsd.hardlink_check_uid=1 \
 		kern.random.harvest.mask=511 \
 		> /dev/null
+	case "$(sysctl -qn kern.vty)" in
+		vt) sysctl kern.vt.enable_bell=0 > /dev/null ;;
+		sc) sysctl hw.syscons.bell=0 > /dev/null ;;
+	esac
 fi
 
 msg "Loading '/etc/sysctl.conf'..."
