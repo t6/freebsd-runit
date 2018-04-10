@@ -18,7 +18,7 @@ usage.
 # System initialization
 
 Runit initializes the system in two stages.  The first stage will run
-a bunch of core services (`/etc/runit/core-services`), one time system
+a bunch of core services (`/usr/local/etc/runit/core-services`), one time system
 tasks:
 
 ```
@@ -47,7 +47,7 @@ insert their own core services in the right places by creating a file
 with an even number prefix.
 
 Stage 2 will look up the runlevel in the `runit.runlevel` kenv and
-link `/etc/runit/runsvdir/$runlevel` to `/var/service`.  It will then
+link `/usr/local/etc/runit/runsvdir/$runlevel` to `/var/service`.  It will then
 run `runsvdir(8)` on it which starts all defined services for the
 runlevel and starts supervising them.
 
@@ -71,9 +71,9 @@ case, runit has to be compiled with the ROOT option on, to make that
 runit can properly bootstrap the system.  Binaries and the necessary
 configuration files will then be installed into `/etc/runit` and
 `/sbin` instead of in `/usr/local/etc/runit` and `/usr/local/sbin`.
-In this document we will always refer to `/etc/runit` directly instead
-of `/usr/local/etc/runit` for brevity's sake.  Please adjust paths
-accordingly.
+In this document we will always refer to `/usr/local/etc/runit`
+directly instead of `/etc/runit`.  Please adjust paths accordingly if
+you have to use the ROOT option.
 
 Edit `/boot/loader.conf` and tell the kernel to attempt to use
 `/sbin/runit-init` as PID 1
@@ -87,16 +87,16 @@ the very least one getty service in the `default` runlevel to get a
 login prompt after rebooting.
 
 ```
-$ ln -s /usr/local/etc/sv/devd /etc/runit/runsvdir/default
-$ ln -s /usr/local/etc/sv/getty-ttyv0 /etc/runit/runsvdir/default
-$ ln -s /usr/local/etc/sv/syslogd /etc/runit/runsvdir/default
+$ ln -s /usr/local/etc/sv/devd /usr/local/etc/runit/runsvdir/default
+$ ln -s /usr/local/etc/sv/getty-ttyv0 /usr/local/etc/runit/runsvdir/default
+$ ln -s /usr/local/etc/sv/syslogd /usr/local/etc/runit/runsvdir/default
 ```
 
 For headless machines (or e.g. `bhyve(8)` virtual machines) with a
 serial port make sure to enable `getty-ttyu0` instead of `getty-ttyv0`
 
 ```
-$ ln -s /usr/local/etc/sv/getty-ttyu0 /etc/runit/runsvdir/default
+$ ln -s /usr/local/etc/sv/getty-ttyu0 /usr/local/etc/runit/runsvdir/default
 ```
 
 The runlevel can be selected via the `runit.runlevel` kenv.  If
@@ -104,20 +104,20 @@ omitted a value of `default` is used.
 
 Settings from `/etc/rc.conf` will *not* be applied when using
 runit-faster. The hostname has to be set via the `runit.hostname` kenv
-or in `/etc/runit/hostname`:
+or in `/usr/local/etc/runit/hostname`:
 
 ```
-$ echo my-hostname > /etc/runit/hostname
+$ echo my-hostname > /usr/local/etc/runit/hostname
 ```
 
 `kld_list` for loading kernel modules should be migrated to
-`/etc/runit/modules`.  They will be loaded as a first step when the
-system initializes.
+`/usr/local/etc/runit/modules`.  They will be loaded as a first step
+when the system initializes.
 
 ```
 $ sysrc kld_list
 kld_list: /boot/modules/i915kms.ko if_iwm ichsmb vboxdrv vboxnetflt vboxnetadp
-$ cat <<EOF > /etc/runit/modules
+$ cat <<EOF > /usr/local/etc/runit/modules
 /boot/modules/i915kms.ko
 vboxdrv
 vboxnetflt
@@ -210,12 +210,12 @@ ifconfig ue0 > /dev/null 2>&1 || exit 1
 
 ## Static IP
 ```
-$ cat <<EOF > /etc/runit/local
+$ cat <<EOF > /usr/local/etc/runit/local
 #!/bin/sh
 ifconfig re0 inet 192.168.0.2/24 up
 route add default 192.168.0.1
 EOF
-$ chmod +x /etc/runit/local
+$ chmod +x /usr/local/etc/runit/local
 ```
 
 ## netif based setup
@@ -223,14 +223,14 @@ $ chmod +x /etc/runit/local
 To keep using the normal FreeBSD rc.conf-based networking setup:
 
 ```
-$ cat <<EOF > /etc/runit/local
+$ cat <<EOF > /usr/local/etc/runit/local
 #!/bin/sh
 service netif quietstart
 service routing quietstart
 # or simply use /etc/netstart to run every networking related
 # rc.d script in the right order.
 EOF
-$ chmod +x /etc/runit/local
+$ chmod +x /usr/local/etc/runit/local
 ```
 
 # Desktop services
@@ -246,13 +246,14 @@ $ ln -s /usr/local/etc/sv/xdm /var/service
 # Console keyboard layout and font setup
 
 The keyboard layout and console font should be set directly via
-`kbdcontrol(1)` and `vidcontrol(1)` in either `/etc/runit/local` or a
-custom core service e.g. `/etc/runit/core-services/12-console.sh` to
-set the keyboard layout and console font as early as possible after
-loading kernel modules
+`kbdcontrol(1)` and `vidcontrol(1)` in either
+`/usr/local/etc/runit/local` or a custom core service
+e.g. `/usr/local/etc/runit/core-services/12-console.sh` to set the
+keyboard layout and console font as early as possible after loading
+kernel modules
 
 ```
-$ cat <<EOF > /etc/runit/core-services/12-console.sh
+$ cat <<EOF > /usr/local/etc/runit/core-services/12-console.sh
 kdbcontrol -l us < /dev/ttyv0
 for ttyv in /dev/ttyv*; do
 	vidcontrol -f terminus-b32 < ${ttyv} > ${ttyv}
@@ -297,20 +298,34 @@ power it off.
 
 # Jails
 
+`runit-faster` will create a `jail0` loopback inteface in the
+192.168.95.0/24 network by default.  You can use this to very quickly
+setup jails.
+
+Setup NAT in `/etc/pf.conf`
+```
+http_jail_ip = 192.168.95.2
+
+nat pass on $ext_if from runit-jail:network to any -> $ext_if
+rdr pass on $ext_if proto tcp from any to $ext_if port { https, http } \
+	-> $http_jail_ip
+```
+
 Clone `jail-sample` on the host:
 ```
 mkdir /usr/local/etc/sv/local
-svclone /usr/local/etc/sv/jail-sample /usr/local/etc/sv/local/jail-example
+svclone /usr/local/etc/sv/jail-sample /usr/local/etc/sv/local/jail-http
 ```
 
-Modify `/usr/local/etc/sv/local/jail-example/jail.conf` to suite your needs
+Modify `/usr/local/etc/sv/local/jail-http/jail.conf` to suite your needs
 ```
-example {
+http {
 	path = /usr/jails/$name;
 	host.hostname = $name.example.com;
 	mount.devfs;
-	exec.start = "/etc/runit/jail start";
-	exec.stop = "/etc/runit/jail stop";
+	exec.start = "/usr/local/etc/runit/jail start";
+	exec.stop = "/usr/local/etc/runit/jail stop";
+	ip4.addr = "jail0|192.168.95.2/24";
 }
 ```
 
@@ -318,6 +333,24 @@ If you change `path` in `jail.conf` from the default also make sure to set it in
 `/usr/local/etc/sv/local/jail-example/conf`:
 ```
 ROOT=/path/to/jail
+```
+
+Setup a basic jail
+```
+bsdinstall jail /usr/jails/http
+```
+
+Install and enable `nginx` and `runit-faster` in the jail
+```
+pkg -c /usr/jails/http install nginx runit-faster
+for s in newsyslog nginx syslogd; do
+	chroot /usr/jails/http ln -s /usr/local/etc/sv/${s} /usr/local/etc/runit/runsvdir/default
+done
+```
+
+Finally enable the jail on the host
+```
+ln -s /usr/local/etc/sv/local/jail-http /var/service
 ```
 
 # If things go wrong...
