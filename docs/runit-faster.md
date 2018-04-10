@@ -22,24 +22,30 @@ a bunch of core services (`/usr/local/etc/runit/core-services`), one time system
 tasks:
 
 ```
-11-kld.sh             Loads kernel modules
-11-set-defaults.sh    Sets some system defaults
-21-swap.sh            Enables swap
-31-enable-dumpdev.sh  Set the dump device 
-31-fsck.sh            Run fsck
-31-mount.sh           Mounts all early filesystem, also ZFS
-31-var.sh             Make sure that /var has the right structure
-41-entropy.sh         Initialize the entropy harvester
-41-hostid.sh          Generate a hostid
-41-hostname.sh        Sets the hostname
-41-ldconfig.sh        Sets up the shared library cache
-41-loopback.sh        Create lo0
-41-mixer.sh           Restore soundcard mixer values
-41-nextboot.sh        Prune nextboot configuration
-41-rctl.sh            Apply resource limits from /etc/rctl.conf
-51-pf.sh              Enable PF and load /etc/pf.conf
-99-cleanup.sh         Clean /tmp
-99-mount-late.sh      Mount all late filesystems
+11-kld.sh               Loads kernel modules
+11-set-defaults.sh      Sets some system defaults
+21-swap.sh              Enables swap
+31-enable-dumpdev.sh    Set the dump device 
+31-fsck.sh              Run fsck
+31-mount.sh             Mounts all early filesystem, also ZFS
+33-microcode_update.sh  Update CPU microcode if sysutils/devcpu-data is installed
+33-var.sh               Make sure that /var has the right structure
+41-entropy.sh           Initialize the entropy harvester
+41-hostid.sh            Generate a hostid
+41-hostname.sh          Sets the hostname
+41-ldconfig.sh          Sets up the shared library cache
+41-loopback.sh          Create lo0
+41-mixer.sh             Restore soundcard mixer values
+41-nextboot.sh          Prune nextboot configuration
+41-rctl.sh              Apply resource limits from /etc/rctl.conf
+43-bhyve-network.sh     Create a bhyve0 bridge for networking for simple bhyve VMs
+43-jail-network.sh      Create a jail0 interface with an assigned network of
+                        192.168.95.0/24 to ease setting up jails
+51-pf.sh                Enable PF and load /etc/pf.conf
+99-cleanup.sh           Clean /tmp
+99-mount-late.sh        Mount all late filesystems
+99-qemu_user_static.sh  Register the QEMU interpreters from emulators/qemu-user-static
+                        with binmiscctl(8)
 ```
 
 The core services will be sourced in lexicographic order.  Users can
@@ -168,6 +174,13 @@ $ ln -s /usr/local/etc/sv/getty-ttyv7 /var/service
 It is recommended to disable `/etc/rc.d/netif` managed network
 interfaces completely and use one of the dhclient services or do
 manual network setup instead.
+
+```
+netif_enable="NO"
+```
+Also make sure to remove or comment out any `ifconfig_X="... DHCP
+..."` lines in `/etc/rc.conf` to prevent `devd(8)` from autostarting
+`dhclient(8)`.
 
 ## Setting up wireless networking with link failover
 Here we setup `lagg0` with `re0` as master interface and `wlan0` as
