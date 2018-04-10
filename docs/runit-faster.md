@@ -317,11 +317,11 @@ setup jails.
 
 Setup NAT in `/etc/pf.conf`
 ```
-http_jail_ip = 192.168.95.2
+jail_http_ip = 192.168.95.2
 
 nat pass on $ext_if from runit-jail:network to any -> $ext_if
 rdr pass on $ext_if proto tcp from any to $ext_if port { https, http } \
-	-> $http_jail_ip
+	-> $jail_http_ip
 ```
 
 Clone `jail-sample` on the host:
@@ -343,7 +343,7 @@ http {
 ```
 
 If you change `path` in `jail.conf` from the default also make sure to set it in
-`/usr/local/etc/sv/local/jail-example/conf`:
+`/usr/local/etc/sv/local/jail-example/conf` as well:
 ```
 ROOT=/path/to/jail
 ```
@@ -357,7 +357,7 @@ Install and enable `nginx` and `runit-faster` in the jail
 ```
 pkg -c /usr/jails/http install nginx runit-faster
 for s in newsyslog nginx syslogd; do
-	chroot /usr/jails/http ln -s /usr/local/etc/sv/${s} /usr/local/etc/runit/runsvdir/default
+	ln -s /usr/local/etc/sv/${s} /usr/jails/http/usr/local/etc/runit/runsvdir/default
 done
 ```
 
