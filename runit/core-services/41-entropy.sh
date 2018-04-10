@@ -22,7 +22,7 @@ feed_dev_random()
 	done
 }
 
-msg 'Feeding entropy...'
+msg 'Feeding entropy'
 
 if [ ! -w /dev/random ] ; then
 	msg_warn "/dev/random is not writeable"

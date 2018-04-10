@@ -1,6 +1,6 @@
 [ -n "${JAILED}" ] && return 0
 
-msg "Enabling dump device..."
+msg "Enabling dump device"
 
 dumpdev=auto
 

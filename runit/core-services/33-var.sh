@@ -1,4 +1,4 @@
-msg "Populating /var directory..."
+msg "Populating /var"
 
 mkdir -p /var/run
 mount -t tmpfs -o size=8m tmpfs /var/run

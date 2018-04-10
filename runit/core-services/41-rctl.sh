@@ -1,5 +1,5 @@
 if [ -e "/etc/rctl.conf" ]; then
-	msg "Applying resource limits from '/etc/rctl.conf'..."
+	msg "Applying resource limits from /etc/rctl.conf"
 	while read var comments; do
 		case ${var} in
 		\#*|'') ;;

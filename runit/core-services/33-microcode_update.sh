@@ -1,7 +1,7 @@
 [ -n "${JAILED}" ] && return 0
 [ -d /usr/local/share/cpucontrol ] || return 0
 
-msg "Updating CPU microcode..."
+msg "Updating CPU microcode"
 
 if ! kldstat -q -m cpuctl; then
 	if ! kldload cpuctl > /dev/null 2>&1; then

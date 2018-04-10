@@ -1,7 +1,7 @@
 [ -n "${JAILED}" ] && return 0
 [ -x /usr/local/bin/qemu-arm-static ] || return 1
 
-msg "Registering QEMU binmiscctl interpreters..."
+msg "Registering QEMU binmiscctl interpreters"
 
 arm_interpreter=/usr/local/bin/qemu-arm-static
 arm_magic="\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00"

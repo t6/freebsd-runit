@@ -9,14 +9,14 @@ if [ -e /var/run/runit/reboot ]; then
 fi
 
 echo
-msg "Waiting for services to stop..."
+msg "Waiting for services to stop"
 sv force-stop /var/service/*
 sv exit /var/service/*
 
 [ -x /usr/local/etc/runit/local.shutdown ] && /usr/local/etc/runit/local.shutdown
 /usr/sbin/utx shutdown
 
-msg "Saving soundcard mixer values..."
+msg "Saving soundcard mixer values"
 for dev in /dev/mixer*; do 
 	if [ -r ${dev} ]; then
 		/usr/sbin/mixer -f ${dev} -s > /var/db/${dev##*/}-state 2>/dev/null
@@ -26,7 +26,7 @@ done
 [ -n "${JAILED}" ] && return 0
 # Write some entropy so when the machine reboots /dev/random
 # can be reseeded
-msg 'Writing entropy file...'
+msg 'Writing entropy file'
 rm -f /entropy 2> /dev/null
 oumask=$(umask)
 umask 077
@@ -52,7 +52,7 @@ case ${entropy_file_confirmed} in
 esac
 umask ${oumask}
 
-msg 'Writing early boot entropy file...'
+msg 'Writing early boot entropy file'
 rm -f /boot/entropy 2> /dev/null
 oumask=$(umask)
 umask 077

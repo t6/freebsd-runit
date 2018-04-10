@@ -3,7 +3,7 @@
 if [ ! -r /etc/fstab ]; then
 	msg_warn "No /etc/fstab: skipping disk checks."
 else
-	msg "Checking filesystems..."
+	msg "Checking filesystems"
 	fsck -F -p
 	err=$?
 	if [ ${err} -ne 0 ]; then

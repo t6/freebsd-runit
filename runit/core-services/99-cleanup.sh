@@ -1,4 +1,4 @@
-msg "Purging '/tmp'..."
+msg "Purging /tmp"
 find -x /tmp/. ! -name . \
      ! \( -name .sujournal -type f -user root \) \
      ! \( -name .snap -type d -user root \) \

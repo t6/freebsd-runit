@@ -1,4 +1,4 @@
-msg "Configuring the shared library cache..."
+msg "Configuring the shared library cache"
 
 add_paths() {
 	local _lib _ldconfig_dir

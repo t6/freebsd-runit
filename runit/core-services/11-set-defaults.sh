@@ -7,7 +7,7 @@
 # - Setup entropy harvesting (see random(4))
 # - Turn off console bell
 if [ -z "${JAILED}"]; then
-	msg "Setting system defaults..."
+	msg "Setting system defaults"
 	kldload cc_cubic > /dev/null 2>&1 || true
 	sysctl \
 		net.inet.tcp.cc.algorithm=cubic \
@@ -37,5 +37,5 @@ if [ -z "${JAILED}"]; then
 	esac
 fi
 
-msg "Loading '/etc/sysctl.conf'..."
+msg "Loading /etc/sysctl.conf"
 [ -e /etc/sysctl.conf ] && sysctl -qf /etc/sysctl.conf > /dev/null

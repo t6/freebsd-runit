@@ -9,5 +9,5 @@ else
 	return 0
 fi
 
-msg "Setting hostname to '${_hostname}'..."
+msg "Setting hostname to ${_hostname}"
 hostname "${_hostname}"
