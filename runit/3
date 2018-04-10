@@ -16,12 +16,14 @@ sv exit /var/service/*
 [ -x /usr/local/etc/runit/local.shutdown ] && /usr/local/etc/runit/local.shutdown
 /usr/sbin/utx shutdown
 
-msg "Saving soundcard mixer values"
-for dev in /dev/mixer*; do 
-	if [ -r ${dev} ]; then
-		/usr/sbin/mixer -f ${dev} -s > /var/db/${dev##*/}-state 2>/dev/null
-	fi
-done
+if [ -r /dev/mixer0 ]; then
+	msg "Saving soundcard mixer values"
+	for dev in /dev/mixer*; do
+		if [ -r ${dev} ]; then
+			/usr/sbin/mixer -f ${dev} -s > /var/db/${dev##*/}-state 2>/dev/null
+		fi
+	done
+fi
 
 [ -n "${JAILED}" ] && return 0
 # Write some entropy so when the machine reboots /dev/random
