@@ -295,6 +295,31 @@ correctly with runit because of the way they send signals to PID 1.
 `runit-init 6` can be used to reboot the system and `runit-init 0` to
 power it off.
 
+# Jails
+
+Clone `jail-sample` on the host:
+```
+mkdir /usr/local/etc/sv/local
+svclone /usr/local/etc/sv/jail-sample /usr/local/etc/sv/local/jail-example
+```
+
+Modify `/usr/local/etc/sv/local/jail-example/jail.conf` to suite your needs
+```
+example {
+	path = /usr/jails/$name;
+	host.hostname = $name.example.com;
+	mount.devfs;
+	exec.start = "/etc/runit/jail start";
+	exec.stop = "/etc/runit/jail stop";
+}
+```
+
+If you change `path` in `jail.conf` from the default also make sure to set it in
+`/usr/local/etc/sv/local/jail-example/conf`:
+```
+ROOT=/path/to/jail
+```
+
 # If things go wrong...
 
 * Booting in single user mode boots to an emergency shell.

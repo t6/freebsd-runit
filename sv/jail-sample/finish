@@ -1,4 +1,7 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
 name=${PWD##*-}
-exec jail ${OPTS} -r ${name} 2>&1
+: ${ROOT:=/usr/jails/${name}}
+: ${CONFIG:=${PWD}/jail.conf}
+jail -f ${CONFIG} ${OPTS} -r ${name} 2>&1
+umount -f ${ROOT}/var/run

@@ -4,4 +4,8 @@
 # exec.start or command, or another command that doesn't fork into the
 # background.
 name=${PWD##*-}
-exec jail ${OPTS} -c ${name} 2>&1
+: ${ROOT:=/usr/jails/${name}}
+: ${CONFIG:=${PWD}/jail.conf}
+mkdir -p ${ROOT}/var/run
+mount -t tmpfs -o size=8m tmpfs ${ROOT}/var/run
+exec jail -f ${CONFIG} ${OPTS} -c ${name} 2>&1
