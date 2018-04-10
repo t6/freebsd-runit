@@ -336,6 +336,7 @@ http {
 	path = /usr/jails/$name;
 	host.hostname = $name.example.com;
 	mount.devfs;
+	mount.fstab = "/var/service/jail-$name/fstab";
 	exec.start = "/usr/local/etc/runit/jail start";
 	exec.stop = "/usr/local/etc/runit/jail stop";
 	ip4.addr = "jail0|192.168.95.2/24";
