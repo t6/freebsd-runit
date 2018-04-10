@@ -311,9 +311,9 @@ power it off.
 
 # Jails
 
-`runit-faster` will create a `jail0` loopback inteface in the
-192.168.95.0/24 network by default.  You can use this to very quickly
-setup jails.
+`runit-faster` will create a `jail0` interface in the 192.168.95.0/24
+network by default.  The host gets IP 192.168.95.1.  You can use this
+to very quickly setup jails.
 
 Setup NAT in `/etc/pf.conf`
 ```
