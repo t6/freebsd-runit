@@ -20,11 +20,12 @@ usage.
 Runit initializes the system in two stages.  The first stage will run
 a bunch of core services (`/usr/local/etc/runit/core-services`), one time system
 tasks:
-
 ```
 11-kld.sh               Loads kernel modules
 11-set-defaults.sh      Sets some system defaults
+12-console.sh           Console setup (fonts, keymap, ...)
 21-swap.sh              Enables swap
+30-geli.sh              Decrypt GELI devices
 31-enable-dumpdev.sh    Set the dump device 
 31-fsck.sh              Run fsck
 31-mount.sh             Mounts all early filesystem, also ZFS
@@ -38,8 +39,8 @@ tasks:
 41-mixer.sh             Restore soundcard mixer values
 41-nextboot.sh          Prune nextboot configuration
 41-rctl.sh              Apply resource limits from /etc/rctl.conf
-43-bhyve-network.sh     Create a bhyve0 bridge for networking for simple bhyve VMs
-43-jail-network.sh      Create a jail0 interface with an assigned network of
+44-bhyve-network.sh     Create a bhyve0 bridge for networking for simple bhyve VMs
+44-jail-network.sh      Create a jail0 interface with an assigned network of
                         192.168.95.0/24 to ease setting up jails
 51-pf.sh                Enable PF and load /etc/pf.conf
 99-cleanup.sh           Clean /tmp
@@ -50,7 +51,10 @@ tasks:
 
 The core services will be sourced in lexicographic order.  Users can
 insert their own core services in the right places by creating a file
-with an even number prefix.
+with an even number prefix.  `12-console.sh`, `30-geli.sh`,
+`44-bhyve-network.sh`, `44-jail-network.sh` are pre-existing
+user-editable files.  Odd numbered services should be treated as
+immutable and will be overwritten when updating `runit-faster`.
 
 Stage 2 will look up the runlevel in the `runit.runlevel` kenv and
 link `/usr/local/etc/runit/runsvdir/$runlevel` to `/var/service`.  It will then
@@ -312,8 +316,10 @@ power it off.
 # Jails
 
 `runit-faster` will create a `jail0` interface in the 192.168.95.0/24
-network by default.  The host gets IP 192.168.95.1.  You can use this
-to very quickly setup jails.
+network by default.  The host gets IP 192.168.95.1.  This can be used
+this to very quickly setup jails.  You can change the network and IP
+settings by editing
+`/usr/local/etc/runit/core-services/44-jail-network.sh`.
 
 Setup NAT in `/etc/pf.conf`
 ```
