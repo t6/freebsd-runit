@@ -1,0 +1,13 @@
+#!/bin/sh
+case "$1" in
+	0) # Certificates were changed
+	# Tell HTTP server to reload renewed certificates
+	#sv check jail-http > /dev/null || exit 0
+	#exec jexec http sv reload obhttpd
+	#exec jexec http sv reload nginx
+	;;
+	1) # Failure
+	;;
+	2) # Certificates didn't change
+	;;
+esac
