@@ -12,7 +12,6 @@
 .Op Fl u
 .Ar source target ...
 .Sh DESCRIPTION
-The following options are available:
 .Bl -tag -width indent
 .It Fl c
 Create new service stubs instead of cloning an existing service.
@@ -45,7 +44,7 @@ ln -s /usr/local/etc/sv/local/runsvdir-kate /var/service
 .Pp
 kate can now create, enable, and manage a user-level sndiod instance by herself:
 .Bd -literal -offset indent
-mkdir ~/.sv
+mkdir ~/.sv ~/service
 svclone -u /usr/local/etc/sv/sndiod ~/.sv/sndiod
 ln -s ~/.sv/sndiod ~/service
 .Ed
