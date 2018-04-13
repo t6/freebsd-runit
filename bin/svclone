@@ -18,8 +18,8 @@ create_services() {
 		printf "#!/bin/sh\n[ -r conf ] && . ./conf\nexec ${target##*/} \${OPTS}\n" > "${target}/run"
 		printf "#!/bin/sh\nexec logger -t ${target##*/}\n" > "${target}/log/run"
 		chmod 755 "${target}/run" "${target}/log/run"
-		ln -sf ${SUPERVISE_PREFIX}$(uuidgen) "${target}/supervise"
-		ln -sf ${SUPERVISE_PREFIX}$(uuidgen) "${target}/log/supervise"
+		ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${target}/supervise"
+		ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${target}/log/supervise"
 	done
 }
 
@@ -43,7 +43,7 @@ clone_services() {
 		tar -C "${source}" --exclude supervise --exclude '*~' -Lcf - . | tar -C "${target}" -xf -
 		find -d "${target}" -type d | while read file; do
 			if [ -x "${file}/run" ]; then
-				ln -sf ${SUPERVISE_PREFIX}$(uuidgen) "${file}/supervise"
+				ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${file}/supervise"
 			fi
 		done
 	done
@@ -61,7 +61,7 @@ regen_supervise() {
 		fi
 		find -d "${target}" -type d | while read file; do
 			if [ -x "${file}/run" ]; then
-				ln -sf ${SUPERVISE_PREFIX}$(uuidgen) "${file}/supervise"
+				ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${file}/supervise"
 			fi
 		done
 	done
