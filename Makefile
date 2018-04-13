@@ -33,8 +33,8 @@ install:
 .for i in 0 1 2
 	@${MKDIR} ${DESTDIR}${SVDIR}/dhclient-${netif}${i}/log
 	@cd ${DESTDIR}${SVDIR}/dhclient-${netif}${i} && \
-		${LN} -sf ../dhclient-sample/run && \
-		cd log && ${LN} -sf ../../dhclient-sample/log/run
+		${LN} -sf ../dhclient-template/run && \
+		cd log && ${LN} -sf ../../dhclient-template/log/run
 .endfor
 .endfor
 # Create convenient getty services for every terminal device that is

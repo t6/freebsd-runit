@@ -327,10 +327,10 @@ rdr pass on $ext_if proto tcp from any to $ext_if port { https, http } \
 	-> $jail_http_ip
 ```
 
-Clone `jail-sample` on the host:
+Clone `jail-template` on the host:
 ```
 mkdir /usr/local/etc/sv/local
-svclone /usr/local/etc/sv/jail-sample /usr/local/etc/sv/local/jail-http
+svclone /usr/local/etc/sv/jail-template /usr/local/etc/sv/local/jail-http
 ```
 
 Modify `/usr/local/etc/sv/local/jail-http/jail.conf` to suite your needs
