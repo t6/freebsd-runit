@@ -194,9 +194,7 @@ runit and the service will be restarted when `dhclient(8)` exits.  For
 this to work we have to make that sure that the interfaces are
 destroyed first should they already exist.
 
-It is assumed that `/etc/wpa_supplicant.conf` is already setup.  We
-assign interfaces to the `egress` group to make them easy to address
-in `/etc/pf.conf`.
+It is assumed that `/etc/wpa_supplicant.conf` is already setup.
 
 ```
 $ cat <<EOF > /usr/local/etc/sv/dhclient-lagg0/conf
@@ -205,11 +203,10 @@ ifconfig wlan0 destroy > /dev/null 2>&1 || true
 ifconfig lagg0 destroy > /dev/null 2>&1 || true
 
 ifconfig wlan0 create wlandev iwm0 country DE
-ifconfig wlan0 inet6 -ifdisabled accept_rtadv group egress up
-ifconfig re0 inet6 -ifdisabled accept_rtadv group egress up
+ifconfig wlan0 inet6 -ifdisabled accept_rtadv up
+ifconfig re0 inet6 -ifdisabled accept_rtadv up
 
 ifconfig lagg0 create laggproto failover laggport re0 laggport wlan0 up
-ifconfig lagg0 group egress
 EOF
 $ ln -s /usr/local/etc/sv/wpa_supplicant /var/service
 $ ln -s /usr/local/etc/sv/dhclient-lagg0 /var/service
