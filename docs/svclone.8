@@ -39,11 +39,11 @@ service to let kate run her own custom services (managed via
 when the system boots up:
 .Bd -literal -offset indent
 mkdir /usr/local/etc/sv/local
-svclone /usr/local/etc/sv/{runsvdir-template,local/runsvdir-kate}
+svclone /usr/local/etc/sv/{runsvdir-user-template,local/runsvdir-kate}
 ln -s /usr/local/etc/sv/local/runsvdir-kate /var/service
 .Ed
 .Pp
-Create and enable a user-level sndiod instance (as kate):
+kate can now create, enable, and manage a user-level sndiod instance by herself:
 .Bd -literal -offset indent
 mkdir ~/.sv
 svclone -u /usr/local/etc/sv/sndiod ~/.sv/sndiod
