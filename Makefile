@@ -11,7 +11,6 @@ TAR?=		tar
 
 LOCALBASE?=	/usr/local
 PREFIX?=	/usr/local
-MANPREFIX?=	${PREFIX}/man
 RUNITDIR?=	${PREFIX}/etc/runit
 SVDIR?=		${PREFIX}/etc/sv
 
@@ -24,8 +23,8 @@ all: docs
 install:
 	@${MKDIR} ${DESTDIR}${PREFIX}/bin ${DESTDIR}${RUNITDIR} ${DESTDIR}${SVDIR}
 	@${INSTALL_SCRIPT} bin/svclone ${DESTDIR}${PREFIX}/bin
-	@${MKDIR} ${DESTDIR}${MANPREFIX}/man8
-	@${INSTALL_MAN} docs/svclone.8 ${DESTDIR}${MANPREFIX}/man8
+	@${MKDIR} ${DESTDIR}${PREFIX}/man/man8
+	@${INSTALL_MAN} docs/svclone.8 ${DESTDIR}${PREFIX}/man/man8
 	@${TAR} -C runit --exclude .gitkeep -cf - . | ${TAR} -C ${DESTDIR}${RUNITDIR} -xf -
 	@${TAR} -C sv --exclude supervise -cf - . | ${TAR} -C ${DESTDIR}${SVDIR} -xf -
 	@${FIND} ${DESTDIR}${RUNITDIR} -type f -exec ${SED} -i '' \
