@@ -1,6 +1,7 @@
 FIND?=		find
 GIT?=		git
 GZIP_CMD?=	gzip
+INSTALL_MAN?=	install -m 444
 INSTALL_SCRIPT?=	install -m 555
 LN?=		ln
 MKDIR?=		mkdir -p
@@ -10,6 +11,7 @@ TAR?=		tar
 
 LOCALBASE?=	/usr/local
 PREFIX?=	/usr/local
+MANPREFIX?=	${PREFIX}/man
 RUNITDIR?=	${PREFIX}/etc/runit
 SVDIR?=		${PREFIX}/etc/sv
 
@@ -22,6 +24,8 @@ all: docs
 install:
 	@${MKDIR} ${DESTDIR}${PREFIX}/bin ${DESTDIR}${RUNITDIR} ${DESTDIR}${SVDIR}
 	@${INSTALL_SCRIPT} bin/svclone ${DESTDIR}${PREFIX}/bin
+	@${MKDIR} ${DESTDIR}${MANPREFIX}/man8
+	@${INSTALL_MAN} docs/svclone.8 ${DESTDIR}${MANPREFIX}/man8
 	@${TAR} -C runit --exclude .gitkeep -cf - . | ${TAR} -C ${DESTDIR}${RUNITDIR} -xf -
 	@${TAR} -C sv --exclude supervise -cf - . | ${TAR} -C ${DESTDIR}${SVDIR} -xf -
 	@${FIND} ${DESTDIR}${RUNITDIR} -type f -exec ${SED} -i '' \

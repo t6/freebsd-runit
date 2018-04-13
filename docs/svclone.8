@@ -1,0 +1,57 @@
+.Dd April 13, 2018
+.Dt SVCLONE 8
+.Os
+.Sh NAME
+.Nm svclone
+.Nd "clone Runit services"
+.Sh SYNOPSIS
+.Nm
+.Op Fl crsu
+.Ar svdir ...
+.Nm
+.Op Fl u
+.Ar source target ...
+.Sh DESCRIPTION
+The following options are available:
+.Bl -tag -width indent
+.It Fl c
+Create new service stubs instead of cloning an existing service.
+.It Fl r
+Remove supervise links from services.
+.It Fl s
+Regenerate and update all
+.Pa supervise
+links.
+.It Fl u
+Let created or updated supervise symlinks point into
+.Pa /var/run/runit/users/$USER
+instead of
+.Pa /var/run/runit .
+This is useful for user level services as users cannot normally write
+into
+.Pa /var/run/runit .
+.El
+.Sh EXAMPLES
+Create a user
+.Xr runsvdir 8
+service to let kate run her own custom services (managed via
+.Pa ~/service )
+when the system boots up:
+.Bd -literal -offset indent
+mkdir /usr/local/etc/sv/local
+svclone /usr/local/etc/sv/{runsvdir-template,local/runsvdir-kate}
+ln -s /usr/local/etc/sv/local/runsvdir-kate /var/service
+.Ed
+.Pp
+Create and enable a user-level sndiod instance (as kate):
+.Bd -literal -offset indent
+mkdir ~/.sv
+svclone -u /usr/local/etc/sv/sndiod ~/.sv/sndiod
+ln -s ~/.sv/sndiod ~/service
+.Ed
+.Sh SEE ALSO
+.Xr ln 1 ,
+.Xr runsvdir 8 ,
+.Xr sv 8
+.Sh AUTHORS
+.An Tobias Kortkamp Aq Mt tobik@FreeBSD.org
