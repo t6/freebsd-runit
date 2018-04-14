@@ -11,7 +11,7 @@ set -eu
 #
 : ${BHYVE:=/usr/sbin/bhyve}
 : ${BOOTROM:=/usr/local/share/uefi-firmware/BHYVE_UEFI.fd}
-: ${BRIDGE:=bhyve-bridge0}
+: ${BRIDGE:=bhyve0}
 : ${OPTS:=}
 
 name=${PWD##*-}
