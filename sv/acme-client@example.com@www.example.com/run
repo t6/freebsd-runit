@@ -1,2 +1,0 @@
-#!/bin/sh
-exec snooze -R 600 -H1 ./acme-client.sh

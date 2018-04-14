@@ -1,0 +1,6 @@
+#!/bin/sh
+# Copy this service and name it something like
+# acme-client@example.com@www.example.com@pkg.example.com
+# Where example.com is the domain to register with Let's Encrypt and
+# www.example.com and pkg.example.com are its altnames.
+exec snooze -R 600 -H1 ./acme-client.sh
