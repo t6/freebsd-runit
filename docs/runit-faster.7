@@ -1,0 +1,176 @@
+.Dd April 15, 2018
+.Dt RUNIT-FASTER 7
+.Os
+.Sh NAME
+.Nm runit-faster
+.Nd "Getting started"
+.Sh DESCRIPTION
+To be written...
+.Sh TEMPLATES
+All
+.Tn svclone
+commands are run in
+.Pa /usr/local/etc/sv
+to keep verbosity of the examples to a minimum.
+.Ss acme-client-template
+Clone the template and name the service directory after the domain and
+altname you want to create a certificate for:
+.Bd -literal -offset indent
+svclone acme-client-template \\
+	local/acme-client@example.com@www.example.com
+.Ed
+.Pp
+There must be one domain name and there can be many altnames separated
+by an @:
+.Bd -literal -offset indent
+acme-client@<domain>[@<altname>]*
+.Ed
+.Pp
+.Xr acme-client 1
+assumes that you have setup an HTTP server to respond to
+.Pa /.well-known/acme-challenge
+requests on the domain.
+By default the challenge dir is set to
+.Pa /usr/jails/http/usr/local/www/acme-client/example.com .
+.Pp
+This can be changed by creating
+.Pa conf
+in the service directory with
+.Bd -literal -offset indent
+CHALLENGEDIR=/path/to/challenge/dir
+.Ed
+.Pp
+Now run the service manually once to register a new account and create
+the domain keys
+.Bd -literal -offset indent
+(cd local/acme-client@example.com@www.example.com && \\
+	./acme-client.sh)
+.Ed
+.Pp
+This will create the following files:
+.Pa /usr/local/etc/ssl/example.com/cert.pem
+.Pa /usr/local/etc/ssl/example.com/chain.pem
+.Pa /usr/local/etc/ssl/example.com/fullchain.pem
+.Pa /usr/local/etc/ssl/example.com/private/example.com.pem
+.Pp
+Edit the
+.Pa finish
+script and find a way to inform your applications to reload the
+renewed certificates or maybe copy them into the right places.
+.Pp
+The service can now be enabled and will renew certificates at
+approximately 1 am every night automatically:
+.Bd -literal -offset indent
+ln -s ${PWD}/local/acme-client@example.com@www.example.com \\
+	/var/service
+.Ed
+.Pp
+To adjust the time this happens edit the
+.Pa run
+script.
+.Pp
+.Ss bhyve-template
+.Ss dhclient-template
+.Ss jail-template
+If you are using runit-faster as PID 1 it will automaitcally create a
+jail0 interface in the 192.168.95.0/24 network.  The host gets IP
+192.168.95.1.  This can be used this to very quickly setup jails.  You
+can change the network and IP settings by editing
+.Pa /usr/local/etc/runit/core-services/44-jail-network.sh .
+.Pp
+For vanilla
+.Xr rc 8
+systems this can be replicated via
+.Pa /etc/rc.conf :
+.Bd -literal -offset indent
+TODO
+pf_enable="YES"
+.Ed
+.Pp
+Setup NAT in
+.Pa /etc/pf.conf :
+.Bd -literal -offset indent
+jail_http_ip = 192.168.95.2
+
+nat pass on $ext_if from runit-jail:network to any -> $ext_if
+rdr pass on $ext_if proto tcp from any to $ext_if \\
+	port { https, http } -> $jail_http_ip
+.Ed
+
+Clone the template on the host:
+.Bd -literal -offset indent
+svclone jail-template local/jail-http
+.Ed
+.Pp
+Modify
+.Pa local/jail-http/jail.conf
+to suite your needs
+.Bd -literal -offset indent
+http {
+	path = /usr/jails/$name;
+	host.hostname = $name.example.com;
+	mount.devfs;
+	mount.fstab = "/var/service/jail-$name/fstab";
+	exec.start = "/usr/local/etc/runit/jail start";
+	exec.stop = "/usr/local/etc/runit/jail stop";
+	ip4.addr = "jail0|192.168.95.2/24";
+}
+.Ed
+.Pp
+If you change
+.Pa path
+in
+.Pa jail.conf
+from the default also make sure to set it in
+.Pa local/jail-http/conf
+as well:
+.Bd -literal -offset indent
+ROOT=/path/to/jail
+.Ed
+.Pp
+Setup a basic jail with your favourite method e.g.
+.Bd -literal -offset indent
+bsdinstall jail /usr/jails/http
+freebsd-update -b /usr/jails/http fetch
+freebsd-update -b /usr/jails/http update
+.Ed
+.Pp
+Install and enable nginx and runit-faster in the jail
+.Bd -literal -offset indent
+pkg -c /usr/jails/http install nginx runit-faster
+ln -s /usr/local/etc/sv/nginx \\
+	/usr/jails/http/usr/local/etc/runit/runsvdir/default
+.Ed
+.Pp
+Finally enable the jail on the host
+.Bd -literal -offset indent
+ln -s ${PWD}/local/jail-http /var/service
+.Ed
+.Ss kore-template
+.Ss runsvdir-user-template
+Create a user
+.Xr runsvdir 8
+service to let kate run her own custom services
+(managed via
+.Pa ~/service )
+when the system boots up:
+.Bd -literal -offset indent
+svclone runsvdir-user-template local/runsvdir-kate
+ln -s ${PWD}/local/runsvdir-kate /var/service
+.Ed
+.Pp
+kate can now create, enable, and manage a user-level sndiod instance by
+herself:
+.Bd -literal -offset indent
+mkdir ~/.sv ~/service
+svclone -u /usr/local/etc/sv/sndiod ~/.sv/sndiod
+ln -s ~/.sv/sndiod ~/service
+.Ed
+.Ss webcamd-template
+.Sh SEE ALSO
+.Xr acme-client 1 ,
+.Xr snooze 1 ,
+.Xr sv 8 ,
+.Xr svclone 8
+.Sh AUTHORS
+.An Tobias Kortkamp Aq Mt tobik@FreeBSD.org
