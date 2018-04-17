@@ -13,6 +13,7 @@ LOCALBASE?=	/usr/local
 PREFIX?=	/usr/local
 RUNITDIR?=	${PREFIX}/etc/runit
 SVDIR?=		${PREFIX}/etc/sv
+SVDIR_REL!=	echo ${SVDIR} | ${SED} 's@[^/]*@..@g'
 
 GETTYSV=	ttyv0 ttyv2 ttyv3 ttyv4 ttyv5 ttyv6 ttyv7 ttyv8
 GETTYSU=	ttyu0 ttyu1 ttyu2 ttyu3
@@ -56,7 +57,7 @@ install:
 	@cd ${DESTDIR}${SVDIR} && ${FIND} -d . -type d -exec /bin/sh -euc '\
 		dir=$${1#./*}; \
 		[ "$${dir}" = "." ] && exit 0; \
-		${LN} -sf /var/run/runit/supervise.$$(echo $${dir} | ${SED} "s,/,-,g") \
+		${LN} -sf ${SVDIR_REL}/var/run/runit/supervise.$$(echo $${dir} | ${SED} "s,/,-,g") \
 			$${dir}/supervise' \
 		SUPERVISE {} \;
 

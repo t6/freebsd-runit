@@ -30,6 +30,12 @@ This is useful for user level services as users cannot normally write
 into
 .Pa /var/run/runit .
 .El
+.Pp
+The
+.Pa supervise
+symlinks are all created as relative symlinks.
+After moving a service you must regenerate them so that they point
+into a valid location.
 .Sh EXAMPLES
 Create a user
 .Xr runsvdir 8
@@ -47,6 +53,13 @@ kate can now create, enable, and manage a user-level sndiod instance by herself:
 mkdir ~/.sv ~/service
 svclone -u /usr/local/etc/sv/sndiod ~/.sv/sndiod
 ln -s ~/.sv/sndiod ~/service
+.Ed
+.Pp
+After moving an existing service to a new parent directory the
+relative supervise symlink will point to nowhere.
+Make sure to update and regenerate it afterwards.
+.Bd -literal -offset indent
+svclone -s /usr/local/etc/sv/local/my-service
 .Ed
 .Sh SEE ALSO
 .Xr ln 1 ,

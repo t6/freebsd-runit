@@ -7,6 +7,16 @@ is_service() {
 	[ -x "$1/run" ]
 }
 
+relpath() {
+	echo "$(/bin/realpath "$1")" | sed 's@[^/]*@..@g'
+}
+
+mk_supervise() {
+	local target
+	target="$1"
+	ln -sf "$(relpath "${target}")${SUPERVISE_PREFIX}$(uuidgen)" "${target}/supervise"
+}
+
 create_services() {
 	local target
 	for target in "$@"; do
@@ -18,8 +28,8 @@ create_services() {
 		printf "#!/bin/sh\n[ -r conf ] && . ./conf\nexec ${target##*/} \${OPTS}\n" > "${target}/run"
 		printf "#!/bin/sh\nexec logger -t ${target##*/}\n" > "${target}/log/run"
 		chmod 755 "${target}/run" "${target}/log/run"
-		ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${target}/supervise"
-		ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${target}/log/supervise"
+		mk_supervise "${target}"
+		mk_supervise "${target}/log"
 	done
 }
 
@@ -43,7 +53,7 @@ clone_services() {
 		tar -C "${source}" --exclude supervise --exclude '*~' -Lcf - . | tar -C "${target}" -xf -
 		find -d "${target}" -type d | while read file; do
 			if [ -x "${file}/run" ]; then
-				ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${file}/supervise"
+				mk_supervise "${file}"
 			fi
 		done
 	done
@@ -61,7 +71,7 @@ regen_supervise() {
 		fi
 		find -d "${target}" -type d | while read file; do
 			if [ -x "${file}/run" ]; then
-				ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${file}/supervise"
+				mk_supervise "${file}"
 			fi
 		done
 	done
