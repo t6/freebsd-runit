@@ -38,6 +38,10 @@ emergency_shell() {
 	if [ -n "${JAILED}" ]; then
 		exit 1
 	fi
+	# Try and load the USB keyboard driver in case
+	# it's not yet loaded.  This can e.g. be the case when
+	# using a modular kernel.
+	kldload -n uhci xhci ohci ehci ukbd > /dev/null 2>&1 || true
 	echo
 	echo "Cannot continue due to errors above, starting emergency shell."
 	echo "When ready type exit to continue booting."
