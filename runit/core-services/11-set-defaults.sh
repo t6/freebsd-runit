@@ -8,7 +8,7 @@
 # - Turn off console bell
 if [ -z "${JAILED}" ]; then
 	msg "Setting system defaults"
-	kldload cc_cubic > /dev/null 2>&1 || true
+	kldload -n cc_cubic > /dev/null 2>&1 || true
 	sysctl \
 		net.inet.tcp.cc.algorithm=cubic \
 		security.bsd.see_other_gids=0 \

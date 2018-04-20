@@ -3,13 +3,7 @@
 
 msg "Updating CPU microcode"
 
-if ! kldstat -q -m cpuctl; then
-	if ! kldload cpuctl > /dev/null 2>&1; then
-		msg_error "Can't load cpuctl module"
-		emergency_shell
-	fi
-fi
-
+kldload -n cpuctl || emergency_shell
 for i in $(jot $(sysctl -n hw.ncpu) 0); do
 	cpucontrol -u -d /usr/local/share/cpucontrol \
 		/dev/cpuctl${i} 2>&1 \

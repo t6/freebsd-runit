@@ -5,7 +5,7 @@ if [ -r /usr/local/etc/runit/modules ]; then
 	while read kld; do
 		case "${kld}" in
 		\#*|'') ;;
-		*) kldload "${kld}" ;;
+		*) kldload -n "${kld}" ;;
 		esac
 	done < /usr/local/etc/runit/modules
 fi
