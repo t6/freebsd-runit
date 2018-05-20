@@ -1,0 +1,5 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${OPTS:=--config /usr/local/etc/kadnode/kadnode.conf}
+exec 2>&1
+exec /usr/local/bin/kadnode ${OPTS}
