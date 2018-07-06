@@ -1,37 +1,13 @@
 msg() {
-	if [ -z "${JAILED}" ]; then
-		# bold
-		printf "\033[1m=> $@\033[m\n"
-	else
-		printf "=> $@\n"
-	fi
-}
-
-msg_ok() {
-	if [ -z "${JAILED}" ]; then
-		# bold/green
-		printf "\033[1m\033[32m OK\033[m\n"
-	else
-		printf " OK\n"
-	fi
+	printf "=> $@\n"
 }
 
 msg_error() {
-	if [ -z "${JAILED}" ]; then
-		# bold/red
-		printf "\033[1m\033[31mERROR: $@\033[m\n"
-	else
-		printf "ERROR: $@\n"
-	fi
+	printf "ERROR: $@\n"
 }
 
 msg_warn() {
-	if [ -z "${JAILED}" ]; then
-		# bold/yellow
-		printf "\033[1m\033[33mWARNING: $@\033[m\n"
-	else
-		printf "WARNING: $@\n"
-	fi
+	printf "WARNING: $@\n"
 }
 
 emergency_shell() {
