@@ -21,5 +21,3 @@ done
 if [ -z "${JAILED}" ]; then
 	( umask 022 ; /sbin/dmesg > /var/run/dmesg.boot )
 fi
-
-msg "Initialization complete, running stage 2"
