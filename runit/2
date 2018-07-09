@@ -17,9 +17,6 @@ elif [ -n "${RUNLEVEL}" ]; then
 		echo "Runlevel detected via environment: '${RUNLEVEL}'"
 		runlevel="${RUNLEVEL}"
 	fi
-elif [ -d /usr/local/etc/runit/runsvdir/"$(hostname)" ]; then
-	runlevel="$(hostname)"
-	echo "Runlevel detected via host name: '${runlevel}'"
 fi
 
 [ -x /usr/local/etc/runit/local ] && /usr/local/etc/runit/local
