@@ -8,7 +8,7 @@ if [ -e /var/run/runit/reboot ]; then
 	chmod 100 /var/run/runit/reboot
 fi
 
-echo
+reset -Q
 msg "Waiting for services to stop"
 sv force-stop /var/service/*
 sv exit /var/service/*
