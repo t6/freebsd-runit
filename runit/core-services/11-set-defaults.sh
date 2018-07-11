@@ -38,4 +38,5 @@ if [ -z "${JAILED}" ]; then
 fi
 
 msg "Loading /etc/sysctl.conf"
-[ -e /etc/sysctl.conf ] && sysctl -qf /etc/sysctl.conf > /dev/null
+[ -r /etc/sysctl.conf ] && sysctl -qf /etc/sysctl.conf > /dev/null
+[ -r /etc/sysctl.conf.local ] && sysctl -qf /etc/sysctl.conf.local > /dev/null
