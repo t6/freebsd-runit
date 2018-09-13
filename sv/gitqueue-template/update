@@ -1,0 +1,59 @@
+#!/bin/sh
+set -eu
+[ -r conf ] && . ./conf
+
+: ${GIT:=/usr/local/bin/git}
+: ${LOGGER:=/usr/bin/logger}
+: ${NQ:=/usr/local/bin/nq}
+: ${NQDIR:=/var/db/gitqueue}
+
+export NQDIR
+
+# While runit takes care of logging output from a service, it won't
+# see output from nq-ed jobs, so log messages directly.
+_err() {
+	${LOGGER} -t gitqueue "[${NQJOBID:=-}] $@"
+	exit 1
+}
+
+_msg() {
+	${LOGGER} -t gitqueue "[${NQJOBID:=-}] $@"
+}
+
+_nq() {
+	${NQ} -c -q "$@"
+}
+
+_repo_needs_update() {
+	local_commit=$(${GIT} -C "$1" rev-parse "$2")
+	remote_commit=$(${GIT} -C "$1" ls-remote origin "$2")
+	[ ! "${local_commit}" = "$(echo ${remote_commit} | awk '{ print $1 }')" ]
+}
+
+_update_repo() {
+	_status=$(${GIT} -C "$1" status --porcelain)
+	if [ ! -z  "${_status}" ]; then
+		_msg "$1 is dirty.  Skipping this update."
+		echo "${_status}" | while read line; do
+			_msg "${line}"
+		done
+		exit 1
+	fi
+
+	_msg "Updating ${}"
+	${GIT} -C "$1" checkout -q "$2"
+	${GIT} -C "$1" fetch -q origin
+	${GIT} -C "$1" reset -q --hard "origin/$2"
+}
+
+# Check again at a later time if a previous build is still running
+_nq -t || exit 0
+
+_repo_needs_update "${repo_path}" "${branch}" || exit 0
+_update_repo "${repo_path}" "${branch}"
+if [ -x "${repo_path}/.gitqueue.d/run" ]; then
+	cd "${repo_path}"
+	_nq "${repo_path}/.gitqueue.d/run"
+fi
+
+exit 0
