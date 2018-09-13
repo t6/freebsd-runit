@@ -24,6 +24,15 @@ emergency_shell() {
 	/bin/sh -p
 }
 
+check_arch() {
+	for arch in "$@"; do
+		if [ "$(sysctl -n hw.machine_arch)" = "${arch}" ]; then
+			return 0
+		fi
+	done
+	return 1
+}
+
 check_osver_major() {
 	local ver
 	ver=$(/bin/freebsd-version -u)
