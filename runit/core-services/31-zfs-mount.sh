@@ -1,5 +1,5 @@
 # No ZFS support on FreeBSD/powerpc
-check_arch powerpc || return 0
+check_arch powerpc && return 0
 
 if [ -z "${JAILED}" ]; then
 	msg "Mounting ZFS datasets"
