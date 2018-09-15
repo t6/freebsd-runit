@@ -16,7 +16,6 @@ SVDIR?=		${PREFIX}/etc/sv
 
 GETTYSV=	ttyv0 ttyv2 ttyv3 ttyv4 ttyv5 ttyv6 ttyv7 ttyv8
 GETTYSU=	ttyu0 ttyu1 ttyu2 ttyu3
-NETIFS=		bge bridge em fxp gem igb lagg re rl vtnet wlan
 
 all: docs
 
@@ -32,14 +31,6 @@ install:
 		-e 's,//etc,/etc,' \
 		-e 's,/usr/local,${LOCALBASE},g' {} \;
 	@${FIND} ${DESTDIR}${SVDIR} -type f -exec ${SED} -i '' -e 's,/usr/local/,${LOCALBASE}/,g' {} \;
-.for netif in ${NETIFS}
-.for i in 0 1 2
-	@${MKDIR} ${DESTDIR}${SVDIR}/dhclient-${netif}${i}/log
-	@cd ${DESTDIR}${SVDIR}/dhclient-${netif}${i} && \
-		${LN} -sf ../dhclient-template/run && \
-		cd log && ${LN} -sf ../../dhclient-template/log/run
-.endfor
-.endfor
 # Create convenient getty services for every terminal device that is
 # by default in /etc/ttys
 .for tty in ${GETTYSV} ${GETTYSU}
