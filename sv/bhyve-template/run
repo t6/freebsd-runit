@@ -14,7 +14,7 @@ set -eu
 : ${BRIDGE:=bhyve0}
 : ${OPTS:=}
 
-name=${PWD##*-}
+name=${PWD##*@}
 
 if ! ifconfig ${BRIDGE} > /dev/null 2>&1; then
 	ifconfig bridge create name ${BRIDGE} group runit-managed up

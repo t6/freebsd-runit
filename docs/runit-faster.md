@@ -330,16 +330,16 @@ rdr pass on $ext_if proto tcp from any to $ext_if port { https, http } \
 Clone `jail-template` on the host:
 ```
 mkdir /usr/local/etc/sv/local
-svclone /usr/local/etc/sv/jail-template /usr/local/etc/sv/local/jail-http
+svclone /usr/local/etc/sv/jail-template /usr/local/etc/sv/local/jail@http
 ```
 
-Modify `/usr/local/etc/sv/local/jail-http/jail.conf` to suite your needs
+Modify `/usr/local/etc/sv/local/jail@http/jail.conf` to suite your needs
 ```
 http {
 	path = /usr/jails/$name;
 	host.hostname = $name.example.com;
 	mount.devfs;
-	mount.fstab = "/var/service/jail-$name/fstab";
+	mount.fstab = "/var/service/jail@$name/fstab";
 	exec.start = "/usr/local/etc/runit/jail start";
 	exec.stop = "/usr/local/etc/runit/jail stop";
 	ip4.addr = "jail0|192.168.95.2/24";
@@ -347,7 +347,7 @@ http {
 ```
 
 If you change `path` in `jail.conf` from the default also make sure to set it in
-`/usr/local/etc/sv/local/jail-example/conf` as well:
+`/usr/local/etc/sv/local/jail@http/conf` as well:
 ```
 ROOT=/path/to/jail
 ```
@@ -367,7 +367,7 @@ done
 
 Finally enable the jail on the host
 ```
-ln -s /usr/local/etc/sv/local/jail-http /var/service
+ln -s /usr/local/etc/sv/local/jail@http /var/service
 ```
 
 # If things go wrong...

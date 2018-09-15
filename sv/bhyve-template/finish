@@ -2,7 +2,7 @@
 set -eu
 [ -r conf ] && . ./conf
 : ${BHYVECTL:=/usr/sbin/bhyvectl}
-name=${PWD##*-}
+name=${PWD##*@}
 [ -r /dev/vmm/${name} ] && ${BHYVECTL} --vm=${name} --destroy
 for intf in $(ifconfig -g bhyve-${name}); do
 	ifconfig ${intf} destroy

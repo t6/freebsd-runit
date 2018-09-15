@@ -1,5 +1,5 @@
 #!/bin/sh
-USER=${PWD##*-}
+USER=${PWD##*@}
 exec 2>&1
 install -d -m 755 -o root -g wheel /var/run/runit/users
 install -d -m 700 -o ${USER%%:*} /var/run/runit/users/${USER%%:*}

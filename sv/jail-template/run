@@ -3,7 +3,7 @@
 # This assumes that the jail is configured to run /etc/runit/jail via
 # exec.start or command, or another command that doesn't fork into the
 # background.
-name=${PWD##*-}
+name=${PWD##*@}
 : ${ROOT:=/usr/jails/${name}}
 : ${CONFIG:=${PWD}/jail.conf}
 mkdir -p ${ROOT}/var/run
