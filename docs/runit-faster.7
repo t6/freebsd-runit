@@ -6,13 +6,20 @@
 .Nd "Getting started"
 .Sh DESCRIPTION
 To be written...
-.Sh TEMPLATES
+.Sh SERVICE TEMPLATES
+.Nm
+provides several service templates to get you started quickly.
+.Pp
 All
-.Tn svclone
+.Xr svclone 8
 commands are run in
 .Pa /usr/local/etc/sv
 to keep verbosity of the examples to a minimum.
 .Ss acme-client-template
+This service provides an easy way to setup the
+.Pa security/acme-client
+Let's Encrypt client.
+.Pp
 Clone the template and name the service directory after the domain and
 altname you want to create a certificate for:
 .Bd -literal -offset indent
@@ -71,11 +78,28 @@ script.
 .Pp
 .Ss bhyve-template
 .Ss dhclient-template
+A service to run
+.Xr dhclient 8
+on a specific interface.
+The interface needs to be part of the service name:
+.Bd -literal -offset indent
+dhclient-<interface>
+.Ed
+.Pp
+Example 1: Create a new dhclient service for the
+.Pa em0
+interface and enable it.
+.Bd -literal -offset indent
+svclone dhclient-template local/dhclient@em0
+ln -s ${PWD}/local/dhclient@em0 /var/service
+.Ed
+.Pp
 .Ss jail-template
-If you are using runit-faster as PID 1 it will automaitcally create a
-jail0 interface in the 192.168.95.0/24 network.  The host gets IP
-192.168.95.1.  This can be used this to very quickly setup jails.  You
-can change the network and IP settings by editing
+If you are using runit-faster as PID 1 it will automatically create a
+jail0 interface in the 192.168.95.0/24 network.
+The host gets IP 192.168.95.1.
+This can be used this to quickly setup jails.
+You can change the network and IP settings by editing
 .Pa /usr/local/etc/runit/core-services/44-jail-network.sh .
 .Pp
 For vanilla
@@ -96,21 +120,21 @@ nat pass on $ext_if from runit-jail:network to any -> $ext_if
 rdr pass on $ext_if proto tcp from any to $ext_if \\
 	port { https, http } -> $jail_http_ip
 .Ed
-
+.Pp
 Clone the template on the host:
 .Bd -literal -offset indent
-svclone jail-template local/jail-http
+svclone jail-template local/jail@http
 .Ed
 .Pp
 Modify
-.Pa local/jail-http/jail.conf
+.Pa local/jail@http/jail.conf
 to suite your needs
 .Bd -literal -offset indent
 http {
 	path = /usr/jails/$name;
 	host.hostname = $name.example.com;
 	mount.devfs;
-	mount.fstab = "/var/service/jail-$name/fstab";
+	mount.fstab = "/var/service/jail@$name/fstab";
 	exec.start = "/usr/local/etc/runit/jail start";
 	exec.stop = "/usr/local/etc/runit/jail stop";
 	ip4.addr = "jail0|192.168.95.2/24";
@@ -122,7 +146,7 @@ If you change
 in
 .Pa jail.conf
 from the default also make sure to set it in
-.Pa local/jail-http/conf
+.Pa local/jail@http/conf
 as well:
 .Bd -literal -offset indent
 ROOT=/path/to/jail
@@ -144,7 +168,7 @@ ln -s /usr/local/etc/sv/nginx \\
 .Pp
 Finally enable the jail on the host
 .Bd -literal -offset indent
-ln -s ${PWD}/local/jail-http /var/service
+ln -s ${PWD}/local/jail@http /var/service
 .Ed
 .Ss kore-template
 .Ss runsvdir-user-template
