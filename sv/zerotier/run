@@ -1,0 +1,4 @@
+#!/bin/sh
+kldload if_tap > /dev/null 2>&1 || true
+[ -r conf ] && . ./conf
+exec /usr/local/sbin/zerotier-one ${OPTS}
