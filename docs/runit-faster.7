@@ -38,7 +38,7 @@ assumes that you have setup an HTTP server to respond to
 .Pa /.well-known/acme-challenge
 requests on the domain.
 By default the challenge dir is set to
-.Pa /usr/jails/http/usr/local/www/acme-client/example.com .
+.Pa /usr/jails/http/usr/local/www/acme-client/<domain> .
 .Pp
 This can be changed by creating
 .Pa conf
@@ -47,7 +47,7 @@ in the service directory with
 CHALLENGEDIR=/path/to/challenge/dir
 .Ed
 .Pp
-Now run the service manually once to register a new account and create
+Run the service manually once to register a new account and create
 the domain keys
 .Bd -literal -offset indent
 (cd local/acme-client@example.com@www.example.com && \\
@@ -72,29 +72,92 @@ ln -s ${PWD}/local/acme-client@example.com@www.example.com \\
 	/var/service
 .Ed
 .Pp
-To adjust the time this happens edit the
+The time can be adjusted by editing the
 .Pa run
 script.
 .Pp
 .Ss bhyve-template
+Service template to create simple
+.Nm runit-faster
+managed VMs.
+.Pp
+.Bd -literal -offset indent
+svclone bhyve-template local/bhyve@openbsd63
+.Ed
+.Pp
+Additionally you must create
+.Pa conf
+in the service directory to set some needed VM parameters:
+.Bl -column
+.It BRIDGE: Assign VM to this bridge, defaults to
+.Pa bhyve0
+.It CPUS: Number of virtual CPUs
+.It DISK: Path to the disk device to use
+.It MEM: Guest memory size
+.It OPTS: Additional arguments to pass to
+.Xr bhyve 8
+.El
+.Pp
+The VM is automatically assigned a
+.Xr tap 4
+network interface which is added to the
+.Pa bhyve0
+bridge, to the
+.Pa runit-managed
+interface group, and to an interface group named after the VM.
+.Pp
+List all interfaces auto-assigned to the
+.Pa openbsd63
+VM:
+.Bd -literal -offset indent
+$ ifconfig -g openbsd63
+tap0
+.Ed
+.Pp
+If you are using
+.Nm
+as PID 1, it is automatically created at boot.
+Assign your outgoing interface to this bridge to provide
+some network connectivity to the VM.
+.Pp
+For vanilla
+.Xr rc 8
+systems this can be replicated via
+.Pa /etc/rc.conf :
+.Bd -literal -offset indent
+TODO
+.Ed
+.Pp
+Finally enable the service
+.Bd -literal -offset indent
+ln -s ${PWD}/local/bhyve@openbsd63 /var/service
+.Ed
+.Pp
+The VM is automatically restarted when it shuts down.
+.Pp
 .Ss dhclient-template
-A service to run
+Service to run
 .Xr dhclient 8
 on a specific interface.
+.Pp
 The interface needs to be part of the service name:
 .Bd -literal -offset indent
 dhclient-<interface>
 .Ed
 .Pp
-Example 1: Create a new dhclient service for the
+Create a new dhclient service for the
 .Pa em0
-interface and enable it.
+interface and enable it:
 .Bd -literal -offset indent
 svclone dhclient-template local/dhclient@em0
 ln -s ${PWD}/local/dhclient@em0 /var/service
 .Ed
 .Pp
 .Ss jail-template
+Service template to create
+.Nm
+managed jails.
+.Pp
 If you are using runit-faster as PID 1 it will automatically create a
 jail0 interface in the 192.168.95.0/24 network.
 The host gets IP 192.168.95.1.
@@ -152,7 +215,7 @@ as well:
 ROOT=/path/to/jail
 .Ed
 .Pp
-Setup a basic jail with your favourite method e.g.
+Setup a basic jail with your favourite method, e.g.
 .Bd -literal -offset indent
 bsdinstall jail /usr/jails/http
 freebsd-update -b /usr/jails/http fetch
