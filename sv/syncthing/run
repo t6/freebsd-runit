@@ -1,0 +1,13 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${HOME:="/usr/local/etc/syncthing"}
+: ${USER:="syncthing"}
+: ${GROUP:="syncthing"}
+if [ ! -e ${HOME} ] ; then
+	install -d -o ${USER} -g ${GROUP} ${HOME}
+fi
+export USER
+export HOME
+exec 2>&1
+exec chpst -u ${USER}:${GROUP} \
+	/usr/local/bin/syncthing -home="${HOME}" ${OPTS}

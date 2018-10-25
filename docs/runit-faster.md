@@ -120,6 +120,9 @@ or in `/usr/local/etc/runit/hostname`:
 $ echo my-hostname > /usr/local/etc/runit/hostname
 ```
 
+The keyboard layout has to be set via a core service like `12-console.sh` (see below
+in "Console keyboard layout and font setup").
+
 `kld_list` for loading kernel modules should be migrated to
 `/usr/local/etc/runit/modules`.  They will be loaded as a first step
 when the system initializes.
@@ -268,7 +271,7 @@ kernel modules
 
 ```
 $ cat <<EOF > /usr/local/etc/runit/core-services/12-console.sh
-kdbcontrol -l us < /dev/ttyv0
+kbdcontrol -l us < /dev/ttyv0
 for ttyv in /dev/ttyv*; do
 	vidcontrol -f terminus-b32 < ${ttyv} > ${ttyv}
 done
