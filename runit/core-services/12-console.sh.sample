@@ -1,4 +1,6 @@
 [ -n "${JAILED}" ] && return 0
+# Uncomment to set a keyboard layout
+#kbdcontrol -l us < /dev/ttyv0
 # Uncomment to use terminus-b32 font for all virtual terminals
 #for ttyv in /dev/ttyv*; do
 #	vidcontrol -f terminus-b32 < ${ttyv} > ${ttyv}
