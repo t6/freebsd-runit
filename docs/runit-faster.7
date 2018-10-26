@@ -21,23 +21,26 @@ Load kernel modules
 Set some system defaults.
 .It Sy 12-console.sh
 Console setup (fonts, keymap, ...)
-.It Sy 21-swap.sh
-Enable swap.
 .It Sy 30-geli.sh
 Decrypt GELI devices.
-.It Sy 31-enable-dumpdev.sh
-Set the dump device.
 .It Sy 31-fsck.sh
 Run fsck.
 .It Sy 31-mount.sh
 Mount all early filesystem.
 .It Sy 31-zfs-mount.sh
 Mount ZFS datasets.
-.It Sy 33-microcode_update.sh
-Update CPU microcode if sysutils/devcpu-data is installed
-.It Sy 33-var.sh
+.It Sy 33-init-var.sh
 Initialize
 .Pa /var .
+.It Sy 33-microcode_update.sh
+Update CPU microcode if sysutils/devcpu-data is installed
+.It Sy 33-savecore.sh
+Run
+.Xr savecore 8 .
+.It Sy 33-set-dumpdev.sh
+Set the dump device.
+.It Sy 33-swap.sh
+Enable swap.
 .It Sy 41-devfs-rules.sh
 Load
 .Xr devfs 8
