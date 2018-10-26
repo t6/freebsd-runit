@@ -1,11 +1,9 @@
-.Dd April 15, 2018
+.Dd October 26, 2018
 .Dt RUNIT-FASTER 7
 .Os
 .Sh NAME
 .Nm runit-faster
 .Nd "Getting started"
-.Sh DESCRIPTION
-To be written...
 .Sh SERVICE TEMPLATES
 .Nm
 provides several service templates to get you started quickly.
@@ -75,12 +73,10 @@ ln -s ${PWD}/local/acme-client@example.com@www.example.com \\
 The time can be adjusted by editing the
 .Pa run
 script.
-.Pp
 .Ss bhyve-template
 Service template to create simple
 .Nm runit-faster
 managed VMs.
-.Pp
 .Bd -literal -offset indent
 svclone bhyve-template local/bhyve@openbsd63
 .Ed
@@ -134,7 +130,6 @@ ln -s ${PWD}/local/bhyve@openbsd63 /var/service
 .Ed
 .Pp
 The VM is automatically restarted when it shuts down.
-.Pp
 .Ss dhclient-template
 Service to run
 .Xr dhclient 8
@@ -152,7 +147,6 @@ interface and enable it:
 svclone dhclient-template local/dhclient@em0
 ln -s ${PWD}/local/dhclient@em0 /var/service
 .Ed
-.Pp
 .Ss jail-template
 Service template to create
 .Nm
@@ -215,7 +209,7 @@ as well:
 ROOT=/path/to/jail
 .Ed
 .Pp
-Setup a basic jail with your favourite method, e.g.
+Setup a basic jail with your favourite method e.g.,
 .Bd -literal -offset indent
 bsdinstall jail /usr/jails/http
 freebsd-update -b /usr/jails/http fetch
