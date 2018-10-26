@@ -1,5 +1,7 @@
 [ -n "$JAILED" ] && return 0
 
+msg "Loading devfs rules"
+
 awk 'BEGIN {
 	FS="="
 	ruleset_num = -1
@@ -29,4 +31,4 @@ END {
 		print "devfs ruleset $runit_devfs_rules"
 		print "devfs rule applyset"
 	}
-}' /etc/defaults/devfs.rules /etc/devfs.rules | sh
+}' /etc/defaults/devfs.rules $([ -r /etc/devfs.rules ] && echo /etc/devfs.rules) | sh
