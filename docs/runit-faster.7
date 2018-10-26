@@ -340,8 +340,8 @@ service to let kate run her own custom services
 .Pa ~/service )
 when the system boots up:
 .Bd -literal -offset indent
-svclone runsvdir-user-template local/runsvdir-kate
-ln -s ${PWD}/local/runsvdir-kate /var/service
+svclone runsvdir-user-template local/runsvdir@kate
+ln -s ${PWD}/local/runsvdir@kate /var/service
 .Ed
 .Pp
 kate can now create, enable, and manage a user-level sndiod instance by
