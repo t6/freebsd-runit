@@ -33,11 +33,11 @@ check_arch() {
 	return 1
 }
 
-check_osver_major() {
-	local ver
-	ver=$(/bin/freebsd-version -u)
-	ver=${ver%.*}
-	[ "${ver}" -eq "$1" ]
+kernel_has_feature() {
+	if [ "$(sysctl -qn kern.features.$1)" = "1" ]; then
+		return 0
+	fi
+	return 1
 }
 
 detect_jail() {

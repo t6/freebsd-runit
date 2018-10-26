@@ -8,9 +8,9 @@ dumpon_try()
 {
 	local flags
 
-	if check_osver_major 12; then
-		# On FreeBSD 12 encrypt dump and compress with ZSTD
-		/sbin/dumpon -k /etc/dumppubkey -Z "${1}"
+	# Encrypt dump if supported
+	if [ -r /etc/dumppubkey ] && kernel_has_feature ekcd; then
+		/sbin/dumpon -k /etc/dumppubkey "${1}"
 	else
 		/sbin/dumpon "${1}"
 	fi
