@@ -17,53 +17,7 @@ usage.
 
 # System initialization
 
-Runit initializes the system in two stages.  The first stage will run
-a bunch of core services (`/usr/local/etc/runit/core-services`), one time system
-tasks:
-```
-11-kld.sh               Loads kernel modules
-11-set-defaults.sh      Sets some system defaults
-12-console.sh           Console setup (fonts, keymap, ...)
-21-swap.sh              Enables swap
-30-geli.sh              Decrypt GELI devices
-31-enable-dumpdev.sh    Set the dump device 
-31-fsck.sh              Run fsck
-31-mount.sh             Mounts all early filesystem, also ZFS
-33-microcode_update.sh  Update CPU microcode if sysutils/devcpu-data is installed
-33-var.sh               Make sure that /var has the right structure
-41-entropy.sh           Initialize the entropy harvester
-41-hostid.sh            Generate a hostid
-41-hostname.sh          Sets the hostname
-41-ldconfig.sh          Sets up the shared library cache
-41-loopback.sh          Create lo0
-41-mixer.sh             Restore soundcard mixer values
-41-nextboot.sh          Prune nextboot configuration
-41-rctl.sh              Apply resource limits from /etc/rctl.conf
-44-bhyve-network.sh     Create a bhyve0 bridge for networking for simple bhyve VMs
-44-jail-network.sh      Create a jail0 interface with an assigned network of
-                        192.168.95.0/24 to ease setting up jails
-51-pf.sh                Enable PF and load /etc/pf.conf
-99-cleanup.sh           Clean /tmp
-99-mount-late.sh        Mount all late filesystems
-99-qemu_user_static.sh  Register the QEMU interpreters from emulators/qemu-user-static
-                        with binmiscctl(8)
-```
-
-The core services will be sourced in lexicographic order.  Users can
-insert their own core services in the right places by creating a file
-with an even number prefix.  `12-console.sh`, `30-geli.sh`,
-`44-bhyve-network.sh`, `44-jail-network.sh` are pre-existing
-user-editable files.  Odd numbered services should be treated as
-immutable and will be overwritten when updating `runit-faster`.
-
-Stage 2 will look up the runlevel in the `runit.runlevel` kenv and
-link `/usr/local/etc/runit/runsvdir/$runlevel` to `/var/service`.  It will then
-run `runsvdir(8)` on it which starts all defined services for the
-runlevel and starts supervising them.
-
-runit-faster comes with some services out of the box for the user's
-convenience in `/usr/local/etc/sv`.  These can be linked to the
-runlevel to enable them.
+Please see runit-faster(7).
 
 # Installation
 

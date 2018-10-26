@@ -4,6 +4,110 @@
 .Sh NAME
 .Nm runit-faster
 .Nd "Getting started"
+.Sh SYSTEM INITIALIZATION
+.Nm
+initializes the system in two stages.
+The first stage will run one time system tasks, dubbed
+core services, located in
+.Pa /usr/local/etc/runit/core-services :
+.Bl -tag -width 2n
+.It sy 11-devmatch.sh
+Use
+.Xr devmatch 8
+to load kernel modules.
+.It Sy 11-kld.sh
+Load kernel modules
+.It Sy 11-set-defaults.sh
+Set some system defaults.
+.It Sy 12-console.sh
+Console setup (fonts, keymap, ...)
+.It Sy 21-swap.sh
+Enable swap.
+.It Sy 30-geli.sh
+Decrypt GELI devices.
+.It Sy 31-enable-dumpdev.sh
+Set the dump device.
+.It Sy 31-fsck.sh
+Run fsck.
+.It Sy 31-mount.sh
+Mount all early filesystem.
+.It Sy 31-zfs-mount.sh
+Mount ZFS datasets.
+.It Sy 33-microcode_update.sh
+Update CPU microcode if sysutils/devcpu-data is installed
+.It Sy 33-var.sh
+Initialize
+.Pa /var .
+.It Sy 41-devfs-rules.sh
+Load
+.Xr devfs 8
+rules from
+.Pa /etc/defaults/devfs.rules
+and
+.Pa /etc/devfs.rules .
+.It Sy 41-entropy.sh
+Initialize the entropy harvester.
+.It Sy 41-hostid.sh
+Generate a hostid.
+.It Sy 41-hostname.sh
+Set the hostname.
+.It Sy 41-ldconfig.sh
+Setup the shared library cache.
+.It Sy 41-loopback.sh
+Create lo0.
+.It Sy 41-mixer.sh
+Restore soundcard mixer values.
+.It Sy 41-nextboot.sh
+Prune nextboot configuration.
+.It Sy 41-rctl.sh
+Apply resource limits from
+.Pa /etc/rctl.conf .
+.It Sy 44-bhyve-network.sh
+Create a bhyve0 bridge for networking for simple
+.Xr bhyve 8
+VMs.
+.It Sy 44-jail-network.sh
+Create a jail0 interface with an assigned network of
+192.168.95.0/24 to ease setting up jails.
+.It Sy 51-pf.sh
+Enable PF and load /etc/pf.conf
+.It Sy 99-cleanup.sh
+Clean /tmp
+.It Sy 99-mount-late.sh
+Mount all late filesystems
+.It Sy 99-qemu_user_static.sh
+Register the QEMU interpreters from emulators/qemu-user-static with
+.Xr binmiscctl 8 .
+.El
+.Pp
+The core services will be sourced in lexicographic order.
+Users can insert their own core services in the right places
+by creating a file with an even number prefix.
+.Pa 12-console.sh ,
+.Pa 30-geli.sh ,
+.Pa 44-bhyve-network.sh ,
+.Pa 44-jail-network.sh
+are pre-existing user-editable files.
+Odd numbered services should be treated as immutable and
+will be overwritten when updating
+.Nm .
+.Pp
+Stage 2 will look up the runlevel in the
+.Pa runit.runlevel
+kenv and link
+.Pa /usr/local/etc/runit/runsvdir/$runlevel
+to
+.Pa /var/service .
+It will then run
+.Xr runsvdir 8
+on it which starts all defined services for the runlevel
+and starts supervising them.
+.Pp
+.Nm
+comes with some services out of the box for the user's
+convenience in
+.Pa /usr/local/etc/sv .
+These can be linked to the runlevel to enable them.
 .Sh SERVICE TEMPLATES
 .Nm
 provides several service templates to get you started quickly.
