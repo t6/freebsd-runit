@@ -1,4 +1,4 @@
-.Dd October 26, 2018
+.Dd October 27, 2018
 .Dt RUNIT-FASTER 7
 .Os
 .Sh NAME
@@ -36,9 +36,23 @@ Initialize
 Update CPU microcode if sysutils/devcpu-data is installed
 .It Sy 33-savecore.sh
 Run
-.Xr savecore 8 .
+.Xr savecore 8
+at boot to retrieve a kernel crash device from the dump device
+as specified in
+.Pa /boot/loader.conf
+via
+.Sy dumpdev .
 .It Sy 33-set-dumpdev.sh
-Set the dump device.
+Enables the dump device as specified in
+.Pa /boot/loader.conf
+via
+.Sy dumpdev .
+The crash dump is encrypted with
+.Pa /etc/dumppubkey
+if it exists and if the kernel supports encrypted crash dumps.
+See
+.Xr dumpon 8
+for more information.
 .It Sy 33-swap.sh
 Enable swap.
 .It Sy 41-devfs-rules.sh
