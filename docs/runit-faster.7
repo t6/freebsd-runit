@@ -4,7 +4,140 @@
 .Sh NAME
 .Nm runit-faster
 .Nd "Getting started"
+.Sh SETUP AS PID 1
+This section only applies if opting into using
+.Nm
+as PID 1.
+It is entirely optional and the service templates and other features
+can be used via the
+.Sy runsvdir
+.Xr rc 8
+service instead:
+.Bd -literal -offset indent
+$ sysrc runsvdir_enable=YES
+$ service runsvdir start
+.Ed
+.Pp
+The
+.Nm
+port by default assumes that
+.Pa /usr/local
+is located on the same partition as the root filesystem.
+For systems where this is not the case, runit has to be compiled
+with the
+.Sy ROOT
+option on, to make sure that
+.Xr runit 8
+can properly bootstrap the system.
+Binaries and the necessary configuration files will then be installed
+into
+.Pa /etc/runit
+and
+.Pa /sbin
+instead of in
+.Pa /usr/local/etc/runit
+and
+.Pa /usr/local/sbin .
+In this document we will always refer to
+.Pa /usr/local/etc/runit
+directly instead of
+.Pa /etc/runit .
+Please adjust paths accordingly if you have to use the
+.Sy ROOT
+option.
+.Pp
+To get started edit
+.Pa /boot/loader.conf
+and tell the kernel to attempt to use
+.Pa /usr/local/sbin/runit-init
+as PID 1.
+.Bd -literal -offset indent
+init_path="/usr/local/sbin/runit-init:/rescue/init"
+.Ed
+.Pp
+No service is enabled by default.
+Some basic ones must be enabled, at the very least one getty service
+in the
+.Sy default
+runlevel, to get a login prompt after rebooting:
+.Bd -literal -offset indent
+$ ln -s /usr/local/etc/sv/devd \\
+	/usr/local/etc/runit/runsvdir/default
+$ ln -s /usr/local/etc/sv/getty-ttyv0 \\
+	/usr/local/etc/runit/runsvdir/default
+$ ln -s /usr/local/etc/sv/syslogd \\
+	/usr/local/etc/runit/runsvdir/default
+.Ed
+.Pp
+For headless machines (or e.g.,
+.Xr bhyve 8
+virtual machines) with a serial port make sure to enable `getty-ttyu0`
+instead of `getty-ttyv0`:
+.Bd -literal -offset indent
+$ ln -s /usr/local/etc/sv/getty-ttyu0 \\
+	/usr/local/etc/runit/runsvdir/default
+.Ed
+.Pp
+The runlevel can be selected via the
+.Sy runit.runlevel
+in the kernel environment e.g.,
+as specified in
+.Pa /boot/loader.conf .
+If omitted a value of
+.Sy default
+is used.
+.Pp
+Settings from
+.Pa /etc/rc.conf
+will \fBnot\fP be applied when using
+.Nm .
+The hostname has to be set either via
+.Sy runit.hostname
+in the kernel environment or by creating
+.Pa /usr/local/etc/runit/hostname :
+.Bd -literal -offset indent
+$ echo my-hostname > /usr/local/etc/runit/hostname
+.Ed
+.Pp
+The keyboard layout has to be set via a core service like
+.Sy 12-console.sh .
+See SYSTEM INITIALIZATION below for more information.
+.Pp
+.Sy kld_list
+from
+.Pa /etc/rc.conf
+for loading kernel modules can be migrated to
+.Pa /usr/local/etc/runit/modules .
+They will be loaded as a first step when the system initializes.
+.Bd -literal -offset indent
+$ sysrc kld_list
+kld_list: /boot/modules/i915kms.ko vboxdrv vboxnetflt vboxnetadp
+$ cat <<EOF > /usr/local/etc/runit/modules
+/boot/modules/i915kms.ko
+vboxdrv
+vboxnetflt
+vboxnetadp
+EOF
+.Ed
+.Pp
+Enable additional service as you see fit.
+Make sure to always use absolute paths when symlinking new services to a runlevel.
+.Pp
+Now reboot! If something goes wrong, try booting in single user mode or
+temporarily revert back to
+.Xr init 8
+and
+.Xr rc 8
+at the
+.Xr loader 8
+prompt:
+.Bd -literal -offset indent
+set init_path=/rescue/init
+.Ed
 .Sh SYSTEM INITIALIZATION
+This section only applies if opting into using
+.Nm
+as PID 1.
 .Nm
 initializes the system in two stages.
 The first stage will run one time system tasks, dubbed

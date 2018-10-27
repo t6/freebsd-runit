@@ -15,84 +15,9 @@ I like runit.  Let us experiment and see how hard it would be to
 completely initialize FreeBSD with it and what it is like in daily
 usage.
 
-# System initialization
+# System initialization / Setup as PID 1
 
 Please see runit-faster(7).
-
-# Installation
-
-```
-pkg install runit-faster
-```
-or from ports
-```
-make -C /usr/ports/sysutils/runit-faster install
-```
-
-The port by default assumes that `/usr/local` is located on the same
-partition as the root filesystem.  For systems where this is not the
-case, runit has to be compiled with the ROOT option on, to make that
-runit can properly bootstrap the system.  Binaries and the necessary
-configuration files will then be installed into `/etc/runit` and
-`/sbin` instead of in `/usr/local/etc/runit` and `/usr/local/sbin`.
-In this document we will always refer to `/usr/local/etc/runit`
-directly instead of `/etc/runit`.  Please adjust paths accordingly if
-you have to use the ROOT option.
-
-Edit `/boot/loader.conf` and tell the kernel to attempt to use
-`/sbin/runit-init` as PID 1
-
-```
-init_path="/sbin/runit-init:/usr/local/sbin/runit-init:/rescue/init"
-```
-
-No service is enabled by default.  Some basic ones must be enabled, at
-the very least one getty service in the `default` runlevel to get a
-login prompt after rebooting.
-
-```
-$ ln -s /usr/local/etc/sv/devd /usr/local/etc/runit/runsvdir/default
-$ ln -s /usr/local/etc/sv/getty-ttyv0 /usr/local/etc/runit/runsvdir/default
-$ ln -s /usr/local/etc/sv/syslogd /usr/local/etc/runit/runsvdir/default
-```
-
-For headless machines (or e.g. `bhyve(8)` virtual machines) with a
-serial port make sure to enable `getty-ttyu0` instead of `getty-ttyv0`
-
-```
-$ ln -s /usr/local/etc/sv/getty-ttyu0 /usr/local/etc/runit/runsvdir/default
-```
-
-The runlevel can be selected via the `runit.runlevel` kenv.  If
-omitted a value of `default` is used.
-
-Settings from `/etc/rc.conf` will *not* be applied when using
-runit-faster. The hostname has to be set via the `runit.hostname` kenv
-or in `/usr/local/etc/runit/hostname`:
-
-```
-$ echo my-hostname > /usr/local/etc/runit/hostname
-```
-
-The keyboard layout has to be set via a core service like `12-console.sh` (see below
-in "Console keyboard layout and font setup").
-
-`kld_list` for loading kernel modules should be migrated to
-`/usr/local/etc/runit/modules`.  They will be loaded as a first step
-when the system initializes.
-
-```
-$ sysrc kld_list
-kld_list: /boot/modules/i915kms.ko if_iwm ichsmb vboxdrv vboxnetflt vboxnetadp
-$ cat <<EOF > /usr/local/etc/runit/modules
-/boot/modules/i915kms.ko
-vboxdrv
-vboxnetflt
-vboxnetadp
-EOF
-```
-
-Now reboot!
 
 # Enabling basic system services
 
