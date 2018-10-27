@@ -1,5 +1,5 @@
 [ -n "${JAILED}" ] && return 0
-dumpdev=$(/bin/kenv -q dumpdev)
+dumpdev=$(kenv -q dumpdev)
 [ -z "${dumpdev}" ] && return 0
 savecore -C "${dumpdev}" || return 0
 
