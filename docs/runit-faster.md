@@ -102,24 +102,6 @@ $ ln -s /usr/local/etc/sv/dsbmd /var/service
 $ ln -s /usr/local/etc/sv/xdm /var/service
 ```
 
-# Console keyboard layout and font setup
-
-The keyboard layout and console font should be set directly via
-`kbdcontrol(1)` and `vidcontrol(1)` in either
-`/usr/local/etc/runit/local` or a custom core service
-e.g. `/usr/local/etc/runit/core-services/12-console.sh` to set the
-keyboard layout and console font as early as possible after loading
-kernel modules
-
-```
-$ cat <<EOF > /usr/local/etc/runit/core-services/12-console.sh
-kbdcontrol -l us < /dev/ttyv0
-for ttyv in /dev/ttyv*; do
-	vidcontrol -f terminus-b32 < ${ttyv} > ${ttyv}
-done
-EOF
-```
-
 # Autologin to Xfce
 
 For bash/oksh/sh add this to `~/.profile`:

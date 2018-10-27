@@ -207,7 +207,20 @@ Load kernel modules
 .It Sy 11-set-defaults.sh
 Set some system defaults.
 .It Sy 12-console.sh
-Console setup (fonts, keymap, ...)
+A user-editable service file where keyboard layout and other console
+settings should be added to.
+.Pp
+Use the
+.Sy us
+keyboard layout and
+.Sy terminus-b32
+font on all virtual terminals:
+.Bd -literal -offset indent
+kbdcontrol -l us < /dev/ttyv0
+for ttyv in /dev/ttyv*; do
+	vidcontrol -f terminus-b32 < ${ttyv} > ${ttyv}
+done
+.Ed
 .It Sy 30-geli.sh
 Decrypt GELI devices.
 .It Sy 31-fsck.sh
