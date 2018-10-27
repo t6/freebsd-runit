@@ -130,13 +130,6 @@ sv check dbus > /dev/null || exit 1
 sv check dsbmd > /dev/null || exit 1
 ```
 
-# Rebooting and powering off
-
-`reboot(8)`, `halt(8)`, `poweroff(8)`, `shutdown(8)` will not work
-correctly with runit because of the way they send signals to PID 1.
-`runit-init 6` can be used to reboot the system and `runit-init 0` to
-power it off.
-
 # If things go wrong...
 
 * Booting in single user mode boots to an emergency shell.

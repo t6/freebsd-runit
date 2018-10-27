@@ -190,6 +190,25 @@ $ ln -s /usr/local/etc/sv/getty-ttyv5 /var/service
 $ ln -s /usr/local/etc/sv/getty-ttyv6 /var/service
 $ ln -s /usr/local/etc/sv/getty-ttyv7 /var/service
 .Ed
+.Pp
+.Xr reboot 8 ,
+.Xr halt 8 ,
+.Xr poweroff 8 ,
+and
+.Xr shutdown 8
+will not work correctly with
+.Xr runit 8
+because of the way they send signals to PID 1.
+.Pp
+Reboot the system:
+.Bd -literal -offset indent
+$ runit-init 6
+.Ed
+.Pp
+Power off the system:
+.Bd -literal -offset indent
+$ runit-init 0
+.Ed
 .Sh SYSTEM INITIALIZATION
 This section only applies if opting into using
 .Nm
