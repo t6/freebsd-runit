@@ -137,66 +137,6 @@ correctly with runit because of the way they send signals to PID 1.
 `runit-init 6` can be used to reboot the system and `runit-init 0` to
 power it off.
 
-# Jails
-
-`runit-faster` will create a `jail0` interface in the 192.168.95.0/24
-network by default.  The host gets IP 192.168.95.1.  This can be used
-this to very quickly setup jails.  You can change the network and IP
-settings by editing
-`/usr/local/etc/runit/core-services/44-jail-network.sh`.
-
-Setup NAT in `/etc/pf.conf`
-```
-jail_http_ip = 192.168.95.2
-
-nat pass on $ext_if from runit-jail:network to any -> $ext_if
-rdr pass on $ext_if proto tcp from any to $ext_if port { https, http } \
-	-> $jail_http_ip
-```
-
-Clone `jail-template` on the host:
-```
-mkdir /usr/local/etc/sv/local
-svclone /usr/local/etc/sv/jail-template /usr/local/etc/sv/local/jail@http
-```
-
-Modify `/usr/local/etc/sv/local/jail@http/jail.conf` to suite your needs
-```
-http {
-	path = /usr/jails/$name;
-	host.hostname = $name.example.com;
-	mount.devfs;
-	mount.fstab = "/var/service/jail@$name/fstab";
-	exec.start = "/usr/local/etc/runit/jail start";
-	exec.stop = "/usr/local/etc/runit/jail stop";
-	ip4.addr = "jail0|192.168.95.2/24";
-}
-```
-
-If you change `path` in `jail.conf` from the default also make sure to set it in
-`/usr/local/etc/sv/local/jail@http/conf` as well:
-```
-ROOT=/path/to/jail
-```
-
-Setup a basic jail
-```
-bsdinstall jail /usr/jails/http
-```
-
-Install and enable `nginx` and `runit-faster` in the jail
-```
-pkg -c /usr/jails/http install nginx runit-faster
-for s in newsyslog nginx syslogd; do
-	ln -s /usr/local/etc/sv/${s} /usr/jails/http/usr/local/etc/runit/runsvdir/default
-done
-```
-
-Finally enable the jail on the host
-```
-ln -s /usr/local/etc/sv/local/jail@http /var/service
-```
-
 # If things go wrong...
 
 * Booting in single user mode boots to an emergency shell.
