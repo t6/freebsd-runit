@@ -19,43 +19,6 @@ usage.
 
 Please see runit-faster(7).
 
-# Enabling basic system services
-
-Some basic system maintenance tasks must be setup.  This can be done by
-either enabling cron:
-
-```
-$ ln -s /usr/local/etc/sv/cron /var/service
-```
-
-or by using the `snooze(1)` based replacements for them:
-
-```
-$ ln -s /usr/local/etc/sv/adjkerntz /var/service
-$ ln -s /usr/local/etc/sv/periodic-daily /var/service
-$ ln -s /usr/local/etc/sv/periodic-weekly /var/service
-$ ln -s /usr/local/etc/sv/periodic-monthly /var/service
-$ ln -s /usr/local/etc/sv/save-entropy /var/service
-```
-
-If the `snooze(1)` services are used and cron is also needed the
-corresponding system maintenance tasks should be disabled in
-`/etc/crontab`.
-
-To mimic a default FreeBSD console setup, more getty services need to
-be enabled.  This will enable all virtual terminals that are normally
-enabled in `/etc/ttys`:
-
-```
-$ ln -s /usr/local/etc/sv/getty-ttyv1 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv2 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv3 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv4 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv5 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv6 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv7 /var/service
-```
-
 # Network setup
 It is recommended to disable `/etc/rc.d/netif` managed network
 interfaces completely and use one of the dhclient services or do
