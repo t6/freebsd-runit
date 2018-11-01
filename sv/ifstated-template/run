@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: ${OPTS:=-f ${PWD}/ifstated.conf}
+exec /usr/local/sbin/ifstated -d ${OPTS}

@@ -1,0 +1,8 @@
+# ifstated does not currently handle ephemeral interfaces, so
+# interface creation needs to happen here first.
+
+#ifconfig wlan0 destroy || true
+#ifconfig lagg0 destroy || true
+#ifconfig wlan0 create wlandev iwm0 country DE
+#ifconfig lagg0 create laggproto failover laggport re0 laggport wlan0 up
+#ifconfig re0 up
