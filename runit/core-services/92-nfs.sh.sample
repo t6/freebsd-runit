@@ -1,0 +1,50 @@
+# Do nothing if there are no shares in /etc/exports or /etc/zfs/exports
+nfs_exports=
+[ -r /etc/exports ] && nfs_exports=/etc/exports
+[ -r /etc/zfs/exports ] && nfs_exports="${nfs_exports} /etc/zfs/exports"
+grep -qEv '^#|^[[:space:]]*$' ${nfs_exports} || return 1
+kldload -n nfsd || return 1
+
+# The NFS daemons always fork into the background.  They cannot
+# be properly supervised, so we start them now.
+
+msg "Starting NFS server"
+
+# Customize NFS daemon flags here if needed
+mountd_flags="-r -S"
+nfsd_flags="-u -t"
+nfsuserd_flags=""
+rpcbind_flags=""
+
+# Do we need NFSv4?
+if grep -qEv '^[[:space:]]*V4:' ${nfs_exports}; then
+	sysctl vfs.nfsd.server_max_nfsvers=4 > /dev/null
+else
+	sysctl vfs.nfsd.server_max_nfsvers=3 > /dev/null
+fi
+
+if ! nfsuserd ${nfsuserd_flags}; then
+	msg_warn "Cannot run nfsuserd"
+	return 1
+fi
+
+if ! rpcbind ${rpcbind_flags}; then
+	msg_warn "Cannot run rpcbind"
+	return 1
+fi
+
+rm -f /var/db/mountdtab
+if ! ( umask 022 ; > /var/db/mountdtab ); then
+	msg_warn "Cannot create /var/db/mountdtab"
+	return 1
+fi
+
+if ! mountd ${mountd_flags} ${nfs_exports}; then
+	msg_warn "Cannot run mountd"
+	return 1
+fi
+
+if ! nfsd ${nfsd_flags}; then
+	msg_warn "Cannot run nfsd"
+	return 1
+fi
