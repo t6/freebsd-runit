@@ -1,3 +1,5 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-exec /usr/local/sbin/ntpd -d ${OPTS:=-s} 2>&1
+: "${OPTS:=-s}"
+# shellcheck disable=SC2086
+exec /usr/local/sbin/ntpd -d ${OPTS} 2>&1

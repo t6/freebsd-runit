@@ -2,19 +2,19 @@
 
 save_dev_random()
 {
-	oumask=`umask`
+	oumask=$(umask)
 	umask 077
 	for f ; do
 		dd if=/dev/random of="$f" bs=4096 count=1 status=none &&
 			chmod 600 "$f"
 	done
-	umask ${oumask}
+	umask "${oumask}"
 }
 
 feed_dev_random()
 {
 	for f ; do
-		if [ -f "$f" -a -r "$f" -a -s "$f" ] ; then
+		if [ -f "$f" ] && [ -r "$f" ] && [ -s "$f" ] ; then
 			if dd if="$f" of=/dev/random bs=4096 2>/dev/null ; then
 				rm -f "$f"
 			fi

@@ -2,6 +2,7 @@
 nfs_exports=
 [ -r /etc/exports ] && nfs_exports=/etc/exports
 [ -r /etc/zfs/exports ] && nfs_exports="${nfs_exports} /etc/zfs/exports"
+# shellcheck disable=SC2086
 grep -qEv '^#|^[[:space:]]*$' ${nfs_exports} || return 1
 kldload -n nfsd || return 1
 
@@ -17,33 +18,38 @@ nfsuserd_flags=""
 rpcbind_flags=""
 
 # Do we need NFSv4?
+# shellcheck disable=SC2086
 if grep -qEv '^[[:space:]]*V4:' ${nfs_exports}; then
 	sysctl vfs.nfsd.server_max_nfsvers=4 > /dev/null
 else
 	sysctl vfs.nfsd.server_max_nfsvers=3 > /dev/null
 fi
 
+# shellcheck disable=SC2086
 if ! nfsuserd ${nfsuserd_flags}; then
 	msg_warn "Cannot run nfsuserd"
 	return 1
 fi
 
+# shellcheck disable=SC2086
 if ! rpcbind ${rpcbind_flags}; then
 	msg_warn "Cannot run rpcbind"
 	return 1
 fi
 
 rm -f /var/db/mountdtab
-if ! ( umask 022 ; > /var/db/mountdtab ); then
+if ! ( umask 022 ; : > /var/db/mountdtab ); then
 	msg_warn "Cannot create /var/db/mountdtab"
 	return 1
 fi
 
+# shellcheck disable=SC2086
 if ! mountd ${mountd_flags} ${nfs_exports}; then
 	msg_warn "Cannot run mountd"
 	return 1
 fi
 
+# shellcheck disable=SC2086
 if ! nfsd ${nfsd_flags}; then
 	msg_warn "Cannot run nfsd"
 	return 1

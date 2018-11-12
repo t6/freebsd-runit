@@ -1,5 +1,6 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-: ${PID_FILE:=/var/run/xdm.pid}
-rm -f ${PID_FILE}
+: "${PID_FILE:=/var/run/xdm.pid}"
+rm -f "${PID_FILE}"
+# shellcheck disable=SC2086
 exec /usr/local/bin/xdm -nodaemon ${OPTS} 2>&1

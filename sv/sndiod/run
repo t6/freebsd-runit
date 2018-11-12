@@ -1,4 +1,5 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-: ${OPTS:=-f rsnd/$(sysctl -n hw.snd.default_unit)}
-exec sndiod -d $OPTS 2>&1
+: "${OPTS:=-f rsnd/$(sysctl -n hw.snd.default_unit)}"
+# shellcheck disable=SC2086
+exec sndiod -d ${OPTS} 2>&1

@@ -3,6 +3,5 @@
 
 msg "Autoloading kernel modules"
 for m in $(devmatch); do
-	echo "${m}"
-	kldload -n ${m}
+	kldload -n "${m}"
 done

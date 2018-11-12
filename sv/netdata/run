@@ -1,4 +1,5 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-: ${USER:=netdata:netdata}
+: "${USER:=netdata:netdata}"
+# shellcheck disable=SC2086
 exec chpst -u ${USER} /usr/local/sbin/netdata -D ${OPTS}

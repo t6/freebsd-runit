@@ -1,6 +1,7 @@
 msg "Configuring the shared library cache"
 
 add_paths() {
+	# shellcheck disable=SC2039
 	local _lib _ldconfig_dir
 	_lib=""
 	for i in $1; do
@@ -16,8 +17,10 @@ add_paths() {
 	done
 	shift 2
 	if [ -n "${_ldconfig_dir}" ]; then
+		# shellcheck disable=SC2038,SC2086
 		find ${_ldconfig_dir} -type f | xargs cat | sort -u | xargs ldconfig "$@" ${_lib}
 	else
+		# shellcheck disable=SC2086
 		ldconfig "$@" ${_lib}
 	fi
 }

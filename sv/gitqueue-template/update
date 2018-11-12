@@ -2,10 +2,10 @@
 set -eu
 [ -r conf ] && . ./conf
 
-: ${GIT:=/usr/local/bin/git}
-: ${LOGGER:=/usr/bin/logger}
-: ${NQ:=/usr/local/bin/nq}
-: ${NQDIR:=/var/db/gitqueue}
+: "${GIT:=/usr/local/bin/git}"
+: "${LOGGER:=/usr/bin/logger}"
+: "${NQ:=/usr/local/bin/nq}"
+: "${NQDIR:=/var/db/gitqueue}"
 
 export NQDIR
 

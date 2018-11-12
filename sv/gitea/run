@@ -1,7 +1,7 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-: ${USER:=git:git}
-: ${SHARED:=/usr/local/share/gitea}
+: "${USER:=git:git}"
+: "${SHARED:=/usr/local/share/gitea}"
 exec 2>&1
 exec chpst -u ${USER} \
      env -i "GITEA_WORK_DIR=${SHARED}" \

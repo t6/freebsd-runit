@@ -1,3 +1,4 @@
+# shellcheck disable=SC1117,SC2034,SC2086
 [ -n "${JAILED}" ] && return 0
 [ -x /usr/local/bin/qemu-arm-static ] || return 1
 

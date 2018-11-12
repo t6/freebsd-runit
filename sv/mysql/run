@@ -1,4 +1,5 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
 install -d -m700 -o mysql -g mysql /var/run/mysqld
+# shellcheck disable=SC2086
 exec chpst -u mysql:mysql /usr/local/libexec/mysqld --user=mysql ${OPTS} 2>&1

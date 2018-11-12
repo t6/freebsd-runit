@@ -1,9 +1,10 @@
 #!/bin/sh
 set -e
 [ -r conf ] && . ./conf
-: ${JAVA:=/usr/local/openjdk8/bin/java}
+: "${JAVA:=/usr/local/openjdk8/bin/java}"
 if [ ! -e /var/run/unifi ] ; then
 	install -d -o unifi -g unifi /var/run/unifi;
 fi
 cd /usr/local/share/java/unifi
+# shellcheck disable=SC2086
 exec chpst -u unifi:unifi -P ${JAVA} ${JAVAFLAGS} -jar lib/ace.jar start

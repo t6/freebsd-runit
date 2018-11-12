@@ -1,13 +1,13 @@
 msg() {
-	printf "=> $@\n"
+	echo "=>" "$@"
 }
 
 msg_error() {
-	printf "ERROR: $@\n"
+	echo "ERROR:" "$@"
 }
 
 msg_warn() {
-	printf "WARNING: $@\n"
+	echo "WARNING:" "$@"
 }
 
 emergency_shell() {
@@ -34,14 +34,14 @@ check_arch() {
 }
 
 kernel_has_feature() {
-	if [ "$(sysctl -qn kern.features.$1)" = "1" ]; then
+	if [ "$(sysctl -qn "kern.features.$1")" = "1" ]; then
 		return 0
 	fi
 	return 1
 }
 
 detect_jail() {
-	if [ $(sysctl -n security.jail.jailed) -eq 1 ]; then
+	if [ "$(sysctl -n security.jail.jailed)" -eq 1 ]; then
 		export JAILED=1
 	fi
 }

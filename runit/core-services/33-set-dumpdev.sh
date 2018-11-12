@@ -10,7 +10,8 @@ if [ -r /etc/dumppubkey ] && kernel_has_feature ekcd; then
 else
 	dumpon "${dumpdev}"
 fi
-if [ $? -neq 0 ]; then
+# shellcheck disable=SC2181
+if [ $? -ne 0 ]; then
 	msg_warn "Unable to specify ${dumpdev} as a dump device"
 	return 1
 fi

@@ -14,7 +14,7 @@ fi
 
 # Start core services: one-time system tasks.
 for f in /usr/local/etc/runit/core-services/*.sh; do
-	[ -r $f ] && . $f
+	[ -r "$f" ] && . "$f"
 done
 
 if [ -z "${JAILED}" ]; then

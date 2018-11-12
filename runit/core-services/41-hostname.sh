@@ -1,4 +1,4 @@
-[ -n "${JAILED}" ] && [ $(sysctl -n security.jail.set_hostname_allowed) -eq 0 ] && return 0
+[ -n "${JAILED}" ] && [ "$(sysctl -n security.jail.set_hostname_allowed)" -eq 0 ] && return 0
 
 if [ -r "/usr/local/etc/runit/hostname" ]; then
 	_hostname=$(cat /usr/local/etc/runit/hostname)

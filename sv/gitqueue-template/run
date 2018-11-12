@@ -1,8 +1,22 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-: ${SNOOZE_ARGS="-H'*' -M'/5'"}
-# gitqueue@$path@$branch[@$user] e.g. gitqueue@__usr__src@master
-repo_path=$(echo "${PWD}" | awk -F@ '{ gsub("__", "/", $2); print $2 }')
-branch=$(echo "${PWD}" | awk -F@ '{ print $3 }')
-chuser=$(echo "${PWD}" | awk -F@ '{ if ($4 != "") { printf "chpst -u %s\n", $4 } }')
+: "${SNOOZE_ARGS="-H'*' -M'/5'"}"
+# gitqueue@<path>@<branch>[@<user>]
+# e.g. gitqueue@__usr__src@master
+myifs="${IFS}"
+IFS="@"
+i=0
+for f in ${PWD}; do
+	case ${i} in
+	1) repo_path=$(echo "${f}" | sed 's,__,/,g') ;;
+	2) branch=${f} ;;
+	3) chuser="chpst -u ${f}" ;;
+	4) exit 1 ;;
+	esac
+	i=$((i + 1))
+done
+IFS="${myifs}"
+export repo_path
+export branch
+# shellcheck disable=SC2086
 exec ${chuser} /usr/local/bin/snooze ${SNOOZE_ARGS} "${PWD}/update" 2>&1

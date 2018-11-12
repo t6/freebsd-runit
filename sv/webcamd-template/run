@@ -1,3 +1,4 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-exec /usr/local/sbin/webcamd -N ${PWD#*@} ${OPTS} 2>&1
+# shellcheck disable=SC2086
+exec /usr/local/sbin/webcamd -N "${PWD#*@}" ${OPTS} 2>&1

@@ -1,5 +1,6 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-: ${CONFIG:=/usr/local/etc/rsync/rsyncd.conf}
+: "${CONFIG:=/usr/local/etc/rsync/rsyncd.conf}"
 [ ! -e ${CONFIG} ] && exit 1
+# shellcheck disable=SC2086
 exec /usr/local/bin/rsync --daemon --no-detach ${OPTS} ${CONFIG}

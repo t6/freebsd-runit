@@ -1,12 +1,13 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
 eval ROOT=~postgres
-: ${DATA:="${ROOT}/data"}
-: ${INITOPTS:=-A peer --auth-host=md5 --auth-local=peer --encoding=utf-8 --lc-collate=C}
+: "${DATA:="${ROOT}/data"}"
+: "${INITOPTS:=-A peer --auth-host=md5 --auth-local=peer --encoding=utf-8 --lc-collate=C}"
 
 if [ ! -d "${DATA}" ]; then
 	echo "Initializing database in ${DATA}"
 	install -d -m0700 -o postgres -g postgres "${DATA}"
 	su -l postgres -c "/usr/local/bin/initdb ${INITOPTS} -D '${DATA}' -U postgres" >/dev/null
 fi
+# shellcheck disable=SC2086
 exec chpst -u postgres:postgres /usr/local/bin/postgres -D "${DATA}" ${OPTS} 2>&1

@@ -1,3 +1,4 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-exec /usr/local/sbin/smtpd -d ${OPTS} 2>&1 > /dev/null
+# shellcheck disable=SC2086
+exec /usr/local/sbin/smtpd -d ${OPTS} > /dev/null 2>&1

@@ -1,5 +1,6 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-: ${OPTS:=--config /usr/local/etc/kadnode/kadnode.conf}
+: "${OPTS:=--config /usr/local/etc/kadnode/kadnode.conf}"
 exec 2>&1
+# shellcheck disable=SC2086
 exec /usr/local/bin/kadnode ${OPTS}

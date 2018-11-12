@@ -1,4 +1,4 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-: ${USER:=kodi:kodi}
-exec chpst -u ${USER}:video env HOME=$(eval echo ~${USER%%:*}) /usr/local/bin/kodi 2>&1
+: "${USER:=kodi:kodi}"
+exec chpst -u ${USER}:video env HOME="$(eval echo "~${USER%%:*}")" /usr/local/bin/kodi 2>&1

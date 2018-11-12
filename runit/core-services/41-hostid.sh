@@ -33,7 +33,8 @@ hostid_set()
 {
 	uuid=$1
 	# Generate hostid based on hostuuid - take first four bytes from md5(uuid).
-	id=$(echo -n $uuid | /sbin/md5)
+	# shellcheck disable=SC2039
+	id=$(echo -n "$uuid" | /sbin/md5)
 	id="0x${id%????????????????????????}"
 
 	# Set both kern.hostuuid and kern.hostid.
@@ -41,7 +42,7 @@ hostid_set()
 	msg "Setting hostuuid to ${uuid}"
 	sysctl kern.hostuuid="${uuid}" >/dev/null
 	msg "Setting hostid to ${id}"
-	sysctl kern.hostid=${id} >/dev/null
+	sysctl kern.hostid="${id}" >/dev/null
 }
 
 valid_hostid()
@@ -92,7 +93,7 @@ hostid_hardware()
 {
 	uuid=$(kenv -q smbios.system.uuid)
 
-	if valid_hostid $uuid; then
+	if valid_hostid "$uuid"; then
 		echo "${uuid}"
 	fi
 }
@@ -107,14 +108,15 @@ hostid_generate()
 		# If not found, fall back to software-generated UUID.
 		uuid=$(uuidgen)
 	fi
-	hostid_set $uuid
+	hostid_set "$uuid"
 }
 
 # If ${hostid_file} already exists, we take UUID from there.
 if [ -r ${hostid_file} ]; then
+	# shellcheck disable=SC2162
 	read saved_hostid < ${hostid_file}
-	if valid_hostid ${saved_hostid}; then
-		hostid_set $(cat ${hostid_file})
+	if valid_hostid "${saved_hostid}"; then
+		hostid_set "$(cat ${hostid_file})"
 	fi
 else
 	# No hostid file, generate UUID.

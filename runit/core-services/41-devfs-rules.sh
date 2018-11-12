@@ -31,4 +31,4 @@ END {
 		print "devfs ruleset $runit_devfs_rules"
 		print "devfs rule applyset"
 	}
-}' /etc/defaults/devfs.rules $([ -r /etc/devfs.rules ] && echo /etc/devfs.rules) | sh
+}' /etc/defaults/devfs.rules "$([ -r /etc/devfs.rules ] && echo /etc/devfs.rules)" | sh

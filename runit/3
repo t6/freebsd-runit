@@ -19,8 +19,8 @@ sv exit /var/service/*
 if [ -r /dev/mixer0 ]; then
 	msg "Saving soundcard mixer values"
 	for dev in /dev/mixer*; do
-		if [ -r ${dev} ]; then
-			/usr/sbin/mixer -f ${dev} -s > /var/db/${dev##*/}-state 2>/dev/null
+		if [ -r "${dev}" ]; then
+			/usr/sbin/mixer -f "${dev}" -s > "/var/db/${dev##*/}-state" 2>/dev/null
 		fi
 	done
 fi
@@ -52,7 +52,7 @@ case ${entropy_file_confirmed} in
 			msg_warn 'write failed (unwriteable file or full fs?)'
 		;;
 esac
-umask ${oumask}
+umask "${oumask}"
 
 msg 'Writing early boot entropy file'
 rm -f /boot/entropy 2> /dev/null
@@ -71,4 +71,4 @@ case ${entropy_boot_file_confirmed} in
 			msg_warn 'write failed (unwriteable file or full fs?)'
 		;;
 esac
-umask ${oumask}
+umask "${oumask}"

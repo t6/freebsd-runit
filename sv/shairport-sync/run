@@ -1,6 +1,7 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-: ${SHAIRPORT_USER:=nobody}
-: ${SHAIRPORT_GROUP:=nobody}
+: "${SHAIRPORT_USER:=nobody}"
+: "${SHAIRPORT_GROUP:=nobody}"
+# shellcheck disable=SC2086
 exec chpst -u ${SHAIRPORT_USER}:${SHAIRPORT_GROUP} \
 	 /usr/local/bin/shairport-sync ${OPTS} 2>&1

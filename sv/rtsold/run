@@ -1,4 +1,5 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
-: ${OPTS:=-a}
+: "${OPTS:=-a}"
+# shellcheck disable=SC2086
 exec /usr/sbin/rtsold -f ${OPTS}
