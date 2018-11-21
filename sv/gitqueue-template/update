@@ -12,12 +12,12 @@ export NQDIR
 # While runit takes care of logging output from a service, it won't
 # see output from nq-ed jobs, so log messages directly.
 _err() {
-	${LOGGER} -t gitqueue "[${NQJOBID:=-}] $@"
+	${LOGGER} -t gitqueue "[${NQJOBID:=-}] $*"
 	exit 1
 }
 
 _msg() {
-	${LOGGER} -t gitqueue "[${NQJOBID:=-}] $@"
+	${LOGGER} -t gitqueue "[${NQJOBID:=-}] $*"
 }
 
 _nq() {
@@ -27,14 +27,14 @@ _nq() {
 _repo_needs_update() {
 	local_commit=$(${GIT} -C "$1" rev-parse "$2")
 	remote_commit=$(${GIT} -C "$1" ls-remote origin "$2")
-	[ ! "${local_commit}" = "$(echo ${remote_commit} | awk '{ print $1 }')" ]
+	[ ! "${local_commit}" = "$(echo "${remote_commit}" | awk '{ print $1 }')" ]
 }
 
 _update_repo() {
 	_status=$(${GIT} -C "$1" status --porcelain)
 	if [ ! -z "${_status}" ]; then
 		_msg "$1 is dirty.  Skipping this update."
-		echo "${_status}" | while read line; do
+		echo "${_status}" | while read -r line; do
 			_msg "${line}"
 		done
 		exit 1
@@ -49,6 +49,10 @@ _update_repo() {
 # Check again at a later time if a previous build is still running
 _nq -t || exit 0
 
+# shellcheck disable=SC2154
+if [ -z "${repo_path}" ] || [ -z "${branch}" ]; then
+	exit 1
+fi
 _repo_needs_update "${repo_path}" "${branch}" || exit 0
 _update_repo "${repo_path}" "${branch}"
 if [ -x "${repo_path}/.gitqueue.d/run" ]; then

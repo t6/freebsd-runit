@@ -4,10 +4,13 @@
 export RUNLEVEL=$2
 case "$1" in
 start)
+	# shellcheck source=runit/1
 	. /usr/local/etc/runit/1
+	# shellcheck source=runit/2
 	. /usr/local/etc/runit/2
 	;;
 stop)
+	# shellcheck source=runit/3
 	. /usr/local/etc/runit/3
 	;;
 esac

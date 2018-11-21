@@ -1,5 +1,6 @@
 #!/bin/sh
+# shellcheck disable=SC2086
 USER=${PWD##*@}
-svdir=$(eval echo ~${USER%%:*}/service)
+svdir=$(eval echo "~${USER%%:*}/service")
 sv force-stop ${svdir}/*
 sv exit ${svdir}/*

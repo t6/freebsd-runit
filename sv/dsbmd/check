@@ -1,5 +1,5 @@
 #!/bin/sh
-if which -s dsbmc-cli; then
+if command -v dsbmc-cli >/dev/null; then
 	exec dsbmc-cli -l >/dev/null 2>&1
 else
 	exec nc -w1 -U /var/run/dsbmd.socket >/dev/null 2>&1

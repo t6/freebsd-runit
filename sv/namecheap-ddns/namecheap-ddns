@@ -6,7 +6,11 @@
 # password: the password given to you by Namecheap's web interface
 #
 [ -r conf ] && . ./conf
-: ${FETCH:=fetch -qo -}
+: "${FETCH:=fetch -qo -}"
+# shellcheck disable=SC2154
+if [ -z "${host}" ] || [ -z "${domain}" ] || [ -z "${password}" ]; then
+	exit 1
+fi
 out=$(${FETCH} "https://dynamicdns.park-your-domain.com/update?host=${host}&domain=${domain}&password=${password}")
 grep -q "<ErrCount>0</ErrCount>" <<EOF && exit 0
 ${out}

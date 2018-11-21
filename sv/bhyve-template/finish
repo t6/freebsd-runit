@@ -1,9 +1,9 @@
 #!/bin/sh
 set -eu
 [ -r conf ] && . ./conf
-: ${BHYVECTL:=/usr/sbin/bhyvectl}
+: "${BHYVECTL:=/usr/sbin/bhyvectl}"
 name=${PWD##*@}
-[ -r /dev/vmm/${name} ] && ${BHYVECTL} --vm=${name} --destroy
-for intf in $(ifconfig -g bhyve-${name}); do
-	ifconfig ${intf} destroy
+[ -r "/dev/vmm/${name}" ] && ${BHYVECTL} --vm="${name}" --destroy
+for intf in $(ifconfig -g "bhyve-${name}"); do
+	ifconfig "${intf}" destroy
 done

@@ -1,6 +1,7 @@
 #!/bin/sh
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/rescue
 
+# shellcheck source=runit/functions
 . /usr/local/etc/runit/functions
 detect_jail
 

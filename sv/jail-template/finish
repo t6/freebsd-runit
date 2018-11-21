@@ -1,7 +1,8 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
 name=${PWD##*@}
-: ${path:="$(readlink root)"}
-: ${path:="/usr/jails/${name}"}
+: "${path:="$(readlink root)"}"
+: "${path:="/usr/jails/${name}"}"
+# shellcheck disable=SC2086
 jail -f supervise/jail.conf ${OPTS} -r ${name} 2>&1
 umount -f "${path}/var/run"

@@ -7,8 +7,10 @@ LN?=		ln
 MKDIR?=		mkdir -p
 PRINTF?=	printf
 SED?=		sed
+SHELLCHECK?=	shellcheck
 SHFMT?=		shfmt
 TAR?=		tar
+XARGS?=		xargs
 
 LOCALBASE?=	/usr/local
 PREFIX?=	/usr/local
@@ -57,7 +59,11 @@ install:
 		SUPERVISE {} \;
 
 format:
-	${SHFMT} -w -p runit sv
+	${SHFMT} -w -s -p runit sv
+
+lint:
+	${SHFMT} -d -s -p runit sv
+	${SHFMT} -p -f runit sv | ${XARGS} ${SHELLCHECK} -s sh -x -e SC1091
 
 archive:
 	@tag=$$(${GIT} tag --contains HEAD); ver=$${tag#v*}; \
