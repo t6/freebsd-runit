@@ -1,8 +1,7 @@
 # shellcheck disable=SC1117,SC2034,SC2086
 [ -n "${JAILED}" ] && return 0
-[ -x /usr/local/bin/qemu-arm-static ] || return 1
 
-msg "Registering QEMU binmiscctl interpreters"
+msg "Registering binary image activators"
 
 arm_interpreter=/usr/local/bin/qemu-arm-static
 arm_magic="\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00"
@@ -44,11 +43,17 @@ sparc64_interpreter=/usr/local/bin/qemu-sparc64-static
 sparc64_magic="\x7f\x45\x4c\x46\x02\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x2b"
 sparc64_mask="\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff"
 
-for arch in arm armv6 armv7 aarch64 mips mipsel mips64 powerpc powerpc64 sparc64; do
-	/usr/sbin/binmiscctl remove ${arch} > /dev/null 2>&1
-	/usr/sbin/binmiscctl add ${arch} --size 20 --set-enabled \
-			     --interpreter "$(eval echo \$${arch}_interpreter)" \
-			     --magic "$(eval echo \$${arch}_magic)" \
-			     --mask "$(eval echo \$${arch}_mask)" \
-		|| msg_warn "Failed to activate ${arch} interpreter"
+wine32_interpreter=/usr/local/bin/wine
+wine32_magic="\x4d\x5a\x90\x00\x03\x00\x00\x00\x04\x00\x00\x00\xff\xff\x00\x00\xb8\x00\x00\x00"
+wine32_mask="\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+
+for arch in arm armv6 armv7 aarch64 mips mipsel mips64 powerpc powerpc64 sparc64 wine32; do
+	if [ -x "$(eval echo \$${arch}_interpreter)" ]; then
+		/usr/sbin/binmiscctl remove ${arch} >/dev/null 2>&1
+		/usr/sbin/binmiscctl add ${arch} --size 20 --set-enabled \
+			--interpreter "$(eval echo \$${arch}_interpreter)" \
+			--magic "$(eval echo \$${arch}_magic)" \
+			--mask "$(eval echo \$${arch}_mask)" ||
+			msg_warn "Failed to activate ${arch} interpreter"
+	fi
 done
