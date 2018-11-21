@@ -1,37 +1,57 @@
 #!/bin/sh
 set -eu
 [ -r conf ] && . ./conf
-#
-# The following variables must be defined in ./conf
-#
-# DISK:  Device or disk image to use as the VMs boot disk
-# MEM:   Max memory to use
-# CPUS:  Number of guest virtual CPUs
-# OPTS:  Pass through arbitrary arguments to bhyve(8)
-#
-: ${BHYVE:=/usr/sbin/bhyve}
-: ${BOOTROM:=/usr/local/share/uefi-firmware/BHYVE_UEFI.fd}
-: ${BRIDGE:=bhyve0}
-: ${OPTS:=}
+: "${BHYVE:=/usr/sbin/bhyve}"
+: "${BOOTROM:=/usr/local/share/uefi-firmware/BHYVE_UEFI.fd}"
+: "${OPTS:=}"
 
-name=${PWD##*@}
+# bhyve@<name>@<mem>@<cpus>@<bridge>
+myifs="${IFS}"
+IFS="@"
+i=0
+for f in ${PWD}; do
+	case ${i} in
+	1) name=${f} ;;
+	2) mem=${f} ;;
+	3) cpus=${f} ;;
+	4) bridge=${f} ;;
+	5) exit 1 ;;
+	esac
+	i=$((i + 1))
+done
+IFS="${myifs}"
 
-if ! ifconfig ${BRIDGE} > /dev/null 2>&1; then
-	ifconfig bridge create name ${BRIDGE} group runit-managed up
+: "${mem:=512m}"
+: "${cpus:=1}"
+: "${bridge:=bhyve0}"
+
+if ! ifconfig ${bridge} > /dev/null 2>&1; then
+	ifconfig bridge create name ${bridge} group runit-managed up
 fi
-kldload nmdm > /dev/null 2>&1 || true
+kldload -qn nmdm
+kldload -qn if_tap
 sysctl net.link.tap.up_on_open=1 > /dev/null
 
-intf=$(ifconfig tap create group bhyve-${name} group runit-managed)
-ifconfig ${BRIDGE} addm ${intf}
+slots="-s 0,hostbridge"
+[ -r "cdrom" ] && slots="${slots} -s 1,ahci-cd,$(readlink cdrom)"
+for i in $(seq 0 15); do
+	if [ -r "disk${i}" ]; then
+		disk="$(readlink "disk${i}")"
+		slots="${slots} -s $((i + 2)),virtio-blk,${disk},nocache,direct"
+	fi
+done
+
+intf=$(ifconfig tap create group "bhyve-${name}" group runit-managed)
+ifconfig "${bridge}" addm "${intf}"
+slots="${slots} -s 18,virtio-net,${intf}"
+slots="${slots}	-s 31,lpc"
+
+# shellcheck disable=SC2086
 exec ${BHYVE} -A -H -P \
-     	-s 0,hostbridge \
-	-c ${CPUS} \
-	-m ${MEM} \
-	-s 4,virtio-blk,${DISK} \
-	-s 5,virtio-net,${intf} \
-	-l com1,/dev/nmdm${name}A \
-	-l bootrom,${BOOTROM} \
-	-s 31,lpc \
+	-c ${cpus} \
+	-m ${mem} \
+	${slots} \
+	-l "com1,/dev/nmdm${name}A" \
+	-l "bootrom,${BOOTROM}" \
 	${OPTS} \
-	${name}
+	"${name}"
