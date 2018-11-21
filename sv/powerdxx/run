@@ -1,4 +1,4 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
 # shellcheck disable=SC2086
-exec /usr/local/sbin/powerd++ -f ${OPTS} > /dev/null 2>&1
+exec /usr/local/sbin/powerd++ -f ${OPTS} >/dev/null 2>&1

@@ -2,4 +2,4 @@
 [ -r conf ] && . ./conf
 /usr/sbin/automount
 # shellcheck disable=SC2086
-exec /usr/sbin/automountd -d ${OPTS} > /dev/null 2>&1
+exec /usr/sbin/automountd -d ${OPTS} >/dev/null 2>&1

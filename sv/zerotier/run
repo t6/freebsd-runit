@@ -1,5 +1,5 @@
 #!/bin/sh
-kldload -qn if_tap > /dev/null 2>&1 || true
+kldload -qn if_tap >/dev/null 2>&1 || true
 [ -r conf ] && . ./conf
 # shellcheck disable=SC2086
 exec /usr/local/sbin/zerotier-one ${OPTS}

@@ -26,18 +26,18 @@ add_paths() {
 }
 
 add_paths "/lib /usr/lib /usr/lib/compat /usr/local/lib /usr/local/lib/compat/pkg /etc/ld-elf.so.conf" \
-	  /usr/local/libdata/ldconfig \
-	  -elf -v
+	/usr/local/libdata/ldconfig \
+	-elf -v
 
 case $(sysctl -n hw.machine_arch) in
-	amd64|powerpc64)
-		add_paths "/usr/lib32 /usr/lib32/compat" \
-			  /usr/local/libdata/ldconfig32 \
-			  -32 -m
-		;;
-	armv[67])
-		add_paths "/usr/libsoft /usr/libsoft/compat /usr/local/libsoft" \
-			  /usr/local/libdata/ldconfigsoft \
-			  -soft -m
-		;;
+amd64 | powerpc64)
+	add_paths "/usr/lib32 /usr/lib32/compat" \
+		/usr/local/libdata/ldconfig32 \
+		-32 -m
+	;;
+armv[67])
+	add_paths "/usr/libsoft /usr/libsoft/compat /usr/local/libsoft" \
+		/usr/local/libdata/ldconfigsoft \
+		-soft -m
+	;;
 esac

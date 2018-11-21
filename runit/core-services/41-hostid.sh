@@ -29,8 +29,7 @@
 [ -n "${JAILED}" ] && return 0
 hostid_file=/etc/hostid
 
-hostid_set()
-{
+hostid_set() {
 	uuid=$1
 	# Generate hostid based on hostuuid - take first four bytes from md5(uuid).
 	# shellcheck disable=SC2039
@@ -45,8 +44,7 @@ hostid_set()
 	sysctl kern.hostid="${id}" >/dev/null
 }
 
-valid_hostid()
-{
+valid_hostid() {
 	uuid=$1
 
 	x="[0-9a-f]"
@@ -55,42 +53,26 @@ valid_hostid()
 	# Check against a blacklist before
 	# accepting the UUID.
 	case "${uuid}" in
-	00000000-0000-0000-0000-000000000000)
-		;;
-	00020003-0004-0005-0006-000700080009)
-		;;
-	03000200-0400-0500-0006-000700080009)
-		;;
-	07090201-0103-0301-0807-060504030201)
-		;;
-	11111111-1111-1111-1111-111111111111)
-		;;
-	11111111-2222-3333-4444-555555555555)
-		;;
-	4c4c4544-0000-2010-8020-80c04f202020)
-		;;
-	58585858-5858-5858-5858-585858585858)
-		;;
-	890e2d14-cacd-45d1-ae66-bc80e8bfeb0f)
-		;;
-	8e275844-178f-44a8-aceb-a7d7e5178c63)
-		;;
-	dc698397-fa54-4cf2-82c8-b1b5307a6a7f)
-		;;
-	fefefefe-fefe-fefe-fefe-fefefefefefe)
-		;;
-	*-ffff-ffff-ffff-ffffffffffff)
-		;;
-	$y$y-$y-$y-$y-$y$y$y)
-		return 0
-		;;
+	00000000-0000-0000-0000-000000000000) ;;
+	00020003-0004-0005-0006-000700080009) ;;
+	03000200-0400-0500-0006-000700080009) ;;
+	07090201-0103-0301-0807-060504030201) ;;
+	11111111-1111-1111-1111-111111111111) ;;
+	11111111-2222-3333-4444-555555555555) ;;
+	4c4c4544-0000-2010-8020-80c04f202020) ;;
+	58585858-5858-5858-5858-585858585858) ;;
+	890e2d14-cacd-45d1-ae66-bc80e8bfeb0f) ;;
+	8e275844-178f-44a8-aceb-a7d7e5178c63) ;;
+	dc698397-fa54-4cf2-82c8-b1b5307a6a7f) ;;
+	fefefefe-fefe-fefe-fefe-fefefefefefe) ;;
+	*-ffff-ffff-ffff-ffffffffffff) ;;
+	$y$y-$y-$y-$y-$y$y$y) return 0 ;;
 	esac
 
 	return 1
 }
 
-hostid_hardware()
-{
+hostid_hardware() {
 	uuid=$(kenv -q smbios.system.uuid)
 
 	if valid_hostid "$uuid"; then
@@ -98,8 +80,7 @@ hostid_hardware()
 	fi
 }
 
-hostid_generate()
-{
+hostid_generate() {
 	# First look for UUID in hardware.
 	uuid=$(hostid_hardware)
 	if [ -z "${uuid}" ]; then
@@ -114,7 +95,7 @@ hostid_generate()
 # If ${hostid_file} already exists, we take UUID from there.
 if [ -r ${hostid_file} ]; then
 	# shellcheck disable=SC2162
-	read saved_hostid < ${hostid_file}
+	read saved_hostid <${hostid_file}
 	if valid_hostid "${saved_hostid}"; then
 		hostid_set "$(cat ${hostid_file})"
 	fi

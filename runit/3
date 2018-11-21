@@ -20,7 +20,7 @@ if [ -r /dev/mixer0 ]; then
 	msg "Saving soundcard mixer values"
 	for dev in /dev/mixer*; do
 		if [ -r "${dev}" ]; then
-			/usr/sbin/mixer -f "${dev}" -s > "/var/db/${dev##*/}-state" 2>/dev/null
+			/usr/sbin/mixer -f "${dev}" -s >"/var/db/${dev##*/}-state" 2>/dev/null
 		fi
 	done
 fi
@@ -29,46 +29,46 @@ fi
 # Write some entropy so when the machine reboots /dev/random
 # can be reseeded
 msg 'Writing entropy file'
-rm -f /entropy 2> /dev/null
+rm -f /entropy 2>/dev/null
 oumask=$(umask)
 umask 077
-if touch /entropy 2> /dev/null; then
+if touch /entropy 2>/dev/null; then
 	entropy_file_confirmed=/entropy
 else
 	# Try this as a reasonable alternative for read-only
 	# roots, diskless workstations, etc.
-	rm -f /var/db/entropy-file 2> /dev/null
-	if touch /var/db/entropy-file 2> /dev/null; then
+	rm -f /var/db/entropy-file 2>/dev/null
+	if touch /var/db/entropy-file 2>/dev/null; then
 		entropy_file_confirmed=/var/db/entropy-file
 	fi
 fi
 case ${entropy_file_confirmed} in
-	'')
-		msg_warn 'write failed (read-only fs?)'
-		;;
-	*)
-		dd if=/dev/random of=${entropy_file_confirmed} \
-		   bs=4096 count=1 2> /dev/null ||
-			msg_warn 'write failed (unwriteable file or full fs?)'
-		;;
+'')
+	msg_warn 'write failed (read-only fs?)'
+	;;
+*)
+	dd if=/dev/random of=${entropy_file_confirmed} \
+		bs=4096 count=1 2>/dev/null ||
+		msg_warn 'write failed (unwriteable file or full fs?)'
+	;;
 esac
 umask "${oumask}"
 
 msg 'Writing early boot entropy file'
-rm -f /boot/entropy 2> /dev/null
+rm -f /boot/entropy 2>/dev/null
 oumask=$(umask)
 umask 077
-if touch /boot/entropy 2> /dev/null; then
+if touch /boot/entropy 2>/dev/null; then
 	entropy_boot_file_confirmed=/boot/entropy
 fi
 case ${entropy_boot_file_confirmed} in
-	'')
-		msg_warn 'write failed (read-only fs?)'
-		;;
-	*)
-		dd if=/dev/random of=${entropy_boot_file_confirmed} \
-		   bs=4096 count=1 2> /dev/null ||
-			msg_warn 'write failed (unwriteable file or full fs?)'
-		;;
+'')
+	msg_warn 'write failed (read-only fs?)'
+	;;
+*)
+	dd if=/dev/random of=${entropy_boot_file_confirmed} \
+		bs=4096 count=1 2>/dev/null ||
+		msg_warn 'write failed (unwriteable file or full fs?)'
+	;;
 esac
 umask "${oumask}"

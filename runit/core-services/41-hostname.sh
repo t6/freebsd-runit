@@ -2,7 +2,7 @@
 
 if [ -r "/usr/local/etc/runit/hostname" ]; then
 	_hostname=$(cat /usr/local/etc/runit/hostname)
-elif [ -n "$(kenv runit.hostname 2> /dev/null)" ]; then
+elif [ -n "$(kenv runit.hostname 2>/dev/null)" ]; then
 	_hostname=$(kenv runit.hostname)
 else
 	msg_warn "Didn't setup a hostname!"

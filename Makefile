@@ -7,6 +7,7 @@ LN?=		ln
 MKDIR?=		mkdir -p
 PRINTF?=	printf
 SED?=		sed
+SHFMT?=		shfmt
 TAR?=		tar
 
 LOCALBASE?=	/usr/local
@@ -54,6 +55,9 @@ install:
 		${LN} -sf /var/run/runit/supervise.$$(echo $${dir} | ${SED} "s,/,-,g") \
 			$${dir}/supervise' \
 		SUPERVISE {} \;
+
+format:
+	${SHFMT} -w -p runit sv
 
 archive:
 	@tag=$$(${GIT} tag --contains HEAD); ver=$${tag#v*}; \

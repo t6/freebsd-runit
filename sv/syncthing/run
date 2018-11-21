@@ -3,7 +3,7 @@
 : "${HOME:="/usr/local/etc/syncthing"}"
 : "${USER:="syncthing"}"
 : "${GROUP:="syncthing"}"
-if [ ! -e ${HOME} ] ; then
+if [ ! -e ${HOME} ]; then
 	install -d -o ${USER} -g ${GROUP} ${HOME}
 fi
 export USER

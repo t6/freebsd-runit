@@ -6,7 +6,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/rescue
 detect_jail
 
 runlevel=default
-if [ -z "${JAILED}" ] && kenv -q runit.runlevel > /dev/null; then
+if [ -z "${JAILED}" ] && kenv -q runit.runlevel >/dev/null; then
 	arg=$(kenv runit.runlevel)
 	if [ -d /usr/local/etc/runit/runsvdir/"$arg" ]; then
 		echo "Runlevel detected via kenv: '$arg'"

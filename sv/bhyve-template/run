@@ -25,12 +25,12 @@ IFS="${myifs}"
 : "${cpus:=1}"
 : "${bridge:=bhyve0}"
 
-if ! ifconfig ${bridge} > /dev/null 2>&1; then
+if ! ifconfig ${bridge} >/dev/null 2>&1; then
 	ifconfig bridge create name ${bridge} group runit-managed up
 fi
 kldload -qn nmdm
 kldload -qn if_tap
-sysctl net.link.tap.up_on_open=1 > /dev/null
+sysctl net.link.tap.up_on_open=1 >/dev/null
 
 slots="-s 0,hostbridge"
 [ -r "cdrom" ] && slots="${slots} -s 1,ahci-cd,$(readlink cdrom)"

@@ -17,7 +17,7 @@ IFS="${myifs}"
 : "${ALTNAMES:=}"
 install -d -o root -g wheel -m 755 "${SSLDIR}/${domain}"
 install -d -m700 -o root -g wheel "${SSLDIR}/${domain}/private"
-install -d -o root -g www -m 770 "${CHALLENGEDIR}" 
+install -d -o root -g www -m 770 "${CHALLENGEDIR}"
 # shellcheck disable=SC2086
 exec /usr/local/bin/acme-client -b \
 	-C "${CHALLENGEDIR}" \

@@ -32,7 +32,7 @@ _repo_needs_update() {
 
 _update_repo() {
 	_status=$(${GIT} -C "$1" status --porcelain)
-	if [ ! -z  "${_status}" ]; then
+	if [ ! -z "${_status}" ]; then
 		_msg "$1 is dirty.  Skipping this update."
 		echo "${_status}" | while read line; do
 			_msg "${line}"
@@ -40,7 +40,7 @@ _update_repo() {
 		exit 1
 	fi
 
-	_msg "Updating ${}"
+	_msg "Updating $1"
 	${GIT} -C "$1" checkout -q "$2"
 	${GIT} -C "$1" fetch -q origin
 	${GIT} -C "$1" reset -q --hard "origin/$2"

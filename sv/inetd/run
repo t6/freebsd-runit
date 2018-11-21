@@ -2,4 +2,4 @@
 [ -r conf ] && . ./conf
 : "${OPTS:=-wW -C 60}"
 # shellcheck disable=SC2086
-exec /usr/sbin/inetd -d ${OPTS} > /dev/null 2>&1
+exec /usr/sbin/inetd -d ${OPTS} >/dev/null 2>&1

@@ -4,9 +4,9 @@
 : "${SHARED:=/usr/local/share/gitea}"
 exec 2>&1
 exec chpst -u ${USER} \
-     env -i "GITEA_WORK_DIR=${SHARED}" \
-     "GITEA_CUSTOM=/usr/local/etc/gitea" \
-     "HOME=$(eval echo ~${USER%%:*})" \
-     "PATH=/usr/local/bin:${PATH}" \
-     "USER=${USER%%:*}" \
-     /usr/local/sbin/gitea web
+	env -i "GITEA_WORK_DIR=${SHARED}" \
+	"GITEA_CUSTOM=/usr/local/etc/gitea" \
+	"HOME=$(eval echo ~${USER%%:*})" \
+	"PATH=/usr/local/bin:${PATH}" \
+	"USER=${USER%%:*}" \
+	/usr/local/sbin/gitea web

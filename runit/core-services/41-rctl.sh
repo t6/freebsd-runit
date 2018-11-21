@@ -3,8 +3,8 @@ if [ -e "/etc/rctl.conf" ]; then
 	# shellcheck disable=SC2034,SC2162
 	while read var comments; do
 		case ${var} in
-		\#*|'') ;;
+		\#* | '') ;;
 		*) echo "${var}" ;;
 		esac
-	done < /etc/rctl.conf | xargs rctl -a
+	done </etc/rctl.conf | xargs rctl -a
 fi

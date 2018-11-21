@@ -5,7 +5,7 @@
 : "${WPA_SUPPLICANT:=/usr/sbin/wpa_supplicant}"
 
 # Wait for interface
-while ! ifconfig ${WPA_INTERFACE} > /dev/null 2>&1; do
+while ! ifconfig ${WPA_INTERFACE} >/dev/null 2>&1; do
 	sleep 1
 done
 exec 2>&1

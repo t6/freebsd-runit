@@ -5,7 +5,7 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin:/rescue
 
 detect_jail
 
-if [ -z "${JAILED}" ] && [ -n "$(kenv boot_single 2> /dev/null)" ]; then
+if [ -z "${JAILED}" ] && [ -n "$(kenv boot_single 2>/dev/null)" ]; then
 	if [ "x$(kenv boot_single)" = "xYES" ]; then
 		msg_warn "Booting in single user mode!"
 		emergency_shell
@@ -18,5 +18,8 @@ for f in /usr/local/etc/runit/core-services/*.sh; do
 done
 
 if [ -z "${JAILED}" ]; then
-	( umask 022 ; /sbin/dmesg > /var/run/dmesg.boot )
+	(
+		umask 022
+		/sbin/dmesg >/var/run/dmesg.boot
+	)
 fi

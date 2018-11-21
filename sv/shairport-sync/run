@@ -4,4 +4,4 @@
 : "${SHAIRPORT_GROUP:=nobody}"
 # shellcheck disable=SC2086
 exec chpst -u ${SHAIRPORT_USER}:${SHAIRPORT_GROUP} \
-	 /usr/local/bin/shairport-sync ${OPTS} 2>&1
+	/usr/local/bin/shairport-sync ${OPTS} 2>&1

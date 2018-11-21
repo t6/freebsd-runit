@@ -2,5 +2,5 @@
 [ -r conf ] && . ./conf
 intf=${PWD##*@}
 # Wait for interface
-ifconfig "${intf}" > /dev/null 2>&1 || exit 1
+ifconfig "${intf}" >/dev/null 2>&1 || exit 1
 exec dhclient -d "${intf}" 2>&1

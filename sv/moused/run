@@ -2,4 +2,4 @@
 [ -r conf ] && . ./conf
 : "${OPTS:=-p /dev/psm0 -t auto}"
 # shellcheck disable=SC2086
-exec /usr/sbin/moused -f ${OPTS} > /dev/null 2>&1
+exec /usr/sbin/moused -f ${OPTS} >/dev/null 2>&1

@@ -3,11 +3,11 @@
 # creating a new jail that uses runit to start and supervise services.
 export RUNLEVEL=$2
 case "$1" in
-	start)
-		. /usr/local/etc/runit/1
-		. /usr/local/etc/runit/2
-		;;
-	stop)
-		. /usr/local/etc/runit/3
-		;;
+start)
+	. /usr/local/etc/runit/1
+	. /usr/local/etc/runit/2
+	;;
+stop)
+	. /usr/local/etc/runit/3
+	;;
 esac

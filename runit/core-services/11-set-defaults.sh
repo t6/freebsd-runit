@@ -8,7 +8,7 @@
 # - Turn off console bell
 if [ -z "${JAILED}" ]; then
 	msg "Setting system defaults"
-	kldload -n cc_cubic > /dev/null 2>&1 || true
+	kldload -n cc_cubic >/dev/null 2>&1 || true
 	sysctl \
 		net.inet.tcp.cc.algorithm=cubic \
 		security.bsd.see_other_gids=0 \
@@ -30,13 +30,13 @@ if [ -z "${JAILED}" ]; then
 		security.bsd.hardlink_check_gid=1 \
 		security.bsd.hardlink_check_uid=1 \
 		kern.random.harvest.mask=511 \
-		> /dev/null
+		>/dev/null
 	case "$(sysctl -qn kern.vty)" in
-		vt) sysctl kern.vt.enable_bell=0 > /dev/null ;;
-		sc) sysctl hw.syscons.bell=0 > /dev/null ;;
+	vt) sysctl kern.vt.enable_bell=0 >/dev/null ;;
+	sc) sysctl hw.syscons.bell=0 >/dev/null ;;
 	esac
 fi
 
 msg "Loading /etc/sysctl.conf"
-[ -r /etc/sysctl.conf ] && sysctl -qf /etc/sysctl.conf > /dev/null
-[ -r /etc/sysctl.conf.local ] && sysctl -qf /etc/sysctl.conf.local > /dev/null
+[ -r /etc/sysctl.conf ] && sysctl -qf /etc/sysctl.conf >/dev/null
+[ -r /etc/sysctl.conf.local ] && sysctl -qf /etc/sysctl.conf.local >/dev/null

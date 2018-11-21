@@ -5,7 +5,7 @@ if [ -z "${JAILED}" ]; then
 	msg "Mounting ZFS datasets"
 	zfs mount -va || emergency_shell
 
-	msg "Sharing ZFS datasets"	
+	msg "Sharing ZFS datasets"
 	zfs share -a || emergency_shell
 	if [ ! -r /etc/zfs/exports ]; then
 		touch /etc/zfs/exports
