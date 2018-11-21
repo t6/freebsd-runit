@@ -1,7 +1,7 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
 name=${PWD##*@}
-: ${ROOT:=/usr/jails/${name}}
-: ${CONFIG:=${PWD}/jail.conf}
-jail -f ${CONFIG} ${OPTS} -r ${name} 2>&1
-umount -f ${ROOT}/var/run
+: ${path:="$(readlink root)"}
+: ${path:="/usr/jails/${name}"}
+jail -f supervise/jail.conf ${OPTS} -r ${name} 2>&1
+umount -f "${path}/var/run"
