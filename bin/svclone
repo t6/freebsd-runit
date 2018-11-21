@@ -15,8 +15,9 @@ create_services() {
 			return 1
 		fi
 		mkdir -p "${target}/log"
-		printf "#!/bin/sh\n[ -r conf ] && . ./conf\nexec ${target##*/} \${OPTS}\n" > "${target}/run"
-		printf "#!/bin/sh\nexec logger -t ${target##*/}\n" > "${target}/log/run"
+		# shellcheck disable=SC2016
+		printf '#!/bin/sh\n[ -r conf ] && . ./conf\nexec %s ${OPTS}\n' "${target##*/}" >"${target}/run"
+		printf '#!/bin/sh\nexec logger -t %s\n' "${target##*/}" >"${target}/log/run"
 		chmod 755 "${target}/run" "${target}/log/run"
 		ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${target}/supervise"
 		ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${target}/log/supervise"
@@ -41,7 +42,7 @@ clone_services() {
 		fi
 		mkdir -p "${target}"
 		tar -C "${source}" --exclude supervise --exclude '*~' -Lcf - . | tar -C "${target}" -xf -
-		find -d "${target}" -type d | while read file; do
+		find -d "${target}" -type d | while read -r file; do
 			if [ -x "${file}/run" ]; then
 				ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${file}/supervise"
 			fi
@@ -59,7 +60,7 @@ regen_supervise() {
 			echo "svclone: ${target} is not a service directory" 1>&2
 			err=1
 		fi
-		find -d "${target}" -type d | while read file; do
+		find -d "${target}" -type d | while read -r file; do
 			if [ -x "${file}/run" ]; then
 				ln -sf "${SUPERVISE_PREFIX}$(uuidgen)" "${file}/supervise"
 			fi
@@ -77,8 +78,8 @@ remove_supervise() {
 			echo "svclone: ${target} is not a service directory" 1>&2
 			err=1
 		fi
-		find -d "${target}" -name supervise -and \( -type l -or -type d \) | \
-			while read file; do
+		find -d "${target}" -name supervise -and \( -type l -or -type d \) |
+			while read -r file; do
 				rm -rf "${file}"
 			done
 	done
@@ -100,11 +101,11 @@ main() {
 	sflag=
 	while getopts ":crsu" arg; do
 		case ${arg} in
-			c) cflag=1;;
-			r) rflag=1;;
-			s) sflag=1;;
-			u) SUPERVISE_PREFIX="/var/run/runit/users/${USER}/supervise.";;
-			*) usage;;
+		c) cflag=1 ;;
+		r) rflag=1 ;;
+		s) sflag=1 ;;
+		u) SUPERVISE_PREFIX="/var/run/runit/users/${USER}/supervise." ;;
+		*) usage ;;
 		esac
 	done
 	shift $((OPTIND - 1))

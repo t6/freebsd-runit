@@ -59,11 +59,11 @@ install:
 		SUPERVISE {} \;
 
 format:
-	${SHFMT} -w -s -p runit sv
+	${SHFMT} -w -s -p bin runit sv
 
 lint:
-	${SHFMT} -d -s -p runit sv
-	${SHFMT} -p -f runit sv | ${XARGS} ${SHELLCHECK} -s sh -x -e SC1091
+	${SHFMT} -d -s -p bin runit sv
+	${SHFMT} -p -f bin runit sv | ${XARGS} ${SHELLCHECK} -s sh -x -e SC1091,SC2039
 
 archive:
 	@tag=$$(${GIT} tag --contains HEAD); ver=$${tag#v*}; \
