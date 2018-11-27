@@ -7,3 +7,13 @@ name=${PWD##*@}
 for intf in $(ifconfig -g "bhyve-${name}"); do
 	ifconfig "${intf}" destroy
 done
+
+case "$1" in
+0) ;; # rebooted
+1 | 2 | 3 | 4)
+	# Do not restart the VM when it
+	# powered off | halted | triple faulted | exited due to an error
+	# and require manual admin intervention to restart it
+	sv down ${PWD}
+	;;
+esac
