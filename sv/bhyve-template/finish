@@ -2,7 +2,21 @@
 set -eu
 [ -r conf ] && . ./conf
 : "${BHYVECTL:=/usr/sbin/bhyvectl}"
-name=${PWD##*@}
+
+# bhyve@<name>@<mem>@<cpus>@<bridge>
+myifs="${IFS}"
+IFS="@"
+i=0
+for f in ${PWD}; do
+	case ${i} in
+	1) name=${f} ;;
+	2 | 3 | 4) ;;
+	5) exit 1 ;;
+	esac
+	i=$((i + 1))
+done
+IFS="${myifs}"
+
 [ -r "/dev/vmm/${name}" ] && ${BHYVECTL} --vm="${name}" --destroy
 for intf in $(ifconfig -g "bhyve-${name}"); do
 	ifconfig "${intf}" destroy
