@@ -28,6 +28,6 @@ case "$1" in
 	# Do not restart the VM when it
 	# powered off | halted | triple faulted | exited due to an error
 	# and require manual admin intervention to restart it
-	sv down ${PWD}
+	sv down "${PWD}"
 	;;
 esac
