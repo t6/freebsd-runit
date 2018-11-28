@@ -1,6 +1,13 @@
 #!/bin/sh
+# shellcheck source=sv/acme-client-template/settings.sh
+. ./settings.sh
 case "$1" in
 0) # Certificates were changed
+	# Hiawatha needs everything in one file
+	cat "${SSLDIR}/${domain}/private/${domain}.pem" \
+		"${SSLDIR}/${domain}/cert.pem" \
+		>"${SSLDIR}/${domain}/private/hiawatha.crt"
+	chmod 400 "${SSLDIR}/${domain}/private/hiawatha.crt"
 	# Tell HTTP server to reload renewed certificates
 	#sv check jail-http > /dev/null || exit 0
 	#exec jexec http sv reload obhttpd
