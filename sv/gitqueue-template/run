@@ -1,22 +1,36 @@
 #!/bin/sh
+set -eu
 [ -r conf ] && . ./conf
-: "${SNOOZE_ARGS="-H'*' -M'/5'"}"
-# gitqueue@<path>@<branch>[@<user>]
-# e.g. gitqueue@__usr__src@master
+# gitqueue@<path>@<branch>[@<user>[:<group>]][@<queuename>]
+# e.g. gitqueue@__usr__src@master@pkgbuild:pkgbuild@shared_queue
+# The repository must be read/writable by the user
 myifs="${IFS}"
 IFS="@"
 i=0
 for f in ${PWD}; do
 	case ${i} in
-	1) repo_path=$(echo "${f}" | sed 's,__,/,g') ;;
-	2) branch=${f} ;;
-	3) chuser="chpst -u ${f}" ;;
-	4) exit 1 ;;
+	1) REPO_PATH=$(echo "${f}" | sed 's,__,/,g') ;;
+	2) BRANCH="${f}" ;;
+	3) GITUSER="${f}" ;;
+	4) NQDIR="/var/db/gitqueue/${f}" ;;
+	5) exit 1 ;;
 	esac
 	i=$((i + 1))
 done
 IFS="${myifs}"
-export repo_path
-export branch
+: "${GIT:="/usr/local/bin/git"}"
+: "${GITUSER:="nobody:nobody"}"
+: "${LOGGER:="/usr/bin/logger"}"
+: "${NQ:="/usr/local/bin/nq"}"
+: "${NQDIR:="/var/db/gitqueue/${GITUSER}/${REPO_PATH}"}"
+: "${SNOOZE_ARGS="-H'*' -M'/5'"}"
+export REPO_PATH
+export BRANCH
+export GIT
+export LOGGER
+export NQ
+export NQDIR
+install -d -m700 -o "${GITUSER%%:*}" -g "${GITUSER##*:}" "${NQDIR}"
+chown -R "${GITUSER}" "${NQDIR}"
 # shellcheck disable=SC2086
-exec ${chuser} /usr/local/bin/snooze ${SNOOZE_ARGS} "${PWD}/update" 2>&1
+exec chpst -u "${GITUSER}" /usr/local/bin/snooze ${SNOOZE_ARGS} "${PWD}/update" 2>&1

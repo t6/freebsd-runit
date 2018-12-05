@@ -2,11 +2,6 @@
 set -eu
 [ -r conf ] && . ./conf
 
-: "${GIT:=/usr/local/bin/git}"
-: "${LOGGER:=/usr/bin/logger}"
-: "${NQ:=/usr/local/bin/nq}"
-: "${NQDIR:=/var/db/gitqueue}"
-
 export NQDIR
 
 # While runit takes care of logging output from a service, it won't
@@ -50,14 +45,14 @@ _update_repo() {
 _nq -t || exit 0
 
 # shellcheck disable=SC2154
-if [ -z "${repo_path}" ] || [ -z "${branch}" ]; then
+if [ -z "${REPO_PATH}" ] || [ -z "${BRANCH}" ]; then
 	exit 1
 fi
-_repo_needs_update "${repo_path}" "${branch}" || exit 0
-_update_repo "${repo_path}" "${branch}"
-if [ -x "${repo_path}/.gitqueue.d/run" ]; then
-	cd "${repo_path}"
-	_nq "${repo_path}/.gitqueue.d/run"
+_repo_needs_update "${REPO_PATH}" "${BRANCH}" || exit 0
+_update_repo "${REPO_PATH}" "${BRANCH}"
+if [ -x "${REPO_PATH}/.gitqueue.d/run" ]; then
+	cd "${REPO_PATH}"
+	_nq "${REPO_PATH}/.gitqueue.d/run"
 fi
 
 exit 0
