@@ -12,7 +12,7 @@ for f in ${PWD}; do
 	1) REPO_PATH=$(echo "${f}" | sed 's,__,/,g') ;;
 	2) BRANCH="${f}" ;;
 	3) GITUSER="${f}" ;;
-	4) NQDIR="/var/db/gitqueue/${f}" ;;
+	4) QUEUE="${f}" ;;
 	5) exit 1 ;;
 	esac
 	i=$((i + 1))
@@ -22,7 +22,8 @@ IFS="${myifs}"
 : "${GITUSER:="nobody:nobody"}"
 : "${LOGGER:="/usr/bin/logger"}"
 : "${NQ:="/usr/local/bin/nq"}"
-: "${NQDIR:="/var/db/gitqueue/${GITUSER}/${REPO_PATH}"}"
+: "${QUEUE:="${GITUSER}/${REPO_PATH}"}"
+: "${NQDIR:="/var/db/gitqueue/${QUEUE}"}"
 : "${SNOOZE_ARGS="-H'*' -M'/5'"}"
 export REPO_PATH
 export BRANCH
@@ -30,6 +31,7 @@ export GIT
 export LOGGER
 export NQ
 export NQDIR
+export QUEUE
 install -d -m700 -o "${GITUSER%%:*}" -g "${GITUSER##*:}" "${NQDIR}"
 chown -R "${GITUSER}" "${NQDIR}"
 # shellcheck disable=SC2086

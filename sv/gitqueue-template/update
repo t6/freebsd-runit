@@ -48,11 +48,19 @@ _nq -t || exit 0
 if [ -z "${REPO_PATH}" ] || [ -z "${BRANCH}" ]; then
 	exit 1
 fi
-_repo_needs_update "${REPO_PATH}" "${BRANCH}" || exit 0
-_update_repo "${REPO_PATH}" "${BRANCH}"
+cd "${REPO_PATH}"
+if [ -x "${REPO_PATH}/.gitqueue.d/check" ]; then
+	"${REPO_PATH}/.gitqueue.d/check" "${QUEUE}" "${REPO_PATH}" "${BRANCH}" || exit 0
+else
+	_repo_needs_update "${REPO_PATH}" "${BRANCH}" || exit 0
+fi
+if [ -x "${REPO_PATH}/.gitqueue.d/update" ]; then
+	"${REPO_PATH}/.gitqueue.d/update" "${QUEUE}" "${REPO_PATH}" "${BRANCH}"
+else
+	_update_repo "${REPO_PATH}" "${BRANCH}"
+fi
 if [ -x "${REPO_PATH}/.gitqueue.d/run" ]; then
-	cd "${REPO_PATH}"
-	_nq "${REPO_PATH}/.gitqueue.d/run"
+	_nq "${REPO_PATH}/.gitqueue.d/run" "${QUEUE}"
 fi
 
 exit 0
