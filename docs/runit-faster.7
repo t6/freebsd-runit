@@ -557,7 +557,6 @@ For vanilla
 systems this can be replicated via
 .Pa /etc/rc.conf :
 .Bd -literal -offset indent
-TODO
 pf_enable="YES"
 .Ed
 .Pp
@@ -580,26 +579,21 @@ Modify
 .Pa local/jail@http/jail.conf
 to suite your needs
 .Bd -literal -offset indent
-http {
-	path = /usr/jails/$name;
-	host.hostname = $name.example.com;
-	mount.devfs;
-	mount.fstab = "/var/service/jail@$name/fstab";
-	exec.start = "/usr/local/etc/runit/jail start";
-	exec.stop = "/usr/local/etc/runit/jail stop";
-	ip4.addr = "jail0|192.168.95.2/24";
-}
+ip4.addr = "jail0|192.168.95.2/24";
 .Ed
 .Pp
-If you change
-.Pa path
-in
+By default the jail root is determined from the jail name and set to
+.Pa /usr/jails/$name .
+To change it create a
+.Pa root
+symlink pointing to the jail's root directory.
+.Pp
+By default the jail's hostname is determined from the jail name.
+Edit
 .Pa jail.conf
-from the default also make sure to set it in
-.Pa local/jail@http/conf
-as well:
+to override it:
 .Bd -literal -offset indent
-ROOT=/path/to/jail
+host.hostname = "http-runit.example.com";
 .Ed
 .Pp
 Setup a basic jail with your favourite method e.g.,
@@ -615,6 +609,12 @@ pkg -c /usr/jails/http install nginx runit-faster
 ln -s /usr/local/etc/sv/nginx \\
 	/usr/jails/http/usr/local/etc/runit/runsvdir/default
 .Ed
+.Pp
+Edit
+.Pa fstab
+to mount filesystems when the jail starts.
+.Sy %%jail%%
+is substituted with the jail's root directory.
 .Pp
 Finally enable the jail on the host
 .Bd -literal -offset indent
