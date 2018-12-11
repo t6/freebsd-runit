@@ -1,4 +1,4 @@
-.Dd October 27, 2018
+.Dd December 11, 2018
 .Dt RUNIT-FASTER 7
 .Os
 .Sh NAME
@@ -224,7 +224,8 @@ Use
 .Xr devmatch 8
 to load kernel modules.
 .It Sy 11-kld.sh
-Load kernel modules
+Load kernel modules listed in
+.Pa /usr/local/etc/runit/modules .
 .It Sy 11-set-defaults.sh
 Set some system defaults.
 .It Sy 12-console.sh
@@ -254,7 +255,7 @@ Mount ZFS datasets.
 Initialize
 .Pa /var .
 .It Sy 33-microcode_update.sh
-Update CPU microcode if sysutils/devcpu-data is installed
+Update CPU microcode if sysutils/devcpu-data is installed.
 .It Sy 33-savecore.sh
 Run
 .Xr savecore 8
@@ -308,14 +309,41 @@ VMs.
 Create a jail0 interface with an assigned network of
 192.168.95.0/24 to ease setting up jails.
 .It Sy 51-pf.sh
-Enable PF and load /etc/pf.conf
-.It Sy 99-cleanup.sh
-Clean /tmp
-.It Sy 99-mount-late.sh
-Mount all late filesystems
-.It Sy 99-qemu_user_static.sh
-Register the QEMU interpreters from emulators/qemu-user-static with
+Enable PF and load /etc/pf.conf.
+.It Sy 91-cleanup.sh
+Clean
+.Pa /tmp .
+.It Sy 92-nfs.sh
+Start the NFS daemons when an
+.Pa /etc/exports
+or
+.Pa /etc/zfs/exports
+exists and exports some filesystems.
+.It Sy 93-ctld.sh
+Start
+.Xr ctld 8
+when
+.Pa /etc/ctl.conf
+exists.
+.Xr ctld 8
+has no support for starting the daemon in the foreground, so it cannot
+easily be supervised with a
+.Xr runsv 8
+service.
+.It Sy 95-mount-late.sh
+Mount all late filesystems.
+.It Sy 99-binmisc.sh
+Register the QEMU interpreters from emulators/qemu-user-static and
+WINE from emulators/wine with
 .Xr binmiscctl 8 .
+.It Sy 99-start-jails.sh
+Start all vanilla
+.Xr rc 8
+jails defined in
+.Pa /etc/jail.conf
+that do not use
+.Nm
+for starting services.
 .El
 .Pp
 The core services will be sourced in lexicographic order.
