@@ -1,0 +1,20 @@
+#!/bin/sh
+set -eu
+[ -r conf ] && . ./conf
+: "${CU:=/usr/bin/cu}"
+
+# bhyve@<name>@<mem>@<cpus>@<bridge>@<bootmethod>
+myifs="${IFS}"
+IFS="@"
+i=0
+for f in ${PWD}; do
+	case ${i} in
+	1) name=${f} ;;
+	2 | 3 | 4 | 5) ;;
+	6) exit 1 ;;
+	esac
+	i=$((i + 1))
+done
+IFS="${myifs}"
+
+exec ${CU} -l "/dev/nmdm${name}B"
