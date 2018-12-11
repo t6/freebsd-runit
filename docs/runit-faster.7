@@ -447,30 +447,74 @@ script.
 Service template to create simple
 .Nm runit-faster
 managed VMs.
+.Pp
+VM parameters are determined through the service directory name:
 .Bd -literal -offset indent
-svclone bhyve-template local/bhyve@openbsd63
+bhyve@<name>@<memory>@<cpus>@<bridge>
 .Ed
 .Pp
-Additionally you must create
-.Pa conf
-in the service directory to set some needed VM parameters:
-.Bl -column
-.It BRIDGE: Assign VM to this bridge, defaults to
-.Pa bhyve0
-.It CPUS: Number of virtual CPUs
-.It DISK: Path to the disk device to use
-.It MEM: Guest memory size
-.It OPTS: Additional arguments to pass to
-.Xr bhyve 8
+Every parameter but the VM name are optional.
+.Bl -tag -width 2n
+.It Sy bridge
+Assign VM to this bridge.
+Defaults to
+.Sy bhyve0 ,
+as created by the
+.Sy 44-bhyve-network.sh
+core service.
+For systems not using
+.Nm runit-faster
+as PID 1, make sure to create a
+.Sy bhyve0
+bridge via
+.Xr rc.conf 5 .
+Assign your outgoing interface to this bridge to provide some network
+connectivity to the VM.
+.It Sy memory
+Guest memory size.
+Defaults to 512m.
+.It Sy cpus
+Number of virtual CPUs.
+Defaults to 1.
 .El
 .Pp
-The VM is automatically assigned a
+Additional arguments to
+.Xr bhyve 8
+can be passed through setting
+.Sy OPTS
+in
+.Pa conf .
+.Pp
+To add disk images, or disk devices to the VM simply provide
+.Pa disk[0..15]
+or
+.Pa cdrom
+symlinks in the service directory.
+.Pp
+VMs get an automatically assigned
 .Xr tap 4
-network interface which is added to the
-.Pa bhyve0
-bridge, to the
+network interface which is added to the configured bridge, assigned to
+the
 .Pa runit-managed
 interface group, and to an interface group named after the VM.
+.Pp
+As one would expect, if the VM reboots, the service will restart the
+VM.
+If it powers off, the service will be marked as down and will require
+manual administrator intervention to restart.
+Edit
+.Pa finish
+to change this behavior.
+.Pp
+Create a
+.Ox 6.3
+VM with 1g of memory that boots from
+.Pa miniroot63.fs :
+.Bd -literal -offset indent
+svclone bhyve-template local/bhyve@openbsd63@1g
+ln -s /root/miniroot63.fs local/bhyve@openbsd63@1g/disk0
+ln -s ${PWD}/local/bhyve@openbsd63@1g /var/service
+.Ed
 .Pp
 List all interfaces auto-assigned to the
 .Pa openbsd63
@@ -479,27 +523,6 @@ VM:
 $ ifconfig -g openbsd63
 tap0
 .Ed
-.Pp
-If you are using
-.Nm
-as PID 1, it is automatically created at boot.
-Assign your outgoing interface to this bridge to provide
-some network connectivity to the VM.
-.Pp
-For vanilla
-.Xr rc 8
-systems this can be replicated via
-.Pa /etc/rc.conf :
-.Bd -literal -offset indent
-TODO
-.Ed
-.Pp
-Finally enable the service
-.Bd -literal -offset indent
-ln -s ${PWD}/local/bhyve@openbsd63 /var/service
-.Ed
-.Pp
-The VM is automatically restarted when it shuts down.
 .Ss dhclient-template
 Service to run
 .Xr dhclient 8
