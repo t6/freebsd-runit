@@ -450,11 +450,17 @@ managed VMs.
 .Pp
 VM parameters are determined through the service directory name:
 .Bd -literal -offset indent
-bhyve@<name>@<memory>@<cpus>@<bridge>
+bhyve@<name>@<memory>@<cpus>@<bridge>@<bootmethod>
 .Ed
 .Pp
 Every parameter but the VM name are optional.
 .Bl -tag -width 2n
+.It Sy memory
+Guest memory size.
+Defaults to 512m.
+.It Sy cpus
+Number of virtual CPUs.
+Defaults to 1.
 .It Sy bridge
 Assign VM to this bridge.
 Defaults to
@@ -470,12 +476,29 @@ bridge via
 .Xr rc.conf 5 .
 Assign your outgoing interface to this bridge to provide some network
 connectivity to the VM.
-.It Sy memory
-Guest memory size.
-Defaults to 512m.
-.It Sy cpus
-Number of virtual CPUs.
-Defaults to 1.
+.It Sy bootmethod
+How to boot the VM.
+Valid values are
+.Ar uefi ,
+.Ar csm ,
+and
+.Ar bhyveload .
+.Pp
+The
+.Ar uefi
+and
+.Ar csm
+methods require that
+.Pa sysutils/bhyve-firmware
+is installed.
+.Pp
+.Ar bhyveload
+will use
+.Xr bhyveload 8
+to boot the VM.
+It is assumed that
+.Pa disk0
+is the root device.
 .El
 .Pp
 Additional arguments to
