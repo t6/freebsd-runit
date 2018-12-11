@@ -18,9 +18,9 @@ done
 IFS="${myifs}"
 
 [ -r "/dev/vmm/${name}" ] && ${BHYVECTL} --vm="${name}" --destroy
-for intf in $(ifconfig -g "bhyve-${name}"); do
+while read -r intf; do
 	ifconfig "${intf}" destroy
-done
+done <supervise/network-interfaces
 
 case "$1" in
 0) ;; # rebooted

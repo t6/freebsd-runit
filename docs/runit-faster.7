@@ -519,7 +519,7 @@ VMs get an automatically assigned
 network interface which is added to the configured bridge, assigned to
 the
 .Pa runit-managed
-interface group, and to an interface group named after the VM.
+interface group.
 .Pp
 As one would expect, if the VM reboots, the service will restart the
 VM.
@@ -543,7 +543,7 @@ List all interfaces auto-assigned to the
 .Pa openbsd63
 VM:
 .Bd -literal -offset indent
-$ ifconfig -g openbsd63
+$ cat /var/service/bhyve@openbsd63@1g/supervise/network-interfaces
 tap0
 .Ed
 .Ss dhclient-template

@@ -43,10 +43,11 @@ for i in $(seq 0 15); do
 	fi
 done
 
-intf=$(ifconfig tap create group "bhyve-${name}" group runit-managed)
+intf=$(ifconfig tap create group runit-managed)
+echo "${intf}" >supervise/network-interfaces
 ifconfig "${bridge}" addm "${intf}"
 slots="${slots} -s 18,virtio-net,${intf}"
-slots="${slots}	-s 31,lpc"
+slots="${slots} -s 31,lpc"
 
 case "${bootmethod}" in
 uefi) bootarg='-l "bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd"' ;;
