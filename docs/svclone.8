@@ -1,4 +1,4 @@
-.Dd April 13, 2018
+.Dd December 11, 2018
 .Dt SVCLONE 8
 .Os
 .Sh NAME
@@ -21,6 +21,11 @@ Remove supervise links from services.
 Regenerate and update all
 .Pa supervise
 links.
+.It Fl t
+When cloning a service treat
+.Ar source
+as a template:
+.Pa /usr/local/etc/sv/$source-template
 .It Fl u
 Let created or updated supervise symlinks point into
 .Pa /var/run/runit/users/$USER
@@ -39,6 +44,14 @@ when the system boots up:
 .Bd -literal -offset indent
 mkdir /usr/local/etc/sv/local
 svclone /usr/local/etc/sv/{runsvdir-user-template,local/runsvdir@kate}
+ln -s /usr/local/etc/sv/local/runsvdir@kate /var/service
+.Ed
+.Pp
+Or the same but using
+.Fl t :
+.Bd -literal -offset indent
+mkdir /usr/local/etc/sv/local
+svclone -t runsvdir-user local/runsvdir@kate
 ln -s /usr/local/etc/sv/local/runsvdir@kate /var/service
 .Ed
 .Pp

@@ -99,11 +99,13 @@ main() {
 	cflag=
 	rflag=
 	sflag=
-	while getopts ":crsu" arg; do
+	tflag=
+	while getopts ":crstu" arg; do
 		case ${arg} in
 		c) cflag=1 ;;
 		r) rflag=1 ;;
 		s) sflag=1 ;;
+		t) tflag=1 ;;
 		u) SUPERVISE_PREFIX="/var/run/runit/users/${USER}/supervise." ;;
 		*) usage ;;
 		esac
@@ -118,7 +120,13 @@ main() {
 	elif [ -n "${rflag}" ]; then
 		remove_supervise "$@"
 	elif [ $# -ge 2 ]; then
-		clone_services "$@"
+		if [ -n "${tflag}" ]; then
+			source="/usr/local/etc/sv/$1-template"
+		else
+			source="$1"
+		fi
+		shift 1
+		clone_services "${source}" "$@"
 	else
 		usage
 	fi
