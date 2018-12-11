@@ -27,11 +27,10 @@ IFS="${myifs}"
 : "${bridge:=bhyve0}"
 : "${bootmethod:=uefi}"
 
+kldload -qn if_tap nmdm vmm
 if ! ifconfig ${bridge} >/dev/null 2>&1; then
 	ifconfig bridge create name ${bridge} group runit-managed up
 fi
-kldload -qn nmdm
-kldload -qn if_tap
 sysctl net.link.tap.up_on_open=1 >/dev/null
 
 slots="-s 0,hostbridge"
