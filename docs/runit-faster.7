@@ -391,7 +391,7 @@ Let's Encrypt client.
 Clone the template and name the service directory after the domain and
 altname you want to create a certificate for:
 .Bd -literal -offset indent
-svclone acme-client-template \\
+svclone -t acme-client \\
 	local/acme-client@example.com@www.example.com
 .Ed
 .Pp
@@ -511,7 +511,7 @@ Create a
 VM with 1g of memory that boots from
 .Pa miniroot63.fs :
 .Bd -literal -offset indent
-svclone bhyve-template local/bhyve@openbsd63@1g
+svclone -t bhyve local/bhyve@openbsd63@1g
 ln -s /root/miniroot63.fs local/bhyve@openbsd63@1g/disk0
 ln -s ${PWD}/local/bhyve@openbsd63@1g /var/service
 .Ed
@@ -537,7 +537,7 @@ Create a new dhclient service for the
 .Pa em0
 interface and enable it:
 .Bd -literal -offset indent
-svclone dhclient-template local/dhclient@em0
+svclone -t dhclient local/dhclient@em0
 ln -s ${PWD}/local/dhclient@em0 /var/service
 .Ed
 .Ss jail-template
@@ -572,7 +572,7 @@ rdr pass on $ext_if proto tcp from any to $ext_if \\
 .Pp
 Clone the template on the host:
 .Bd -literal -offset indent
-svclone jail-template local/jail@http
+svclone -t jail local/jail@http
 .Ed
 .Pp
 Modify
@@ -629,7 +629,7 @@ service to let kate run her own custom services
 .Pa ~/service )
 when the system boots up:
 .Bd -literal -offset indent
-svclone runsvdir-user-template local/runsvdir@kate
+svclone -t runsvdir-user local/runsvdir@kate
 ln -s ${PWD}/local/runsvdir@kate /var/service
 .Ed
 .Pp
