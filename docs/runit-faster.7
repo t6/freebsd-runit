@@ -641,6 +641,27 @@ svclone -u /usr/local/etc/sv/sndiod ~/.sv/sndiod
 ln -s ~/.sv/sndiod ~/service
 .Ed
 .Ss webcamd-template
+Run
+.Xr webcamd 8
+on specific devices.
+.Pp
+First determine the device
+.Xr webcamd 8
+should attach to:
+.Bd -literal -offset indent
+$ webcamd -l
+Available device(s):
+webcamd -N Chicony-Electronics-Co--Ltd--HD-WebCam -S unknown -M 0
+webcamd -N vendor-0x06cb-product-0x2970 -S unknown -M 0
+webcamd -N vendor-0x0489-product-0xe078 -S unknown -M 0
+.Ed
+.Pp
+Create a service and start it:
+.Bd -literal -offset indent
+svclone -t webcamd local/webcamd@Chicony-Electronics-Co--Ltd--HD-WebCam
+ln -s ${PWD}/local/webcamd@Chicony-Electronics-Co--Ltd--HD-WebCam \\
+	/var/service
+.Ed
 .Sh SEE ALSO
 .Xr acme-client 1 ,
 .Xr snooze 1 ,
