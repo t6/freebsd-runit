@@ -563,6 +563,71 @@ interface and enable it:
 svclone -t dhclient local/dhclient@em0
 ln -s ${PWD}/local/dhclient@em0 /var/service
 .Ed
+.Ss gitqueue-template
+A service template for polling Git repositories and running scripts
+on changes.
+It is assumed that you leave the local checkout of the repository
+untouched.
+All local changes will be thrown away on updates.
+An origin remote must be set in the repository and will be used
+to fetch new changes.
+The default poll interval is 5 minutes and can be overridden by
+setting
+.Sy SNOOZE_ARGS
+in
+.Pa conf
+(see
+.Xr snooze 1
+for more details).
+.Pp
+When there are new changes, a run of the
+.Pa .gitqueue.d/run
+script in the repository is queued into an
+.Xr nq 1
+queue under
+.Pa /var/db/gitqueue .
+.Bd -literal -offset indent
+gitqueue@<path>@<branch>[@<user>:<group>[@<queuename>]]
+.Ed
+.Bl -tag -width 2n
+.It Sy path
+The path to the repository.
+.Sy /
+has to be encoded with a
+.Sy __ .
+.It Sy branch
+The remote branch to poll.
+.It Sy user:group
+The user and group to run everything under.
+The repository must be readable and writable by the user.
+Defaults to
+.Sy nobody:nobody
+if not given.
+.It Sy queuename
+The name of the queue determines the directory under
+.Pa /var/db/gitqueue
+where the
+.Xr nq 1
+queue is created in.
+It defaults to
+.Pa /var/db/gitqueue/$user/$unencoded_path .
+.El
+.Pp
+Create a service that polls the Git repository's
+.Sy origin
+remote at
+.Pa /usr/src
+as
+.Sy kate
+and runs
+.Pa /usr/src/.gitqueue.d/run
+on updates to the
+.Pa local
+branch:
+.Bd -literal -offset indent
+svclone -t gitqueue local/gitqueue@__usr__src@local@kate:kate
+ln -s ${PWD}/local/gitqueue@__usr__src@local /var/service
+.Ed
 .Ss ifstated-template
 A template for services that run
 .Xr ifstated 8
