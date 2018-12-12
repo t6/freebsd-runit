@@ -1,4 +1,4 @@
-.Dd December 11, 2018
+.Dd December 12, 2018
 .Dt RUNIT-FASTER 7
 .Os
 .Sh NAME
@@ -562,6 +562,18 @@ interface and enable it:
 .Bd -literal -offset indent
 svclone -t dhclient local/dhclient@em0
 ln -s ${PWD}/local/dhclient@em0 /var/service
+.Ed
+.Ss ifstated-template
+A template for services that run
+.Xr ifstated 8
+.Pq Pa net/ifstated .
+Make sure to edit
+.Pa ifstated.conf
+in the service directory with your own rules.
+.Bd -literal -offset indent
+svclone -t ifstated local/ifstated
+edit local/ifstated/ifstated.conf
+ln -s ${PWD}/local/ifstated /var/service
 .Ed
 .Ss jail-template
 Service template to create
