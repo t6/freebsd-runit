@@ -1,9 +1,11 @@
 FIND?=		find
 GIT?=		git
 GZIP_CMD?=	gzip
+IGOR?=		igor
 INSTALL_MAN?=	install -m 444
 INSTALL_SCRIPT?=	install -m 555
 LN?=		ln
+MANDOC?=	mandoc
 MKDIR?=		mkdir -p
 PRINTF?=	printf
 SED?=		sed
@@ -60,6 +62,10 @@ install:
 
 format:
 	${SHFMT} -w -s -p bin runit sv
+
+manlint:
+	${MANDOC} -Tlint docs/runit-faster.7 docs/svclone.8
+	${IGOR} docs/runit-faster.7 docs/svclone.8
 
 lint:
 	${SHFMT} -d -s -p bin runit sv
