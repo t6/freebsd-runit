@@ -1,5 +1,9 @@
 #!/bin/sh
 set -eu
+# This script is user runnable from outside the service directory
+# and not run by runsv(8), so setup some context like the working
+# directory.
+cd "$(dirname "$0")"
 [ -r conf ] && . ./conf
 : "${CU:=/usr/bin/cu}"
 
