@@ -3,14 +3,11 @@
 
 # - Make FreeBSD installer security options opt-out
 # - Adapt the good bits from https://vez.mrsk.me/freebsd-defaults.txt
-# - Use a better congestion control algorithm than newreno
 # - Setup entropy harvesting (see random(4))
 # - Turn off console bell
 if [ -z "${JAILED}" ]; then
 	msg "Setting system defaults"
-	kldload -n cc_cubic >/dev/null 2>&1 || true
 	sysctl \
-		net.inet.tcp.cc.algorithm=cubic \
 		security.bsd.see_other_gids=0 \
 		security.bsd.see_other_uids=0 \
 		security.bsd.stack_guard_page=1 \
