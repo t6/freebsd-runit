@@ -1,6 +1,7 @@
 FIND?=		find
 GIT?=		git
 GZIP_CMD?=	gzip
+HUB?=		hub
 IGOR?=		igor
 INSTALL_MAN?=	install -m 444
 INSTALL_SCRIPT?=	install -m 555
@@ -79,9 +80,15 @@ archive:
 			$$tag && \
 		${GZIP_CMD} freebsd-runit-$$ver.tar
 
+github-release: archive
+	@${GIT} push --follow-tags github
+	@tag=$$(${GIT} tag --contains HEAD); ver=$${tag#v*}; \
+		${HUB} release create -p -a freebsd-runit-$$ver.tar.gz \
+			-m "freebsd-runit-$$ver" $$tag
+
 docs: docs/runit-faster.html
 
 docs/runit-faster.html: docs/runit-faster.md
 	cmark docs/runit-faster.md > docs/runit-faster.html
 
-.PHONY: all archive docs
+.PHONY: all archive docs format github-release manlint lint
