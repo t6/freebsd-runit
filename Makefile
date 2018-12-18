@@ -86,9 +86,12 @@ github-release: archive
 		${HUB} release create -p -a freebsd-runit-$$ver.tar.gz \
 			-m "freebsd-runit-$$ver" $$tag
 
-docs: docs/runit-faster.html
+docs: docs/runit-faster.html docs/runit-faster.7.html
 
 docs/runit-faster.html: docs/runit-faster.md
 	cmark docs/runit-faster.md > docs/runit-faster.html
+
+docs/runit-faster.7.html: docs/runit-faster.7
+	mandoc -Thtml docs/runit-faster.7 > docs/runit-faster.7.html
 
 .PHONY: all archive docs format github-release manlint lint

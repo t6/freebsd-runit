@@ -17,7 +17,7 @@ usage.
 
 # System initialization / Setup as PID 1
 
-Please see runit-faster(7).
+Please see [runit-faster(7)](runit-faster.7.html).
 
 # Network setup
 It is recommended to disable `/etc/rc.d/netif` managed network
