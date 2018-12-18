@@ -1,4 +1,4 @@
-.Dd December 12, 2018
+.Dd December 18, 2018
 .Dt RUNIT-FASTER 7
 .Os
 .Sh NAME
@@ -284,6 +284,13 @@ rules from
 .Pa /etc/defaults/devfs.rules
 and
 .Pa /etc/devfs.rules .
+.Pp
+To set the system ruleset define
+.Sy runit_devfs_rules :
+.Bd -literal -offset indent
+[runit_devfs_rules=42]
+add include $localrules
+.Ed
 .It Sy 41-entropy.sh
 Initialize the entropy harvester.
 .It Sy 41-hostid.sh
