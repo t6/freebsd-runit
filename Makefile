@@ -1,3 +1,4 @@
+CMARK?=		cmark
 FIND?=		find
 GIT?=		git
 GZIP_CMD?=	gzip
@@ -89,9 +90,11 @@ github-release: archive
 docs: docs/runit-faster.html docs/runit-faster.7.html
 
 docs/runit-faster.html: docs/runit-faster.md
-	cmark docs/runit-faster.md > docs/runit-faster.html
+	${CMARK} docs/runit-faster.md > docs/runit-faster.html
 
 docs/runit-faster.7.html: docs/runit-faster.7
-	mandoc -Thtml docs/runit-faster.7 > docs/runit-faster.7.html
+	${MANDOC} -Thtml docs/runit-faster.7 | ${SED} \
+	's,</style>,&<link rel="stylesheet" type="text/css" href="buttondown.css">,' \
+	> docs/runit-faster.7.html
 
 .PHONY: all archive docs format github-release manlint lint
