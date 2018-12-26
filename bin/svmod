@@ -1,0 +1,69 @@
+#!/bin/sh
+set -eu
+
+usage() {
+	echo "usage: svmod user[:group] svdir ..." 1>&2
+	echo "       svmod :group svdir ..." 1>&2
+	return 64
+}
+
+main() {
+	local gflag
+	local i
+	local myifs
+	local svuser
+	local svgroup
+	gflag=
+	svuser=
+	svgroup=wheel
+
+	myifs="${IFS}"
+	IFS=":"
+	i=0
+	for f in $1; do
+		case ${i} in
+		0) svuser=${f} ;;
+		1)
+			svgroup=${f}
+			gflag=1
+			;;
+		2) usage ;;
+		esac
+		i=$((i + 1))
+	done
+	IFS="${myifs}"
+	shift 1
+	if [ $# -lt 1 ]; then
+		usage
+	fi
+
+	if [ -z "${svuser}" ]; then
+		svuser=root
+	fi
+
+	echo $svuser ... $svgroup
+	for svdir in "$@"; do
+		if [ ! -d "${svdir}/supervise" ]; then
+			echo "svmod: ${svdir} is not a service directory" 1>&2
+			exit 1
+		fi
+
+		chown "${svuser}:${svgroup}" "${svdir}/supervise/" \
+			"${svdir}/supervise/ok" \
+			"${svdir}/supervise/status" \
+			"${svdir}/supervise/control"
+
+		if [ -z "${gflag}" ]; then
+			# no group specified, so use runit defaults
+			chmod 700 "${svdir}/supervise/"
+			chmod 600 "${svdir}/supervise/ok" "${svdir}/supervise/control"
+			chmod 644 "${svdir}/supervise/status"
+		else
+			chmod 750 "${svdir}/supervise/"
+			chmod 660 "${svdir}/supervise/ok" "${svdir}/supervise/control"
+			chmod 664 "${svdir}/supervise/status"
+		fi
+	done
+}
+
+main "$@"

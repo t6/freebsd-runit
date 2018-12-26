@@ -1,4 +1,4 @@
-.Dd December 18, 2018
+.Dd December 26, 2018
 .Dt RUNIT-FASTER 7
 .Os
 .Sh NAME
@@ -381,6 +381,35 @@ comes with some services out of the box for the user's
 convenience in
 .Pa /usr/local/etc/sv .
 These can be linked to the runlevel to enable them.
+.Sh ACCESS CONTROL
+To give other users, besides
+.Sy root ,
+the ability to check on a service's status or change its state,
+change permissions on its control pipe.
+This can either be done in the service's
+.Pa run
+script or in
+.Pa conf
+which most services bundled with
+.Nm
+source in their
+.Pa run
+scripts.
+.Pp
+The
+.Xr svmod 8
+helper makes this straightforward.
+.Pp
+Edit
+.Pa sndiod/conf
+to give users of the
+.Sy audio
+group the ability to control and check the status of the
+.Sy sndiod
+service:
+.Bd -literal -offset indent
+svmod :audio . ./log
+.Ed
 .Sh SERVICE TEMPLATES
 .Nm
 provides several service templates to get you started quickly.
