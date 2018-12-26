@@ -41,7 +41,6 @@ main() {
 		svuser=root
 	fi
 
-	echo $svuser ... $svgroup
 	for svdir in "$@"; do
 		if [ ! -d "${svdir}/supervise" ]; then
 			echo "svmod: ${svdir} is not a service directory" 1>&2
