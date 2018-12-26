@@ -27,7 +27,7 @@ _repo_needs_update() {
 
 _update_repo() {
 	_status=$(${GIT} -C "$1" status --porcelain)
-	if [ ! -z "${_status}" ]; then
+	if [ -n "${_status}" ]; then
 		_msg "$1 is dirty.  Skipping this update."
 		echo "${_status}" | while read -r line; do
 			_msg "${line}"
