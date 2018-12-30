@@ -17,6 +17,9 @@ main() {
 	svuser=
 	svgroup=wheel
 
+	if [ $# -lt 2 ]; then
+		usage
+	fi
 	myifs="${IFS}"
 	IFS=":"
 	i=0
@@ -33,9 +36,6 @@ main() {
 	done
 	IFS="${myifs}"
 	shift 1
-	if [ $# -lt 1 ]; then
-		usage
-	fi
 
 	if [ -z "${svuser}" ]; then
 		svuser=root
