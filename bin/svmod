@@ -2,7 +2,8 @@
 set -eu
 
 usage() {
-	echo "usage: svmod user[:group] svdir ..." 1>&2
+	echo "usage: svmod user:group svdir ..." 1>&2
+	echo "       svmod user svdir ..." 1>&2
 	echo "       svmod :group svdir ..." 1>&2
 	return 64
 }
