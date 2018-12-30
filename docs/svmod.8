@@ -1,4 +1,4 @@
-.Dd December 26, 2018
+.Dd December 30, 2018
 .Dt SVMOD 8
 .Os
 .Sh NAME
@@ -21,25 +21,40 @@ allows for setting fine-grained permissions on its
 pipe, to give users the ability to control a service.
 .Nm
 is a small helper that you can use in your service files that
-simplifies setting the right permission.
+simplifies setting the right permissions.
 .Sh EXAMPLES
-Give control access to the user
+Give
 .Sy kate
-In the services'
-.Pa run
-script or
-.Pa conf
-file:
+the ability to control her own
+.Sy runsvdir-user@kate
+service.
+In
+.Pa /usr/local/etc/sv/local/runsvdir-user@kate/run
+or
+.Pa /usr/local/etc/sv/local/runsvdir-user@kate/conf
+add:
 .Bd -literal -offset indent
-svmod kate . ./log
+svmod kate .
 .Ed
 .Pp
 .Sy kate
 can now control (start, restart, take down, etc.) and check the
 service's state with
-.Xr sv 8 ,
-including the attached log service.
+.Xr sv 8 .
+.Pp
+To give
+.Sy joe
+the ability to control the
+.Sy sndiod
+service and its attached logging service, add
+.Bd -literal -offset indent
+svmod joe . ./log
+.Ed
+.Pp
+to
+.Pa /usr/local/etc/sv/sndiod/conf .
 .Sh SEE ALSO
+.Xr runsv 8 ,
 .Xr sv 8
 .Sh AUTHORS
 .An Tobias Kortkamp Aq Mt tobik@FreeBSD.org
