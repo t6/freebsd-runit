@@ -1,4 +1,5 @@
 #!/bin/sh
+[ -r conf ] && . ./conf
 # Perform weekly maintenance.
 exec snooze -M 15 -H 4 -w 6 \
 	env \

@@ -1,4 +1,5 @@
 #!/bin/sh
+[ -r conf ] && . ./conf
 # Adjust the time zone if the CMOS clock keeps local time, as opposed to
 # UTC time.  See adjkerntz(8) for details.
 exec snooze -M 1,31 -H 0-5 /sbin/adjkerntz -a

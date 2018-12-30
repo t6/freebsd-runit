@@ -1,4 +1,5 @@
 #!/bin/sh
+[ -r conf ] && . ./conf
 export USER=${PWD##*@}
 HOME=$(eval echo "~${USER%%:*}")
 export HOME

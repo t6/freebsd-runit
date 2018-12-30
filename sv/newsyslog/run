@@ -1,4 +1,5 @@
 #!/bin/sh
+[ -r conf ] && . ./conf
 # Rotate log files every hour, if necessary.
 exec snooze -H '*' \
 	env PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin \

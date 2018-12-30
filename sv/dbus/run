@@ -1,4 +1,6 @@
 #!/bin/sh
+[ -r conf ] && . ./conf
 /usr/local/bin/dbus-uuidgen --ensure
 mkdir -p /var/run/dbus
-exec /usr/local/bin/dbus-daemon --system --nofork --nopidfile
+# shellcheck disable=SC2086
+exec /usr/local/bin/dbus-daemon --system --nofork --nopidfile ${OPTS}

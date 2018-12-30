@@ -1,2 +1,3 @@
 #!/bin/sh
+[ -r conf ] && . ./conf
 exec /usr/local/sbin/php-fpm --nodaemonize
