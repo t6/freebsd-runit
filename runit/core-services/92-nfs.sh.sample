@@ -9,7 +9,7 @@ kldload -n nfsd || return 1
 # The NFS daemons always fork into the background.  They cannot
 # be properly supervised, so we start them now.
 
-msg "Starting NFS server"
+echo "=> Starting NFS server"
 
 # Customize NFS daemon flags here if needed
 mountd_flags="-r -S"
@@ -27,30 +27,30 @@ fi
 
 # shellcheck disable=SC2086
 if ! nfsuserd ${nfsuserd_flags}; then
-	msg_warn "Cannot run nfsuserd"
+	echo "WARNING: Cannot run nfsuserd"
 	return 1
 fi
 
 # shellcheck disable=SC2086
 if ! rpcbind ${rpcbind_flags}; then
-	msg_warn "Cannot run rpcbind"
+	echo "WARNING: Cannot run rpcbind"
 	return 1
 fi
 
 rm -f /var/db/mountdtab
 if ! ( umask 022 ; : > /var/db/mountdtab ); then
-	msg_warn "Cannot create /var/db/mountdtab"
+	echo "WARNING: Cannot create /var/db/mountdtab"
 	return 1
 fi
 
 # shellcheck disable=SC2086
 if ! mountd ${mountd_flags} ${nfs_exports}; then
-	msg_warn "Cannot run mountd"
+	echo "WARNING: Cannot run mountd"
 	return 1
 fi
 
 # shellcheck disable=SC2086
 if ! nfsd ${nfsd_flags}; then
-	msg_warn "Cannot run nfsd"
+	echo "WARNING: Cannot run nfsd"
 	return 1
 fi

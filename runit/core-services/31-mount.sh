@@ -1,7 +1,7 @@
 [ -n "${JAILED}" ] && return 0
 
-msg "Mounting / read-write"
+echo "=> Mounting / read-write"
 mount -uw / || emergency_shell
 
-msg "Mounting all non-network filesystems"
+echo "=> Mounting all non-network filesystems"
 mount -a || emergency_shell

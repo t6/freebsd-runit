@@ -4,5 +4,5 @@
 # supervised, so we start it now.  We always use the newer UCL-based
 # configuration format.
 
-msg "Starting iSCSI target daemon"
+echo "=> Starting iSCSI target daemon"
 /usr/sbin/ctld -u -f /etc/ctl.conf

@@ -1,4 +1,4 @@
-msg "Populating /var"
+echo "=> Populating /var"
 
 mkdir -p /var/run
 [ -z "${JAILED}" ] && mount -t tmpfs -o size=8m tmpfs /var/run

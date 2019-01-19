@@ -38,9 +38,9 @@ hostid_set() {
 
 	# Set both kern.hostuuid and kern.hostid.
 	#
-	msg "Setting hostuuid to ${uuid}"
+	echo "=> Setting hostuuid to ${uuid}"
 	sysctl kern.hostuuid="${uuid}" >/dev/null
-	msg "Setting hostid to ${id}"
+	echo "=> Setting hostid to ${id}"
 	sysctl kern.hostid="${id}" >/dev/null
 }
 
@@ -84,7 +84,7 @@ hostid_generate() {
 	# First look for UUID in hardware.
 	uuid=$(hostid_hardware)
 	if [ -z "${uuid}" ]; then
-		msg_warn "hostid: unable to figure out a UUID from DMI data, generating a new one"
+		echo "WARNING: hostid: unable to figure out a UUID from DMI data, generating a new one"
 		sleep 2
 		# If not found, fall back to software-generated UUID.
 		uuid=$(uuidgen)

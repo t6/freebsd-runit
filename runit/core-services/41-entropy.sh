@@ -20,10 +20,10 @@ feed_dev_random() {
 	done
 }
 
-msg 'Feeding entropy'
+echo "=> Feeding entropy"
 
 if [ ! -w /dev/random ]; then
-	msg_warn "/dev/random is not writeable"
+	echo "WARNING: /dev/random is not writeable"
 	return 1
 fi
 

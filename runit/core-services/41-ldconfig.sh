@@ -1,4 +1,4 @@
-msg "Configuring the shared library cache"
+echo "=> Configuring the shared library cache"
 
 add_paths() {
 	# shellcheck disable=SC2039

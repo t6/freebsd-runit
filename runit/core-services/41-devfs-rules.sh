@@ -1,6 +1,6 @@
 [ -n "$JAILED" ] && return 0
 
-msg "Loading devfs rules"
+echo "=> Loading devfs rules"
 
 awk 'BEGIN {
 	FS="="

@@ -1,7 +1,7 @@
 # shellcheck disable=SC1117,SC2034,SC2086
 [ -n "${JAILED}" ] && return 0
 
-msg "Registering binary image activators"
+echo "=> Registering binary image activators"
 
 arm_interpreter=/usr/local/bin/qemu-arm-static
 arm_magic="\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00"
@@ -54,6 +54,6 @@ for arch in arm armv6 armv7 aarch64 mips mipsel mips64 powerpc powerpc64 sparc64
 			--interpreter "$(eval echo \$${arch}_interpreter)" \
 			--magic "$(eval echo \$${arch}_magic)" \
 			--mask "$(eval echo \$${arch}_mask)" ||
-			msg_warn "Failed to activate ${arch} interpreter"
+			echo "WARNING: Failed to activate ${arch} interpreter"
 	fi
 done

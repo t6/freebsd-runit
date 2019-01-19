@@ -1,4 +1,4 @@
 [ -n "${JAILED}" ] && return 0
 
-msg "Initializing swap"
+echo "=> Initializing swap"
 swapon -a || emergency_shell

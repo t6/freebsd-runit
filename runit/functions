@@ -1,15 +1,3 @@
-msg() {
-	echo "=>" "$@"
-}
-
-msg_error() {
-	echo "ERROR:" "$@"
-}
-
-msg_warn() {
-	echo "WARNING:" "$@"
-}
-
 emergency_shell() {
 	if [ -n "${JAILED}" ]; then
 		exit 1
@@ -22,22 +10,6 @@ emergency_shell() {
 	echo "Cannot continue due to errors above, starting emergency shell."
 	echo "When ready type exit to continue booting."
 	/bin/sh -p
-}
-
-check_arch() {
-	for arch in "$@"; do
-		if [ "$(sysctl -n hw.machine_arch)" = "${arch}" ]; then
-			return 0
-		fi
-	done
-	return 1
-}
-
-kernel_has_feature() {
-	if [ "$(sysctl -qn "kern.features.$1")" = "1" ]; then
-		return 0
-	fi
-	return 1
 }
 
 detect_jail() {

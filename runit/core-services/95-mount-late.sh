@@ -1,4 +1,4 @@
 [ -n "${JAILED}" ] && return 0
 
-msg "Mounting all late filesystems"
+echo "=> Mounting all late filesystems"
 mount -a -L || emergency_shell

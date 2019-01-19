@@ -6,7 +6,7 @@
 # - Setup entropy harvesting (see random(4))
 # - Turn off console bell
 if [ -z "${JAILED}" ]; then
-	msg "Setting system defaults"
+	echo "=> Setting system defaults"
 	sysctl \
 		security.bsd.see_other_gids=0 \
 		security.bsd.see_other_uids=0 \
@@ -34,6 +34,6 @@ if [ -z "${JAILED}" ]; then
 	esac
 fi
 
-msg "Loading /etc/sysctl.conf"
+echo "=> Loading /etc/sysctl.conf"
 [ -r /etc/sysctl.conf ] && sysctl -qf /etc/sysctl.conf >/dev/null
 [ -r /etc/sysctl.conf.local ] && sysctl -qf /etc/sysctl.conf.local >/dev/null

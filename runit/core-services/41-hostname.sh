@@ -5,9 +5,9 @@ if [ -r "/usr/local/etc/runit/hostname" ]; then
 elif [ -n "$(kenv runit.hostname 2>/dev/null)" ]; then
 	_hostname=$(kenv runit.hostname)
 else
-	msg_warn "Didn't setup a hostname!"
+	echo "WARNING: Didn't setup a hostname!"
 	return 0
 fi
 
-msg "Setting hostname to ${_hostname}"
+echo "=> Setting hostname to ${_hostname}"
 hostname "${_hostname}"
