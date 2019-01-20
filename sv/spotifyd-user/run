@@ -1,0 +1,12 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+# Note that this service does not work if spotifyd was compile with
+# D-Bus MPRIS support.  It tries to autostart a dbus daemon which
+# does not work since DISPLAY is not set.  You can mitigate this by
+# exporting it manually in conf.  If there is no existing Xorg session
+# it will crash and auto-restart forever.  Be careful.
+: "${OPTS:=-c /usr/local/etc/spotifyd.conf}"
+exec 2>&1
+# shellcheck disable=SC2086
+exec spotifyd --no-daemon \
+	${OPTS}
