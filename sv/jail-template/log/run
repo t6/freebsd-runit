@@ -1,4 +1,4 @@
 #!/bin/sh
-name=${PWD##*-}
+name=${PWD##*@}
 name=${name%*/log}
 exec logger -t "jail-${name}"

@@ -5,6 +5,7 @@ IFS="@"
 i=0
 for f in ${PWD}; do
 	case ${i} in
+	0) ;;
 	1) domain=${f} ;;
 	*) altnames="${altnames} ${f}" ;;
 	esac
