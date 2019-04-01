@@ -1,4 +1,4 @@
-.Dd December 26, 2018
+.Dd April 01, 2019
 .Dt RUNIT-FASTER 7
 .Os
 .Sh NAME
@@ -339,10 +339,25 @@ easily be supervised with a
 service.
 .It Sy 95-mount-late.sh
 Mount all late filesystems.
+.It Sy 95-swap.sh
+Enable late swap.
 .It Sy 99-binmisc.sh
 Register the QEMU interpreters from emulators/qemu-user-static and
 WINE from emulators/wine with
 .Xr binmiscctl 8 .
+.It Sy 99-ports-env.sh
+Caches some values that
+.Xr ports 7
+use.
+Source
+.Pa /var/run/runit/ports-env
+in your shell profile to make use of it.
+This will speed up builds.
+If you update your ports checkout or change something in
+.Xr make.conf 5
+you might have to rerun this service.
+This service will only work if your ports tree is located in
+.Pa /usr/ports .
 .It Sy 99-start-jails.sh
 Start all vanilla
 .Xr rc 8
