@@ -5,7 +5,8 @@
 # in /etc/make.conf you might have to rerun this script.
 echo "=> Caching ports collection environment"
 # shellcheck disable=SC1004
-su -m nobody -c 'env MAKE=/usr/bin/make \
+su -m nobody -c 'env PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" \
+	MAKE=/usr/bin/make \
 	PORTSDIR="/usr/ports" \
 	SCRIPTSDIR="/usr/ports/Mk/Scripts" \
 	/bin/sh "/usr/ports/Mk/Scripts/ports_env.sh"' \
