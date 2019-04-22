@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+kldload -n vboxguest
+exec /usr/local/sbin/VBoxService -f ${OPTS} >/dev/null 2>&1
