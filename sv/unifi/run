@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 [ -r conf ] && . ./conf
-: "${JAVA:=/usr/local/openjdk8/bin/java}"
+: "${JAVA:=/usr/local/bin/java}"
 if [ ! -e /var/run/unifi ]; then
 	install -d -o unifi -g unifi /var/run/unifi
 fi
