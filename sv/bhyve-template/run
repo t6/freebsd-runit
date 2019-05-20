@@ -27,7 +27,8 @@ IFS="${myifs}"
 : "${bridge:=bhyve0}"
 : "${bootmethod:=uefi}"
 
-kldload -qn if_tap nmdm vmm
+kldload -qn if_tuntap nmdm vmm
+kldload -qn if_tap
 if ! ifconfig ${bridge} >/dev/null 2>&1; then
 	ifconfig bridge create name ${bridge} group runit-managed up
 fi
