@@ -1,0 +1,5 @@
+#!/bin/sh
+./activemq.sh stop
+# Send it a regular TERM in case the stop command did not work for
+# some reason.
+exit 1
