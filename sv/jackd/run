@@ -2,5 +2,6 @@
 [ -r conf ] && . ./conf
 : "${USER:=root}"
 : "${OPTS:=-r -doss -r44100 -p1024 -n3 -w16}"
+: "${RTPRIO:=rtprio 1}"
 # shellcheck disable=SC2086
-exec chpst -u ${USER} /usr/local/bin/jackd ${OPTS}
+exec ${RTPRIO} chpst -u ${USER} /usr/local/bin/jackd ${OPTS}
