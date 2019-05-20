@@ -4,6 +4,7 @@
 install -d -m 0750 -o activemq -g activemq /var/log/activemq
 install -d -m 0750 -o activemq -g activemq /var/db/activemq
 exec >/dev/null 2>&1
+# shellcheck disable=SC2086
 chpst -u activemq:activemq -P \
 	${JAVA} -server \
 	-Xmx512M \

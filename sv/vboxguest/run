@@ -1,4 +1,5 @@
 #!/bin/sh
 [ -r conf ] && . ./conf
 kldload -n vboxguest
+# shellcheck disable=SC2086
 exec /usr/local/sbin/VBoxService -f ${OPTS} >/dev/null 2>&1
