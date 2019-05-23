@@ -1,0 +1,5 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+/usr/sbin/bthidd -h 2>&1 | grep -q evdev && : "${OPTS:=-u}"
+# shellcheck disable=SC2086
+exec /usr/sbin/bthidd -d ${OPTS} >/dev/null 2>&1
