@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+# shellcheck disable=SC2086
+exec /usr/sbin/hcsecd -d ${OPTS} >/dev/null 2>&1
