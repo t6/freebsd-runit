@@ -1,0 +1,10 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+: "${USER:=_tor}"
+: "${GROUP:=_tor}"
+: "${CONF:=/usr/local/etc/tor/torrc}"
+: "${DATADIR:=/var/db/tor}"
+# shellcheck disable=SC2086
+exec chpst -u "${USER}:${GROUP}" \
+    /usr/local/bin/tor -f "${CONF}" --DataDirectory "${DATADIR}" \
+    --RunAsDaemon 0 ${OPTS}
