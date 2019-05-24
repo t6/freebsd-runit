@@ -220,12 +220,7 @@ work, you can edit
 for restarting to look like
 .Bd -literal -offset indent
 #!/bin/sh
-if [ -x "/usr/local/sbin/runit-init" ] ; then
-	/usr/local/sbin/runit-init 6
-	exit $?
-else
-	exit 1
-fi
+exec /usr/local/sbin/runit-init 6
 .Ed
 .Pp
 and edit
@@ -233,12 +228,7 @@ and edit
 for power off to look like
 .Bd -literal -offset indent
 #!/bin/sh
-if [ -x "/usr/local/sbin/runit-init" ] ; then
-	/usr/local/sbin/runit-init 0
-	exit $?
-else
-	exit 1
-fi
+exec /usr/local/sbin/runit-init 0
 .Ed
 .Sh SYSTEM INITIALIZATION
 This section only applies if opting into using
