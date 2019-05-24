@@ -1,3 +1,11 @@
+[ -d "/compat/linux" ] || return 1
+
+echo "=> Loading Linux ABI support"
+
+kldload -qn linux || return 1
+kldload -qn linux64
+#/compat/linux/sbin/ldconfig -C /compat/linux/etc/ld.so.cache
+
 [ -d "/compat/linux/proc" ] || return 1
 [ -d "/compat/linux/sys" ] || return 1
 
