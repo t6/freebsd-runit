@@ -5,6 +5,7 @@
 #include "strerr.h"
 #include "error.h"
 #include "buffer.h"
+#include "runit.local.h"
 
 #define USAGE " dir"
 #define SVDIR RUNITDIR "/runsvdir"

@@ -4,5 +4,7 @@ docs/runit-faster.7.html
 *~
 *.tar.gz
 *.bak
-runit/src/conf-*
+runit/src/conf-cc
+runit/src/conf-ld
 runit/compile
+runit/command

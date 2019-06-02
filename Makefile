@@ -19,12 +19,18 @@ XARGS?=		xargs
 LOCALBASE?=	/usr/local
 PREFIX?=	/usr/local
 RUNITDIR?=	${PREFIX}/etc/runit
+SBINDIR?=	${PREFIX}/sbin
 SVDIR?=		${PREFIX}/etc/sv
 
 GETTYSV=	ttyv0 ttyv2 ttyv3 ttyv4 ttyv5 ttyv6 ttyv7 ttyv8
 GETTYSU=	ttyu0 ttyu1 ttyu2 ttyu3
 
 all: docs
+	echo '#define RUNITDIR "${RUNITDIR}"' > runit/src/runit.local.h
+	echo '#define SBINDIR "${SBINDIR}"' >> runit/src/runit.local.h
+	echo "${CC} ${CFLAGS}" > runit/src/conf-cc
+	echo "${CC}" > runit/src/conf-ld
+	cd runit && ./package/compile
 
 install:
 	@${MKDIR} ${DESTDIR}${PREFIX}/bin ${DESTDIR}${RUNITDIR} ${DESTDIR}${SVDIR}
