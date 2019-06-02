@@ -35,8 +35,8 @@ install:
 		${DESTDIR}${PREFIX}/man/man7/runit-faster.7
 	@${MKDIR} ${DESTDIR}${PREFIX}/man/man8
 	@${INSTALL_MAN} docs/svclone.8 docs/svmod.8 ${DESTDIR}${PREFIX}/man/man8
-	@${TAR} -C runit --exclude .gitkeep -cf - . | ${TAR} -C ${DESTDIR}${RUNITDIR} -xf -
-	@${TAR} -C sv --exclude supervise -cf - . | ${TAR} -C ${DESTDIR}${SVDIR} -xf -
+	@${TAR} -C etc/runit --exclude .gitkeep -cf - . | ${TAR} -C ${DESTDIR}${RUNITDIR} -xf -
+	@${TAR} -C etc/sv --exclude supervise -cf - . | ${TAR} -C ${DESTDIR}${SVDIR} -xf -
 	@${FIND} ${DESTDIR}${RUNITDIR} -type f -exec ${SED} -i '' \
 		-e 's,/usr/local/etc/runit,${RUNITDIR},g' \
 		-e 's,//etc,/etc,' \
