@@ -30,6 +30,7 @@ const char * const stage[3] ={
 int selfpipe[2];
 int sigc =0;
 int sigi =0;
+int sigusr2 =0;
 
 void sig_cont_handler (void) {
   sigc++;
@@ -37,6 +38,10 @@ void sig_cont_handler (void) {
 }
 void sig_int_handler (void) {
   sigi++;
+  write(selfpipe[1], "", 1);
+}
+void sig_usr2_handler (void) {
+  sigusr2++;
   write(selfpipe[1], "", 1);
 }
 void sig_child_handler (void) { write(selfpipe[1], "", 1); }
@@ -67,6 +72,8 @@ int main (int argc, const char * const *argv, char * const *envp) {
   sig_catch(sig_int, sig_int_handler);
   sig_block(sig_pipe);
   sig_block(sig_term);
+  sig_block(sig_usr2);
+  sig_catch(sig_usr2, sig_usr2_handler);
 
   /* console */
   if ((ttyfd =open_write("/dev/console")) != -1) {
@@ -130,6 +137,7 @@ int main (int argc, const char * const *argv, char * const *envp) {
       sig_uncatch(sig_int);
       sig_unblock(sig_pipe);
       sig_unblock(sig_term);
+      sig_unblock(sig_usr2);
             
       strerr_warn3(INFO, "enter stage: ", stage[st], 0);
       execve(*prog, (char *const *)prog, envp);
@@ -144,6 +152,7 @@ int main (int argc, const char * const *argv, char * const *envp) {
       sig_unblock(sig_child);
       sig_unblock(sig_cont);
       sig_unblock(sig_int);
+      sig_unblock(sig_usr2);
 #ifdef IOPAUSE_POLL
       poll(&x, 1, -1);
 #else
@@ -154,6 +163,7 @@ int main (int argc, const char * const *argv, char * const *envp) {
       sig_block(sig_cont);
       sig_block(sig_child);
       sig_block(sig_int);
+      sig_block(sig_usr2);
       
       while (read(selfpipe[0], &ch, 1) == 1) {}
       while ((child =wait_nohang(&wstat)) > 0)
@@ -204,7 +214,7 @@ int main (int argc, const char * const *argv, char * const *envp) {
       }
 
       /* sig? */
-      if (!sigc  && !sigi) {
+      if (!sigc  && !sigi && !sigusr2) {
 #ifdef DEBUG
         strerr_warn2(WARNING, "poll: ", &strerr_sys);
 #endif
@@ -212,7 +222,7 @@ int main (int argc, const char * const *argv, char * const *envp) {
       }
       if (st != 1) {
         strerr_warn2(WARNING, "signals only work in stage 2.", 0);
-        sigc =sigi =0;
+        sigc =sigi =sigusr2 =0;
         continue;
       }
       if (sigi && (stat(CTRLALTDEL, &s) != -1) && (s.st_mode & S_IXUSR)) {
@@ -237,7 +247,7 @@ int main (int argc, const char * const *argv, char * const *envp) {
         sigi =0;
         sigc++;
       }
-      if (sigc && (stat(STOPIT, &s) != -1) && (s.st_mode & S_IXUSR)) {
+      if (sigusr2 || (sigc && (stat(STOPIT, &s) != -1) && (s.st_mode & S_IXUSR))) {
         int i;
         /* unlink(STOPIT); */
         chmod(STOPIT, 0);
@@ -279,7 +289,7 @@ int main (int argc, const char * const *argv, char * const *envp) {
         /* enter stage 3 */
         break;
       }
-      sigc =sigi =0;
+      sigc =sigi =sigusr2 =0;
 #ifdef DEBUG
       strerr_warn2(WARNING, "no request.", 0);
 #endif
