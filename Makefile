@@ -5,6 +5,7 @@ GZIP_CMD?=	gzip
 HUB?=		hub
 IGOR?=		igor
 INSTALL_MAN?=	install -m 444
+INSTALL_PROGRAM?=	install -s -m 555
 INSTALL_SCRIPT?=	install -m 555
 LN?=		ln
 MANDOC?=	mandoc
@@ -18,6 +19,7 @@ XARGS?=		xargs
 
 LOCALBASE?=	/usr/local
 PREFIX?=	/usr/local
+DOCSDIR?=	${PREFIX}/share/doc/runit
 RUNITDIR?=	${PREFIX}/etc/runit
 SBINDIR?=	${PREFIX}/sbin
 SVDIR?=		${PREFIX}/etc/sv
@@ -33,14 +35,22 @@ all: docs
 	cd runit && ./package/compile
 
 install:
-	@${MKDIR} ${DESTDIR}${PREFIX}/bin ${DESTDIR}${RUNITDIR} ${DESTDIR}${SVDIR}
-	@${INSTALL_SCRIPT} bin/svclone bin/svmod ${DESTDIR}${PREFIX}/bin
-	@${MKDIR} ${DESTDIR}${PREFIX}/man/man7
-	@${INSTALL_MAN} docs/runit-faster.7 ${DESTDIR}${PREFIX}/man/man7
+	@${MKDIR} ${DESTDIR}${PREFIX}/bin ${DESTDIR}${PREFIX}/sbin ${DESTDIR}${SBINDIR} \
+		${DESTDIR}${RUNITDIR} ${DESTDIR}${SVDIR} ${DESTDIR}${DOCSDIR}
+	cd runit/command && \
+		${INSTALL_PROGRAM} runit runit-init ${DESTDIR}${SBINDIR}
+	cd runit/command && \
+		${INSTALL_PROGRAM} chpst runsv runsvchdir runsvdir sv svlogd \
+		utmpset ${DESTDIR}${PREFIX}/sbin
+	${INSTALL_SCRIPT} bin/svclone bin/svmod ${DESTDIR}${PREFIX}/bin
+	@${MKDIR} ${DESTDIR}${PREFIX}/man/man7 ${DESTDIR}${PREFIX}/man/man8
+	${INSTALL_MAN} docs/runit-faster.7 ${DESTDIR}${PREFIX}/man/man7
+	${INSTALL_MAN} runit/man/*.8 docs/svclone.8 docs/svmod.8 ${DESTDIR}${PREFIX}/man/man8
+	${INSTALL_MAN} runit/doc/*.html ${DESTDIR}${DOCSDIR}
 	@${SED} -i '' -e 's,/usr/local/etc/runit,${RUNITDIR},g' \
-		${DESTDIR}${PREFIX}/man/man7/runit-faster.7
-	@${MKDIR} ${DESTDIR}${PREFIX}/man/man8
-	@${INSTALL_MAN} docs/svclone.8 docs/svmod.8 ${DESTDIR}${PREFIX}/man/man8
+		${DESTDIR}${PREFIX}/man/man7/runit-faster.7 \
+		${DESTDIR}${PREFIX}/man/man8/*.8 \
+		${DESTDIR}${DOCSDIR}/*.html
 	@${TAR} -C etc/runit --exclude .gitkeep -cf - . | ${TAR} -C ${DESTDIR}${RUNITDIR} -xf -
 	@${TAR} -C etc/sv --exclude supervise -cf - . | ${TAR} -C ${DESTDIR}${SVDIR} -xf -
 	@${FIND} ${DESTDIR}${RUNITDIR} -type f -exec ${SED} -i '' \
@@ -67,6 +77,11 @@ install:
 		${LN} -sf /var/run/runit/supervise.$$(echo $${dir} | ${SED} "s,/,-,g") \
 			$${dir}/supervise' \
 		SUPERVISE {} \;
+# Point runit to the run directory (a necessity to let runit work on
+# read-only root filesystems) and make sure rebooting and powering off
+# can work correctly.
+	${LN} -s /var/run/runit/reboot ${DESTDIR}${RUNITDIR}/reboot
+	${LN} -s /var/run/runit/stopit ${DESTDIR}${RUNITDIR}/stopit
 
 format:
 	${SHFMT} -w -s -p bin runit sv

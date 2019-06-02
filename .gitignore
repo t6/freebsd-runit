@@ -8,3 +8,4 @@ runit/src/conf-cc
 runit/src/conf-ld
 runit/compile
 runit/command
+runit/src/runit.local.h
