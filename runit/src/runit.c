@@ -23,9 +23,9 @@
 #define FATAL "- runit: fatal: "
 
 const char * const stage[3] ={
-  "/etc/runit/1",
-  "/etc/runit/2",
-  "/etc/runit/3" };
+  RUNITDIR "/1",
+  RUNITDIR "/2",
+  RUNITDIR "/3" };
 
 int selfpipe[2];
 int sigc =0;

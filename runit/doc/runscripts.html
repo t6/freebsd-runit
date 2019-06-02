@@ -317,7 +317,7 @@ automatically, but then it's not supervised)
 </pre>
 <pre>
  #!/bin/sh
- if svok /service/dsvclockd; then
+ if svok /var/service/dsvclockd; then
    sleep 2 # wait to make sure dsvclockd is initialized
    exec 2&gt;&amp;1
    exec envdir ./env /usr/lib/inet/in.dhcpd -b manual -d # -v
@@ -390,7 +390,7 @@ to be set up.
 <pre>
  #!/bin/sh
  exec 2&gt;&amp;1
- sv start /service/portmap || exit 1
+ sv start /var/service/portmap || exit 1
  exec famd -T 0 -f
 </pre>
 <hr>
@@ -557,7 +557,7 @@ to be set up.
 (<i>Debian sid</i>, <i>FreeBSD 5.3-REL</i>)
 <pre>
  #!/bin/sh
- sv start /service/getty-* || exit 1
+ sv start /var/service/getty-* || exit 1
  exec kdm -nodaemon
 </pre>
 <hr>
@@ -1022,7 +1022,7 @@ to be set up.
 <hr>
 <h3><a name="wvdial">A <tt>wvdial</tt> run script</a></h3>
 (<i>Slackware Linux 9.0</i>, the service should have a <tt>down</tt>
-file, use <tt>svc -o /service/wvdial</tt> to bring up a ppp connection)
+file, use <tt>svc -o /var/service/wvdial</tt> to bring up a ppp connection)
 <pre>
  #!/bin/sh
  exec 2&gt;&amp;1
@@ -1036,7 +1036,7 @@ to be set up.
 (<i>Linux</i>)
 <pre>
  #!/bin/sh
- sv start /service/vc-* || exit 1
+ sv start /var/service/vc-* || exit 1
  exec xdm -nodaemon
 </pre>
 <hr>

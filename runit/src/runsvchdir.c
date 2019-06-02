@@ -7,7 +7,7 @@
 #include "buffer.h"
 
 #define USAGE " dir"
-#define SVDIR "/etc/runit/runsvdir"
+#define SVDIR RUNITDIR "/runsvdir"
 
 #define VERSION "$Id: 9bf17f77e33c6b961e060aacffa3c8abd38fc64a $"
 

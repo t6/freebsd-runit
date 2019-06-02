@@ -23,11 +23,11 @@ the default Unix process no 1 after step 7.
 If you have installed the precompiled Debian package, start at step 3.
 <h3>Step 1: The three stages</h3>
 <i>runit</i> looks for the three stages implementing the system's
-<i>booting</i>, <i>running</i> and <i>shutdown</i> in <tt>/etc/runit/1</tt>,
-<tt>/etc/runit/2</tt> and <tt>/etc/runit/3</tt>, create the files now:
+<i>booting</i>, <i>running</i> and <i>shutdown</i> in <tt>/usr/local/etc/runit/1</tt>,
+<tt>/usr/local/etc/runit/2</tt> and <tt>/etc/runit/3</tt>, create the files now:
 <pre>
- # mkdir -p /etc/runit
- # cp -p /package/admin/runit/etc/debian/[123] /etc/runit/
+ # mkdir -p /usr/local/etc/runit
+ # cp -p /package/admin/runit/etc/debian/[123] /usr/local/etc/runit/
 </pre>
 Create also a getty service directory:
 <pre>
@@ -37,7 +37,7 @@ Create also a getty service directory:
 </pre>
 If you want <i>runit</i> to handle the ctrl-alt-del keyboard request, do:
 <pre>
- # cp -p /package/admin/runit/etc/debian/ctrlaltdel /etc/runit/
+ # cp -p /package/admin/runit/etc/debian/ctrlaltdel /usr/local/etc/runit/
 </pre>
 <h3>Step 2: The runit programs</h3>
 The <i>runit</i> programs must reside on the root partition, copy them to
@@ -53,11 +53,11 @@ needed), and tell <a href="runsvdir.8.html">runsvdir</a> about the getty-5
 <i>service</i>:
 <pre>
  # mkdir -p /service
- # ln -s /etc/sv/getty-5 /service/
+ # ln -s /etc/sv/getty-5 /var/service/
 </pre>
 Start <i>runit</i>'s stage 2 for testing:
 <pre>
- # /etc/runit/2 &
+ # /usr/local/etc/runit/2 &
 </pre>
 And check that the getty is running.
 <h3>Step 4: Reboot into runit for testing</h3>
@@ -67,13 +67,13 @@ will be told to use <i>runit</i> just once:
 <ul>
 <li>reboot the system
 <li>enter the following on the lilo prompt:<br>
-<tt>init=/sbin/runit-init</tt>
+<tt>init=/usr/local/sbin/runit-init</tt>
 <li>watch the console output while <i>runit</i> boots up the system
 <li>switch to <tt>tty5</tt> when stage 2 is reached, a <tt>getty</tt>
 should run there, you are able to login.
 </ul>
 If you are not using <i>lilo</i> as boot loader, refer to the documentation
-of your boot loader on how to pass <tt>init=/sbin/runit-init</tt> to the
+of your boot loader on how to pass <tt>init=/usr/local/sbin/runit-init</tt> to the
 kernel.
 <h3>Step 5: Service migration</h3>
 The goal is to migrate all services from <i>sysvinit</i> scheme to the
@@ -81,7 +81,7 @@ The goal is to migrate all services from <i>sysvinit</i> scheme to the
 <a href="runscripts.html">run scripts</a> for popular services.
 The migration can be done smoothly.
 For those services that are not migrated to use <tt>run</tt> scripts yet,
-add the corresponding <tt>init</tt>-script startup to <tt>/etc/runit/1</tt>,
+add the corresponding <tt>init</tt>-script startup to <tt>/usr/local/etc/runit/1</tt>,
 e.g.:
 <pre>
  #!/bin/sh
@@ -90,8 +90,8 @@ e.g.:
  /etc/init.d/kerneld start
  /etc/init.d/rmnologin
 
- touch /etc/runit/stopit
- chmod 0 /etc/runit/stopit
+ touch /usr/local/etc/runit/stopit
+ chmod 0 /usr/local/etc/runit/stopit
 </pre>
 It is possible to just add <tt>/etc/init.d/rc 2</tt> for having all services
 from the former runlevel 2 started as one time tasks, but keep the goal above
@@ -103,7 +103,7 @@ if it is running, disable the service in <tt>/etc/rc.conf</tt> or remove the
 service startup from the <tt>/etc/rc.*</tt> scripts and
 <a href="faq.html#tell">tell runsvdir</a> about the new service.
 <p>
-Repeat step 4 and 5, using <tt><b>/sbin/runit-init 6</b></tt> to reboot the
+Repeat step 4 and 5, using <tt><b>/usr/local/sbin/runit-init 6</b></tt> to reboot the
 system, until you are satisfied with your services startup.
 If anything goes wrong, reboot the system into the default <i>sysvinit</i>
 <tt>/sbin/init</tt> and repair the <i>runit</i> stages, then start again at
@@ -122,7 +122,7 @@ default Unix process no 1 <i>runit</i>.
 </pre>
 To report success:
 <pre>
- # ( uname -a ; cat /etc/runit/[123] ) |mail pape-runit-2.1.2@smarden.org
+ # ( uname -a ; cat /usr/local/etc/runit/[123] ) |mail pape-runit-2.1.2@smarden.org
 </pre>
 <hr>
 
@@ -133,17 +133,17 @@ Follow these steps to migrate from <i>init</i> to <i>runit</i> on
 The <tt>/sbin/init</tt> binary is not replaced until step 4.
 <h3>Step 1: The three stages</h3>
 <i>runit</i> looks for the three stages implementing the system's
-<i>booting</i>, <i>running</i> and <i>shutdown</i> in <tt>/etc/runit/1</tt>,
-<tt>/etc/runit/2</tt> and <tt>/etc/runit/3</tt> respectively.
+<i>booting</i>, <i>running</i> and <i>shutdown</i> in <tt>/usr/local/etc/runit/1</tt>,
+<tt>/usr/local/etc/runit/2</tt> and <tt>/etc/runit/3</tt> respectively.
 Create the scripts now:
 <pre>
- # mkdir -p /etc/runit
+ # mkdir -p /usr/local/etc/runit
 
 OpenBSD 2.9:
- # cp -p /package/admin/runit/etc/openbsd/[123] /etc/runit/
+ # cp -p /package/admin/runit/etc/openbsd/[123] /usr/local/etc/runit/
 
 FreeBSD 4.4:
- # cp -p /package/admin/runit/etc/freebsd/[123] /etc/runit/
+ # cp -p /package/admin/runit/etc/freebsd/[123] /usr/local/etc/runit/
 </pre>
 Remove the <tt>svscanboot</tt> startup from <tt>/etc/rc.local</tt> by
 deleting the line <tt>csh -cf '/command/svscanboot &'</tt> (this normally
@@ -178,11 +178,11 @@ and tell <a href="runsvdir.8.html">runsvdir</a> about the <tt>getty-5</tt>
 <i>service</i>:
 <pre>
  # mkdir -p /service
- # ln -s /etc/sv/getty-5 /service/
+ # ln -s /etc/sv/getty-5 /var/service/
 </pre>
 Start <i>runit</i>'s stage 2 for testing:
 <pre>
- # /etc/runit/2 &
+ # /usr/local/etc/runit/2 &
 </pre>
 And check that the getty is running.
 <h3>Step 4: Replace the <tt>/sbin/init</tt> binary</h3>
@@ -191,10 +191,10 @@ to boot your system alternatively, e.g. with a boot floppy, to restore the
 former <tt>/sbin/init</tt> if anything goes wrong.
 <p>
 Make a backup copy of the current <tt>/sbin/init</tt> program and replace
-it with <tt>/sbin/runit-init</tt>:
+it with <tt>/usr/local/sbin/runit-init</tt>:
 <pre>
  # cp -p /sbin/init /sbin/init.bsd
- # install /sbin/runit-init /sbin/init
+ # install /usr/local/sbin/runit-init /sbin/init
 </pre>
 Boot your system with <i>runit</i> for the first time:
 <pre>
@@ -211,7 +211,7 @@ This will cause <i>runit</i> to enter stage 3 which runs
 <p>
 To report success:
 <pre>
- # ( uname -a ; cat /etc/runit/[123] ) |mail pape-runit-2.1.2@smarden.org
+ # ( uname -a ; cat /usr/local/etc/runit/[123] ) |mail pape-runit-2.1.2@smarden.org
 </pre>
 <h3>Step 5: Service migration</h3>
 The goal is to migrate all services from <i>/etc/rc.*</i> scheme to the
@@ -226,8 +226,8 @@ one time task, so the services are started automatically:
 
  /bin/sh /etc/rc autoboot
 
- touch /etc/runit/stopit
- chmod 0 /etc/runit/stopit
+ touch /usr/local/etc/runit/stopit
+ chmod 0 /usr/local/etc/runit/stopit
 </pre>
 To migrate a service,
 <a href="faq.html#create">create a service directory</a>, disable the service

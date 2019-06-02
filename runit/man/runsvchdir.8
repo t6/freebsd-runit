@@ -10,13 +10,13 @@ is a services directory for the use with
 .BR runsvdir (8).
 If
 .I dir
-does not start with a slash, it is searched in /etc/runit/runsvdir/.
+does not start with a slash, it is searched in /usr/local/etc/runit/runsvdir/.
 .I dir
 must not start with a dot.
 .P
 .B runsvchdir
 switches to the directory
-.IR /etc/runit/runsvdir/ ,
+.IR /usr/local/etc/runit/runsvdir/ ,
 copies
 .I current
 to
@@ -33,16 +33,16 @@ is a symlink to
 and
 .BR runsvdir (8)
 is running
-.IR /service/ .
+.IR /var/service/ .
 .SH EXIT CODES
 .B runsvchdir
 prints an error message and exits 111 on error.
 .B runsvchdir
 exits 0 on success.
 .SH FILES
- /etc/runit/runsvdir/previous
- /etc/runit/runsvdir/current
- /etc/runit/runsvdir/current.new
+ /usr/local/etc/runit/runsvdir/previous
+ /usr/local/etc/runit/runsvdir/current
+ /usr/local/etc/runit/runsvdir/current.new
 .SH SEE ALSO
 runsvdir(8),
 runit(8),

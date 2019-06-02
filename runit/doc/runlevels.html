@@ -20,27 +20,27 @@ If not yet done, configure your system to use
 <p>
 Create the following directories and symbolic links:
 <pre>
- # mkdir -p /etc/runit/runsvdir/default
- # mkdir -p /etc/runit/runsvdir/single
- # ln -s /etc/sv/getty-5 /etc/runit/runsvdir/single/
- # ln -s default /etc/runit/runsvdir/current
+ # mkdir -p /usr/local/etc/runit/runsvdir/default
+ # mkdir -p /usr/local/etc/runit/runsvdir/single
+ # ln -s /etc/sv/getty-5 /usr/local/etc/runit/runsvdir/single/
+ # ln -s default /usr/local/etc/runit/runsvdir/current
 </pre>
-Copy the contents of <tt>/service/</tt> to
-<tt>/etc/runit/runsvdir/current/</tt> and replace <tt>/service/</tt>
+Copy the contents of <tt>/var/service/</tt> to
+<tt>/usr/local/etc/runit/runsvdir/current/</tt> and replace <tt>/var/service/</tt>
 with a symbolic link:
 <pre>
- # cp -pR /service/* /etc/runit/runsvdir/current/
+ # cp -pR /var/service/* /usr/local/etc/runit/runsvdir/current/
  # mv -f /service /service.old && \
-     ln -s /etc/runit/runsvdir/current /service
+     ln -s /usr/local/etc/runit/runsvdir/current /service
 </pre>
 You have now created two runlevels: <tt>default</tt> and <tt>single</tt>.
 The <tt>current</tt> runlevel is <tt>default</tt>.
 It is safe to remove <tt>/service.old/</tt> if you don't need it anymore.
 <p>
-Finally edit <tt>/etc/runit/2</tt> to set the <tt>default</tt> runlevel when
+Finally edit <tt>/usr/local/etc/runit/2</tt> to set the <tt>default</tt> runlevel when
 stage 2 starts:
 <pre>
- $ cat /etc/runit/2 
+ $ cat /usr/local/etc/runit/2 
  #!/bin/sh
  PATH=/command:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin
  
@@ -68,23 +68,23 @@ Note that there is no guarantee that all services from the <tt>previous</tt>
 runlevel will stop, the <a href="runsv.8.html">runsv</a> processes have sent
 the service daemons a SIGTERM and wait for them to terminate.
 You can check the status of the <tt>previous</tt> runlevel through
-<tt>/etc/runit/runsvdir/previous/</tt>.
+<tt>/usr/local/etc/runit/runsvdir/previous/</tt>.
 <hr>
 <a name="create"><h3>Creating new runlevels</h3></a>
 To create a new runlevel, simply create a new directory in
-<tt>/etc/runit/runsvdir/</tt>.
+<tt>/usr/local/etc/runit/runsvdir/</tt>.
 The name of the directory is the name of the new runlevel.
 The name must not start with a dot and must not be <tt>current</tt>,
 <tt>current.new</tt>, or <tt>previous</tt>, e.g.:
 <pre>
- # mkdir /etc/runit/runsvdir/maintenance
+ # mkdir /usr/local/etc/runit/runsvdir/maintenance
 </pre>
 Add the services you want to run in the runlevel <tt>maintenance</tt> to the
 newly created directory, e.g.:
 <pre>
- # ln -s /etc/sv/getty-5 /etc/runit/runsvdir/maintenance/
- # ln -s /etc/sv/ssh /etc/runit/runsvdir/maintenance/
- # ln -s /etc/sv/dnscache /etc/runit/runsvdir/maintenance/
+ # ln -s /etc/sv/getty-5 /usr/local/etc/runit/runsvdir/maintenance/
+ # ln -s /etc/sv/ssh /usr/local/etc/runit/runsvdir/maintenance/
+ # ln -s /etc/sv/dnscache /usr/local/etc/runit/runsvdir/maintenance/
 </pre>
 If you want to switch to the runlevel <tt>maintenance</tt>, do:
 <pre>

@@ -26,9 +26,9 @@ To signal
 the system halt request,
 .B runit-init
 removes all permissions of the file
-.I /etc/runit/reboot
+.I /usr/local/etc/runit/reboot
 (chmod 0), and sets the execute by owner permission of the file
-.I /etc/runit/stopit
+.I /usr/local/etc/runit/stopit
 (chmod 100).
 Then a CONT signal is sent to
 .BR runit (8).
@@ -40,9 +40,9 @@ To signal
 the system reboot request,
 .B runit-init
 sets the execute by owner permission of the files
-.I /etc/runit/reboot
+.I /usr/local/etc/runit/reboot
 and
-.I /etc/runit/stopit
+.I /usr/local/etc/runit/stopit
 (chmod 100). Then a CONT signal is sent to
 .BR runit (8).
 .SH EXIT CODES

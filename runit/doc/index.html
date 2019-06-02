@@ -68,30 +68,30 @@ if this is started by the kernel.
 <i>running</i> and <i>shutting down</i> in <b>three stages</b>:
 <ul>
   <li><b>Stage 1:</b><br>
-  <i>runit</i> starts <tt>/etc/runit/1</tt> and waits for it to
+  <i>runit</i> starts <tt>/usr/local/etc/runit/1</tt> and waits for it to
   terminate.
   The system's one time initialization tasks are done here.
-  <tt>/etc/runit/1</tt> has full control over <tt>/dev/console</tt> to be
+  <tt>/usr/local/etc/runit/1</tt> has full control over <tt>/dev/console</tt> to be
   able to start an emergency shell in case the one time initialization
   tasks fail.
   <li><b>Stage 2:</b><br>
-  <i>runit</i> starts <tt>/etc/runit/2</tt> which should not return
+  <i>runit</i> starts <tt>/usr/local/etc/runit/2</tt> which should not return
   until the system is going to halt or reboot; if it crashes, it will be
   restarted.
-  Normally, <tt>/etc/runit/2</tt> runs
+  Normally, <tt>/usr/local/etc/runit/2</tt> runs
   <a href="runsvdir.8.html">runsvdir</a>.
   In Stage 2 <i>runit</i> optionally handles the INT signal (ctrl-alt-del
   keyboard request on Linux/i386).
   <li><b>Stage 3:</b><br>
   If <i>runit</i> is told to halt or reboot the system, or Stage 2 returns
   without errors, it terminates Stage 2 if it is running, and runs
-  <tt>/etc/runit/3</tt>.
+  <tt>/usr/local/etc/runit/3</tt>.
   The systems tasks to shutdown and halt or reboot are done here.
 </ul>
 These are working examples for Debian sarge:
-<a href="debian/1">/etc/runit/1</a>,
-<a href="debian/2">/etc/runit/2</a>,
-<a href="debian/3">/etc/runit/3</a>.
+<a href="debian/1">/usr/local/etc/runit/1</a>,
+<a href="debian/2">/usr/local/etc/runit/2</a>,
+<a href="debian/3">/usr/local/etc/runit/3</a>.
 <p>
 The program <a href="runit-init.8.html">runit-init</a> is intended to
 replace <tt>/sbin/init</tt>.

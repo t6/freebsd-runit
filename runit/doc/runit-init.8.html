@@ -24,14 +24,14 @@ while the system is up, it must be either called as <b>init 0</b> or <b>init 6:<
 0</b> </dt>
 <dd>tells the Unix process no 1 to shutdown and halt the system. To signal
 <i><b>runit</b>(8)</i> the system halt request, <b>runit-init</b> removes all permissions of
-the file <i>/etc/runit/reboot</i> (chmod 0), and sets the execute by owner permission
-of the file <i>/etc/runit/stopit</i> (chmod 100). Then a CONT signal is sent to
+the file <i>/usr/local/etc/runit/reboot</i> (chmod 0), and sets the execute by owner permission
+of the file <i>/usr/local/etc/runit/stopit</i> (chmod 100). Then a CONT signal is sent to
 <i><b>runit</b>(8)</i>. </dd>
 
 <dt><b>init 6</b> </dt>
 <dd>tells the Unix process no 1 to shutdown and reboot the
 system. To signal <i><b>runit</b>(8)</i> the system reboot request, <b>runit-init</b> sets the
-execute by owner permission of the files <i>/etc/runit/reboot</i> and <i>/etc/runit/stopit</i>
+execute by owner permission of the files <i>/usr/local/etc/runit/reboot</i> and <i>/etc/runit/stopit</i>
 (chmod 100). Then a CONT signal is sent to <i><b>runit</b>(8)</i>. </dd>
 </dl>
 

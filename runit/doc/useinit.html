@@ -21,7 +21,7 @@ adding <tt>/sbin/runsvdir-start</tt> to the system's <tt>StartupItems</tt>.
 <p>
 In any case, you first need to copy the <i>stage 2</i> script to
 <tt>/sbin/runsvdir-start</tt>, and create the services directory
-<tt>/service/</tt>:
+<tt>/var/service/</tt>:
 <pre>
  # install -m0750 /package/admin/runit/etc/2 /sbin/runsvdir-start
  # mkdir -p /service
