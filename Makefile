@@ -27,7 +27,7 @@ SVDIR?=		${PREFIX}/etc/sv
 GETTYSV=	ttyv0 ttyv2 ttyv3 ttyv4 ttyv5 ttyv6 ttyv7 ttyv8
 GETTYSU=	ttyu0 ttyu1 ttyu2 ttyu3
 
-all: docs
+all:
 	echo '#define RUNITDIR "${RUNITDIR}"' > runit/src/runit.local.h
 	echo '#define SBINDIR "${SBINDIR}"' >> runit/src/runit.local.h
 	echo "${CC} ${CFLAGS}" > runit/src/conf-cc
