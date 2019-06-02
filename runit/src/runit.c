@@ -49,7 +49,6 @@ int main (int argc, const char * const *argv, char * const *envp) {
   iopause_fd x;
 #ifndef IOPAUSE_POLL
   fd_set rfds;
-  struct timeval t;
 #endif
   char ch;
   int ttyfd;
@@ -146,12 +145,11 @@ int main (int argc, const char * const *argv, char * const *envp) {
       sig_unblock(sig_cont);
       sig_unblock(sig_int);
 #ifdef IOPAUSE_POLL
-      poll(&x, 1, 14000);
+      poll(&x, 1, -1);
 #else
-      t.tv_sec =14; t.tv_usec =0;
       FD_ZERO(&rfds);
       FD_SET(x.fd, &rfds);
-      select(x.fd +1, &rfds, (fd_set*)0, (fd_set*)0, &t);
+      select(x.fd +1, &rfds, (fd_set*)0, (fd_set*)0, (struct timeval*)0);
 #endif
       sig_block(sig_cont);
       sig_block(sig_child);
@@ -309,10 +307,10 @@ int main (int argc, const char * const *argv, char * const *envp) {
     reboot_system(RB_AUTOBOOT);
   }
   else {
-#ifdef RB_POWER_OFF
+#ifdef RB_POWEROFF
     strerr_warn2(INFO, "power off...", 0);
     sync();
-    reboot_system(RB_POWER_OFF);
+    reboot_system(RB_POWEROFF);
     sleep(2);
 #endif
 #ifdef RB_HALT_SYSTEM

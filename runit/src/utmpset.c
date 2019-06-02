@@ -22,6 +22,11 @@ const char *progname;
 void usage(void) { strerr_die4x(1, "usage: ", progname, USAGE, "\n"); }
 
 int utmp_logout(const char *line) {
+
+#ifdef _UW_TMP_UTMPX
+  int ok = 1; /* do_nada(); */
+#else /* _UW_TMP_UTMP */
+
   int fd;
   uw_tmp ut;
   int ok =-1;
@@ -45,9 +50,13 @@ int utmp_logout(const char *line) {
     break;
   }
   close(fd);
+#endif /* _UW_TMP_UTMPX */
   return(ok);
 }
 int wtmp_logout(const char *line) {
+#ifdef _UW_TMP_UTMPX
+  return 1; /* do_nada(); */
+#else /* _UW_TMP_UTMP */
   int fd;
   int len;
   struct stat st;
@@ -79,6 +88,7 @@ int wtmp_logout(const char *line) {
   }
   close(fd);
   return(1);
+#endif /* _UW_TMP_UTMPX */
 }
 
 int main (int argc, const char * const *argv, const char * const *envp) {

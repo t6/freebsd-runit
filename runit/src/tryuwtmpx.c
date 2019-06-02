@@ -1,9 +1,9 @@
 #include <sys/types.h>
 #include <utmpx.h>
 
-struct futmpx ut;
+struct utmpx ut;
 
 int main(void) {
-  char *s =ut.ut_name;
+  char *s =ut.ut_user;
   return(0);
 }

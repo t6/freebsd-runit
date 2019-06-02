@@ -3,11 +3,12 @@
 
 /* sysdep: +utmpx */
 
-#define UW_TMP_UFILE _UTMPX_FILE
-#define UW_TMP_WFILE _WTMPX_FILE
-
+#ifndef _UW_TMP_UTMPX
+#define _UW_TMP_UTMPX
 #ifndef ut_time
 #define ut_time ut_tv.tv_sec
 #endif
 
-typedef struct futmpx uw_tmp;
+typedef struct utmpx uw_tmp;
+
+#endif /* _UW_TMP_UTMPX */
