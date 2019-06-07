@@ -1,7 +1,6 @@
 CMARK?=		cmark
 FIND?=		find
 GIT?=		git
-GZIP_CMD?=	gzip
 HUB?=		hub
 IGOR?=		igor
 INSTALL_MAN?=	install -m 444
@@ -16,6 +15,7 @@ SHELLCHECK?=	shellcheck
 SHFMT?=		shfmt
 TAR?=		tar
 XARGS?=		xargs
+XZ_CMD?=	xz -Mmax
 
 LOCALBASE?=	/usr/local
 PREFIX?=	/usr/local
@@ -103,12 +103,12 @@ archive:
 			--prefix=freebsd-runit-$$ver/ \
 			--output=freebsd-runit-$$ver.tar \
 			$$tag && \
-		${GZIP_CMD} freebsd-runit-$$ver.tar
+		${XZ_CMD} -f freebsd-runit-$$ver.tar
 
 github-release: archive
 	@${GIT} push --follow-tags github
 	@tag=$$(${GIT} tag --contains HEAD); ver=$${tag#v*}; \
-		${HUB} release create -p -a freebsd-runit-$$ver.tar.gz \
+		${HUB} release create -p -a freebsd-runit-$$ver.tar.xz \
 			-m "freebsd-runit-$$ver" $$tag
 
 docs: docs/runit-faster.html docs/runit-faster.7.html
