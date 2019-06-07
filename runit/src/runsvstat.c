@@ -11,7 +11,6 @@
 
 #define USAGE " [ -l ] service ..."
 
-#define VERSION "$Id: c17bbd3eda6f3c57027dfb47ff676bdd3fefff9f $"
 
 #define FATAL "runsvstat: fatal: "
 #define WARNING "runsvstat: warning: "
@@ -112,13 +111,11 @@ int main(int argc, char **argv) {
 
   progname =*argv;
 
-  while ((opt =getopt(argc, (const char * const *)argv, "lV")) != opteof) {
+  while ((opt =getopt(argc, (const char * const *)argv, "l")) != opteof) {
     switch(opt) {
     case 'l':
       showlog =1;
       break;
-    case 'V':
-      strerr_warn1(VERSION, 0);
     case '?':
       usage();
     }

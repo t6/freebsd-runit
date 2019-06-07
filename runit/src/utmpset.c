@@ -97,13 +97,11 @@ int main (int argc, const char * const *argv, const char * const *envp) {
 
   progname =*argv;
 
-  while ((opt =getopt(argc, argv, "wV")) != opteof) {
+  while ((opt =getopt(argc, argv, "w")) != opteof) {
     switch(opt) {
     case 'w':
       wtmp =1;
       break;
-    case 'V':
-      strerr_warn1("$Id: cb399098f794012a7f5e6a3a7090b2d53b86c08c $", 0);
     case '?':
       usage();
     }

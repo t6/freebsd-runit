@@ -3,8 +3,6 @@ rm -rf "${ctmp}"
 
 runsvstat
 echo $?
-runsvstat -V
-echo $?
 
 mkdir "${ctmp}"
 echo '#!/bin/sh' >"${ctmp}"/run

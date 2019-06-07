@@ -3,8 +3,6 @@ rm -rf "${ctmp}"
 
 svwaitup
 echo $?
-svwaitup -V
-echo $?
 
 mkdir "${ctmp}"
 echo '#!/bin/sh' >"${ctmp}"/run

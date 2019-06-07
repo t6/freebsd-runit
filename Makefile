@@ -94,6 +94,9 @@ lint:
 	${SHFMT} -d -s -p bin runit sv
 	${SHFMT} -p -f bin runit sv | ${XARGS} ${SHELLCHECK} -s sh -x -e SC1091,SC2039
 
+check:
+	cd runit && package/check
+
 archive:
 	@tag=$$(${GIT} tag --contains HEAD); ver=$${tag#v*}; \
 		${GIT} archive --format=tar \
@@ -118,4 +121,4 @@ docs/runit-faster.7.html: docs/runit-faster.7
 	's,</style>,&<link rel="stylesheet" type="text/css" href="buttondown.css">,' \
 	> docs/runit-faster.7.html
 
-.PHONY: all archive docs format github-release manlint lint
+.PHONY: all archive check docs format github-release manlint lint

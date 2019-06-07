@@ -286,7 +286,7 @@ int main(int argc, const char **argv) {
   if (str_equal(progname, "setlock")) setlock(argc, argv);
   if (str_equal(progname, "softlimit")) softlimit(argc, argv);
 
-  while ((opt =getopt(argc, argv, "u:U:b:e:m:d:o:p:f:c:r:t:/:n:l:L:vP012V"))
+  while ((opt =getopt(argc, argv, "u:U:b:e:m:d:o:p:f:c:r:t:/:n:l:L:vP012"))
          != opteof)
     switch(opt) {
     case 'u': set_user =(char*)optarg; break;
@@ -324,7 +324,6 @@ int main(int argc, const char **argv) {
     case '0': nostdin =1; break;
     case '1': nostdout =1; break;
     case '2': nostderr =1; break;
-    case 'V': strerr_warn1("$Id: f279d44141c981dd7535a12260efcf1ef7beed26 $", 0);
     case '?': usage();
     }
   argv +=optind;

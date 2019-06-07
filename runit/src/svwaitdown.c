@@ -12,7 +12,6 @@
 #define INFO "svwaitdown: "
 #define USAGE " [-v] [-t 1..6000] service ..."
 
-#define VERSION "$Id: 6cd3efc2e15e5e3d2fa60cd0c028e60958676ec7 $"
 
 const char *progname;
 const char * const *dir;
@@ -41,7 +40,7 @@ int main(int argc, const char * const *argv) {
   
   progname =*argv;
   
-  while ((opt =getopt(argc, argv, "t:xkvV")) != opteof) {
+  while ((opt =getopt(argc, argv, "t:xkv")) != opteof) {
     switch(opt) {
     case 't':
       scan_ulong(optarg, &sec);
@@ -56,8 +55,6 @@ int main(int argc, const char * const *argv) {
     case 'v':
       verbose =1;
       break;
-    case 'V':
-      strerr_warn1(VERSION, 0);
     case '?':
       usage();
     }

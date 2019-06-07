@@ -40,7 +40,7 @@ int main(int argc, const char * const *argv) {
 
   progname =*argv;
   
-  while ((opt =getopt(argc, argv, "s:vV")) != opteof) {
+  while ((opt =getopt(argc, argv, "s:v")) != opteof) {
     switch(opt) {
     case 's': 
       scan_ulong(optarg, &sec);
@@ -49,8 +49,6 @@ int main(int argc, const char * const *argv) {
     case 'v':
       verbose =1;
       break;
-    case 'V':
-      strerr_warn1("$Id: e2d6c574c5e56f9931323fbc0e539c7f9b829b73 $", 0);
     case '?':
       usage();
     }

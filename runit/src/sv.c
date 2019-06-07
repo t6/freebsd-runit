@@ -17,7 +17,6 @@
 #define USAGE " [-v] [-w sec] command service ..."
 #define USAGELSB " [-w sec] command"
 
-#define VERSION "$Id: 900314260c6d52c986c5357673bea2f3bd3f4698 $"
 
 #define FATAL   "fatal: "
 #define FAIL    "fail: "
@@ -281,11 +280,10 @@ int main(int argc, char **argv) {
   lsb =(str_diff(progname, "sv"));
   if ((x =env_get("SVDIR"))) varservice =x;
   if ((x =env_get("SVWAIT"))) scan_ulong(x, &wait);
-  while ((i =getopt(argc, (const char* const*)argv, "w:vV")) != opteof) {
+  while ((i =getopt(argc, (const char* const*)argv, "w:v")) != opteof) {
     switch(i) {
     case 'w': scan_ulong(optarg, &wait);
     case 'v': verbose =1; break;
-    case 'V': strerr_warn1(VERSION, 0);
     case '?': usage();
     }
   }

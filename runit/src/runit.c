@@ -96,9 +96,6 @@ int main (int argc, const char * const *argv, char * const *envp) {
   if (RB_DISABLE_CAD == 0) reboot_system(0);
 #endif
 
-  strerr_warn3(INFO, "$Id: 25da3b86f7bed4038b8a039d2f8e8c9bbcf0822b $",
-               ": booting.", 0);
-
   /* runit */
   for (st =0; st < 3; st++) {
     /* if (st == 2) logwtmp("~", "reboot", ""); */
