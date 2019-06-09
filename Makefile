@@ -48,9 +48,11 @@ install:
 	${INSTALL_MAN} runit/man/*.8 docs/svclone.8 docs/svmod.8 ${DESTDIR}${PREFIX}/man/man8
 	${INSTALL_MAN} runit/doc/*.html ${DESTDIR}${DOCSDIR}
 	@${SED} -i '' -e 's,/usr/local/etc/runit,${RUNITDIR},g' \
-		${DESTDIR}${PREFIX}/man/man7/runit-faster.7 \
 		${DESTDIR}${PREFIX}/man/man8/*.8 \
 		${DESTDIR}${DOCSDIR}/*.html
+	@${SED} -i '' -e 's,%%RUNITDIR%%,${RUNITDIR},g' \
+		-e 's,%%SBINDIR%%,${SBINDIR},g' \
+		${DESTDIR}${PREFIX}/man/man7/runit-faster.7
 	@${TAR} -C etc/runit --exclude .gitkeep -cf - . | ${TAR} -C ${DESTDIR}${RUNITDIR} -xf -
 	@${TAR} -C etc/sv --exclude supervise -cf - . | ${TAR} -C ${DESTDIR}${SVDIR} -xf -
 	@${FIND} ${DESTDIR}${RUNITDIR} -type f -exec ${SED} -i '' \

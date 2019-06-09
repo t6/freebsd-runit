@@ -1,4 +1,4 @@
-.Dd May 24, 2019
+.Dd June 09, 2019
 .Dt RUNIT-FASTER 7
 .Os
 .Sh NAME
@@ -38,21 +38,14 @@ instead of in
 .Pa /usr/local/etc/runit
 and
 .Pa /usr/local/sbin .
-In this document we will always refer to
-.Pa /usr/local/etc/runit
-directly instead of
-.Pa /etc/runit .
-Please adjust paths accordingly if you have to use the
-.Sy ROOT
-option.
 .Pp
 To get started edit
 .Pa /boot/loader.conf
 and tell the kernel to attempt to use
-.Pa /usr/local/sbin/runit-init
+.Pa %%SBINDIR%%/runit-init
 as PID 1.
 .Bd -literal -offset indent
-init_path="/usr/local/sbin/runit-init:/rescue/init"
+init_path="%%SBINDIR%%/runit-init:/rescue/init"
 .Ed
 .Pp
 No service is enabled by default.
@@ -62,11 +55,11 @@ in the
 runlevel, to get a login prompt after rebooting:
 .Bd -literal -offset indent
 $ ln -s /usr/local/etc/sv/devd \\
-	/usr/local/etc/runit/runsvdir/default
+	%%RUNITDIR%%/runsvdir/default
 $ ln -s /usr/local/etc/sv/getty-ttyv0 \\
-	/usr/local/etc/runit/runsvdir/default
+	%%RUNITDIR%%/runsvdir/default
 $ ln -s /usr/local/etc/sv/syslogd \\
-	/usr/local/etc/runit/runsvdir/default
+	%%RUNITDIR%%/runsvdir/default
 .Ed
 .Pp
 For headless machines (or e.g.,
@@ -75,7 +68,7 @@ virtual machines) with a serial port make sure to enable `getty-ttyu0`
 instead of `getty-ttyv0`:
 .Bd -literal -offset indent
 $ ln -s /usr/local/etc/sv/getty-ttyu0 \\
-	/usr/local/etc/runit/runsvdir/default
+	%%RUNITDIR%%/runsvdir/default
 .Ed
 .Pp
 The runlevel can be selected via the
@@ -94,9 +87,9 @@ will \fBnot\fP be applied when using
 The hostname has to be set either via
 .Sy runit.hostname
 in the kernel environment or by creating
-.Pa /usr/local/etc/runit/hostname :
+.Pa %%RUNITDIR%%/hostname :
 .Bd -literal -offset indent
-$ echo my-hostname > /usr/local/etc/runit/hostname
+$ echo my-hostname > %%RUNITDIR%%/hostname
 .Ed
 .Pp
 The keyboard layout has to be set via a core service like
@@ -109,12 +102,12 @@ below for more information.
 from
 .Pa /etc/rc.conf
 for loading kernel modules can be migrated to
-.Pa /usr/local/etc/runit/modules .
+.Pa %%RUNITDIR%%/modules .
 They will be loaded as a first step when the system initializes.
 .Bd -literal -offset indent
 $ sysrc kld_list
 kld_list: /boot/modules/i915kms.ko vboxdrv vboxnetflt vboxnetadp
-$ cat <<EOF > /usr/local/etc/runit/modules
+$ cat <<EOF > %%RUNITDIR%%/modules
 /boot/modules/i915kms.ko
 vboxdrv
 vboxnetflt
@@ -149,7 +142,7 @@ As the system is now fully bootstrapped via
 we can symlink new services directly into
 .Pa /var/service ,
 which itself is a symlink to
-.Pa /etc/runit/runsvdir/current
+.Pa %%RUNITDIR%%/runsvdir/current
 which points to the currently active runlevel.
 .Xr runsv 8
 will immediately start the services once symlinked.
@@ -220,7 +213,7 @@ work, you can edit
 for restarting to look like
 .Bd -literal -offset indent
 #!/bin/sh
-exec /usr/local/sbin/runit-init 6
+exec %%SBINDIR%%/runit-init 6
 .Ed
 .Pp
 and edit
@@ -228,7 +221,7 @@ and edit
 for power off to look like
 .Bd -literal -offset indent
 #!/bin/sh
-exec /usr/local/sbin/runit-init 0
+exec %%SBINDIR%%/runit-init 0
 .Ed
 .Sh SYSTEM INITIALIZATION
 This section only applies if opting into using
@@ -238,7 +231,7 @@ as PID 1.
 initializes the system in two stages.
 The first stage will run one time system tasks, dubbed
 core services, located in
-.Pa /usr/local/etc/runit/core-services :
+.Pa %%RUNITDIR%%/core-services :
 .Bl -tag -width 2n
 .It Sy 11-devmatch.sh
 Use
@@ -246,7 +239,7 @@ Use
 to load kernel modules.
 .It Sy 11-kld.sh
 Load kernel modules listed in
-.Pa /usr/local/etc/runit/modules .
+.Pa %%RUNITDIR%%/modules .
 .It Sy 11-set-defaults.sh
 Set some system defaults.
 .It Sy 12-console.sh
@@ -404,7 +397,7 @@ will be overwritten when updating
 Stage 2 will look up the runlevel in the
 .Pa runit.runlevel
 kenv and link
-.Pa /usr/local/etc/runit/runsvdir/$runlevel
+.Pa %%RUNITDIR%%/runsvdir/$runlevel
 to
 .Pa /var/service .
 It will then run
@@ -722,7 +715,7 @@ jail0 interface in the 192.168.95.0/24 network.
 The host gets IP 192.168.95.1.
 This can be used this to quickly setup jails.
 You can change the network and IP settings by editing
-.Pa /usr/local/etc/runit/core-services/44-jail-network.sh .
+.Pa %%RUNITDIR%%/core-services/44-jail-network.sh .
 .Pp
 For vanilla
 .Xr rc 8
@@ -779,7 +772,7 @@ Install and enable nginx and runit-faster in the jail
 .Bd -literal -offset indent
 pkg -c /usr/jails/http install nginx runit-faster
 ln -s /usr/local/etc/sv/nginx \\
-	/usr/jails/http/usr/local/etc/runit/runsvdir/default
+	/usr/jails/http%%RUNITDIR%%/runsvdir/default
 .Ed
 .Pp
 Edit
