@@ -1,4 +1,4 @@
-.Dd December 11, 2018
+.Dd June 09, 2019
 .Dt SVCLONE 8
 .Os
 .Sh NAME
@@ -25,7 +25,7 @@ links.
 When cloning a service treat
 .Ar source
 as a template:
-.Pa /usr/local/etc/sv/$source-template
+.Pa %%SVDIR%%/$source-template
 .It Fl u
 Let created or updated supervise symlinks point into
 .Pa /var/run/runit/users/$USER
@@ -42,23 +42,23 @@ service to let kate run her own custom services (managed via
 .Pa ~/service )
 when the system boots up:
 .Bd -literal -offset indent
-mkdir /usr/local/etc/sv/local
-svclone /usr/local/etc/sv/{runsvdir-user-template,local/runsvdir@kate}
-ln -s /usr/local/etc/sv/local/runsvdir@kate /var/service
+mkdir %%SVDIR%%/local
+svclone %%SVDIR%%/{runsvdir-user-template,local/runsvdir@kate}
+ln -s %%SVDIR%%/local/runsvdir@kate /var/service
 .Ed
 .Pp
 Or the same but using
 .Fl t :
 .Bd -literal -offset indent
-mkdir /usr/local/etc/sv/local
+mkdir %%SVDIR%%/local
 svclone -t runsvdir-user local/runsvdir@kate
-ln -s /usr/local/etc/sv/local/runsvdir@kate /var/service
+ln -s %%SVDIR%%/local/runsvdir@kate /var/service
 .Ed
 .Pp
 kate can now create, enable, and manage a user-level sndiod instance by herself:
 .Bd -literal -offset indent
 mkdir ~/.sv ~/service
-svclone -u /usr/local/etc/sv/sndiod ~/.sv/sndiod
+svclone -u %%SVDIR%%/sndiod ~/.sv/sndiod
 ln -s ~/.sv/sndiod ~/service
 .Ed
 .Sh SEE ALSO

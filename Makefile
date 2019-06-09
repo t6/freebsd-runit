@@ -52,7 +52,13 @@ install:
 		${DESTDIR}${DOCSDIR}/*.html
 	@${SED} -i '' -e 's,%%RUNITDIR%%,${RUNITDIR},g' \
 		-e 's,%%SBINDIR%%,${SBINDIR},g' \
-		${DESTDIR}${PREFIX}/man/man7/runit-faster.7
+		-e 's,%%SVDIR%%,${SVDIR},g' \
+		-e 's,%%PREFIX%%,${PREFIX},g' \
+		-e 's,%%LOCALBASE%%,${LOCALBASE},g' \
+		${DESTDIR}${PREFIX}/bin/svclone \
+		${DESTDIR}${PREFIX}/man/man7/runit-faster.7 \
+		${DESTDIR}${PREFIX}/man/man8/svclone.8 \
+		${DESTDIR}${PREFIX}/man/man8/svmod.8
 	@${TAR} -C etc/runit --exclude .gitkeep -cf - . | ${TAR} -C ${DESTDIR}${RUNITDIR} -xf -
 	@${TAR} -C etc/sv --exclude supervise -cf - . | ${TAR} -C ${DESTDIR}${SVDIR} -xf -
 	@${FIND} ${DESTDIR}${RUNITDIR} -type f -exec ${SED} -i '' \

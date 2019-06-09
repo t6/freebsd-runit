@@ -121,7 +121,7 @@ main() {
 		remove_supervise "$@"
 	elif [ $# -ge 2 ]; then
 		if [ -n "${tflag}" ]; then
-			source="/usr/local/etc/sv/$1-template"
+			source="%%SVDIR%%/$1-template"
 		else
 			source="$1"
 		fi

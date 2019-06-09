@@ -21,7 +21,7 @@ $ service runsvdir start
 The
 .Nm
 port by default assumes that
-.Pa /usr/local
+.Pa %%PREFIX%%
 is located on the same partition as the root filesystem.
 For systems where this is not the case, runit has to be compiled
 with the
@@ -35,9 +35,9 @@ into
 and
 .Pa /sbin
 instead of in
-.Pa /usr/local/etc/runit
+.Pa %%PREFIX%%/etc/runit
 and
-.Pa /usr/local/sbin .
+.Pa %%PREFIX%%/sbin .
 .Pp
 To get started edit
 .Pa /boot/loader.conf
@@ -54,11 +54,11 @@ in the
 .Sy default
 runlevel, to get a login prompt after rebooting:
 .Bd -literal -offset indent
-$ ln -s /usr/local/etc/sv/devd \\
+$ ln -s %%SVDIR%%/devd \\
 	%%RUNITDIR%%/runsvdir/default
-$ ln -s /usr/local/etc/sv/getty-ttyv0 \\
+$ ln -s %%SVDIR%%/getty-ttyv0 \\
 	%%RUNITDIR%%/runsvdir/default
-$ ln -s /usr/local/etc/sv/syslogd \\
+$ ln -s %%SVDIR%%/syslogd \\
 	%%RUNITDIR%%/runsvdir/default
 .Ed
 .Pp
@@ -67,7 +67,7 @@ For headless machines (or e.g.,
 virtual machines) with a serial port make sure to enable `getty-ttyu0`
 instead of `getty-ttyv0`:
 .Bd -literal -offset indent
-$ ln -s /usr/local/etc/sv/getty-ttyu0 \\
+$ ln -s %%SVDIR%%/getty-ttyu0 \\
 	%%RUNITDIR%%/runsvdir/default
 .Ed
 .Pp
@@ -149,18 +149,18 @@ will immediately start the services once symlinked.
 .Pp
 System maintenance tasks can be enabled via cron
 .Bd -literal -offset indent
-$ ln -s /usr/local/etc/sv/cron /var/service
+$ ln -s %%SVDIR%%/cron /var/service
 .Ed
 .Pp
 or by using the
 .Xr snooze 1
 based replacements:
 .Bd -literal -offset indent
-$ ln -s /usr/local/etc/sv/adjkerntz /var/service
-$ ln -s /usr/local/etc/sv/periodic-daily /var/service
-$ ln -s /usr/local/etc/sv/periodic-weekly /var/service
-$ ln -s /usr/local/etc/sv/periodic-monthly /var/service
-$ ln -s /usr/local/etc/sv/save-entropy /var/service
+$ ln -s %%SVDIR%%/adjkerntz /var/service
+$ ln -s %%SVDIR%%/periodic-daily /var/service
+$ ln -s %%SVDIR%%/periodic-weekly /var/service
+$ ln -s %%SVDIR%%/periodic-monthly /var/service
+$ ln -s %%SVDIR%%/save-entropy /var/service
 .Ed
 .Pp
 If the
@@ -175,13 +175,13 @@ console setup more getty services need to be enabled.
 Enable all virtual terminals that are normally enabled in
 .Pa /etc/ttys :
 .Bd -literal -offset indent
-$ ln -s /usr/local/etc/sv/getty-ttyv1 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv2 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv3 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv4 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv5 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv6 /var/service
-$ ln -s /usr/local/etc/sv/getty-ttyv7 /var/service
+$ ln -s %%SVDIR%%/getty-ttyv1 /var/service
+$ ln -s %%SVDIR%%/getty-ttyv2 /var/service
+$ ln -s %%SVDIR%%/getty-ttyv3 /var/service
+$ ln -s %%SVDIR%%/getty-ttyv4 /var/service
+$ ln -s %%SVDIR%%/getty-ttyv5 /var/service
+$ ln -s %%SVDIR%%/getty-ttyv6 /var/service
+$ ln -s %%SVDIR%%/getty-ttyv7 /var/service
 .Ed
 .Sh REBOOT, SHUTDOWN, AND POWEROFF
 .Xr reboot 8 ,
@@ -209,7 +209,7 @@ $ runit-init 0
 To make the shutdown dialogs in desktops that use
 .Pa sysutils/consolekit2
 work, you can edit
-.Pa /usr/local/lib/ConsoleKit/scripts/ck-system-restart
+.Pa %%LOCALBASE%%/lib/ConsoleKit/scripts/ck-system-restart
 for restarting to look like
 .Bd -literal -offset indent
 #!/bin/sh
@@ -217,7 +217,7 @@ exec %%SBINDIR%%/runit-init 6
 .Ed
 .Pp
 and edit
-.Pa /usr/local/lib/ConsoleKit/scripts/ck-system-stop
+.Pa %%LOCALBASE%%/lib/ConsoleKit/scripts/ck-system-stop
 for power off to look like
 .Bd -literal -offset indent
 #!/bin/sh
@@ -408,7 +408,7 @@ and starts supervising them.
 .Nm
 comes with some services out of the box for the user's
 convenience in
-.Pa /usr/local/etc/sv .
+.Pa %%SVDIR%% .
 These can be linked to the runlevel to enable them.
 .Sh ACCESS CONTROL
 To give other users, besides
@@ -446,7 +446,7 @@ provides several service templates to get you started quickly.
 All
 .Xr svclone 8
 commands are run in
-.Pa /usr/local/etc/sv
+.Pa %%SVDIR%%
 to keep verbosity of the examples to a minimum.
 .Ss acme-client-template
 This service provides an easy way to setup the
@@ -471,7 +471,7 @@ assumes that you have setup an HTTP server to respond to
 .Pa /.well-known/acme-challenge
 requests on the domain.
 By default the challenge dir is set to
-.Pa /usr/jails/http/usr/local/www/acme-client/<domain> .
+.Pa /usr/jails/http%%PREFIX%%/www/acme-client/<domain> .
 .Pp
 This can be changed by creating
 .Pa conf
@@ -488,10 +488,10 @@ the domain keys
 .Ed
 .Pp
 This will create the following files:
-.Pa /usr/local/etc/ssl/example.com/cert.pem
-.Pa /usr/local/etc/ssl/example.com/chain.pem
-.Pa /usr/local/etc/ssl/example.com/fullchain.pem
-.Pa /usr/local/etc/ssl/example.com/private/example.com.pem
+.Pa %%LOCALBASE%%/etc/ssl/example.com/cert.pem
+.Pa %%LOCALBASE%%/etc/ssl/example.com/chain.pem
+.Pa %%LOCALBASE%%/etc/ssl/example.com/fullchain.pem
+.Pa %%LOCALBASE%%/etc/ssl/example.com/private/example.com.pem
 .Pp
 Edit the
 .Pa finish
@@ -501,7 +501,7 @@ renewed certificates or maybe copy them into the right places.
 The service can now be enabled and will renew certificates at
 approximately 1 am every night automatically:
 .Bd -literal -offset indent
-ln -s ${PWD}/local/acme-client@example.com@www.example.com \\
+ln -s %%SVDIR%%/local/acme-client@example.com@www.example.com \\
 	/var/service
 .Ed
 .Pp
@@ -601,7 +601,7 @@ VM with 1g of memory that boots from
 .Bd -literal -offset indent
 svclone -t bhyve local/bhyve@openbsd63@1g
 ln -s /root/miniroot63.fs local/bhyve@openbsd63@1g/disk0
-ln -s ${PWD}/local/bhyve@openbsd63@1g /var/service
+ln -s %%SVDIR%%/local/bhyve@openbsd63@1g /var/service
 .Ed
 .Pp
 List all interfaces auto-assigned to the
@@ -626,7 +626,7 @@ Create a new dhclient service for the
 interface and enable it:
 .Bd -literal -offset indent
 svclone -t dhclient local/dhclient@em0
-ln -s ${PWD}/local/dhclient@em0 /var/service
+ln -s %%SVDIR%%/local/dhclient@em0 /var/service
 .Ed
 .Ss gitqueue-template
 A service template for polling Git repositories and running scripts
@@ -691,7 +691,7 @@ on updates to the
 branch:
 .Bd -literal -offset indent
 svclone -t gitqueue local/gitqueue@__usr__src@local@kate:kate
-ln -s ${PWD}/local/gitqueue@__usr__src@local /var/service
+ln -s %%SVDIR%%/local/gitqueue@__usr__src@local /var/service
 .Ed
 .Ss ifstated-template
 A template for services that run
@@ -703,7 +703,7 @@ in the service directory with your own rules.
 .Bd -literal -offset indent
 svclone -t ifstated local/ifstated
 edit local/ifstated/ifstated.conf
-ln -s ${PWD}/local/ifstated /var/service
+ln -s %%SVDIR%%/local/ifstated /var/service
 .Ed
 .Ss jail-template
 Service template to create
@@ -771,7 +771,7 @@ freebsd-update -b /usr/jails/http update
 Install and enable nginx and runit-faster in the jail
 .Bd -literal -offset indent
 pkg -c /usr/jails/http install nginx runit-faster
-ln -s /usr/local/etc/sv/nginx \\
+ln -s %%SVDIR%%/nginx \\
 	/usr/jails/http%%RUNITDIR%%/runsvdir/default
 .Ed
 .Pp
@@ -783,7 +783,7 @@ is substituted with the jail's root directory.
 .Pp
 Finally enable the jail on the host
 .Bd -literal -offset indent
-ln -s ${PWD}/local/jail@http /var/service
+ln -s %%SVDIR%%/local/jail@http /var/service
 .Ed
 .Ss kore-template
 .Ss runsvdir-user-template
@@ -795,14 +795,14 @@ service to let kate run her own custom services
 when the system boots up:
 .Bd -literal -offset indent
 svclone -t runsvdir-user local/runsvdir@kate
-ln -s ${PWD}/local/runsvdir@kate /var/service
+ln -s %%SVDIR%%/local/runsvdir@kate /var/service
 .Ed
 .Pp
 kate can now create, enable, and manage a user-level sndiod instance by
 herself:
 .Bd -literal -offset indent
 mkdir ~/.sv ~/service
-svclone -u /usr/local/etc/sv/sndiod ~/.sv/sndiod
+svclone -u %%SVDIR%%/sndiod ~/.sv/sndiod
 ln -s ~/.sv/sndiod ~/service
 .Ed
 .Ss webcamd-template
@@ -824,7 +824,7 @@ webcamd -N vendor-0x0489-product-0xe078 -S unknown -M 0
 Create a service and start it:
 .Bd -literal -offset indent
 svclone -t webcamd local/webcamd@Chicony-Electronics-Co--Ltd--HD-WebCam
-ln -s ${PWD}/local/webcamd@Chicony-Electronics-Co--Ltd--HD-WebCam \\
+ln -s %%SVDIR%%/local/webcamd@Chicony-Electronics-Co--Ltd--HD-WebCam \\
 	/var/service
 .Ed
 .Sh SEE ALSO
