@@ -3,5 +3,6 @@ tty=${PWD##*-}
 [ -r conf ] && . ./conf
 : "${TYPE:=Pc}"
 : "${TERM:=xterm}"
+[ ! -c /dev/${tty} ] && sv d getty-${tty}
 export TERM
 exec /usr/libexec/getty ${TYPE} "${tty}"
