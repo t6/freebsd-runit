@@ -79,12 +79,13 @@ install:
 .endfor
 # Link supervise dir of services to /var/run/runit to potentially
 # support systems with read-only filesystems.
-	@cd ${DESTDIR}${SVDIR} && ${FIND} -d . -type d -exec /bin/sh -euc '\
-		dir=$${1#./*}; \
-		[ "$${dir}" = "." ] && exit 0; \
-		${LN} -sf /var/run/runit/supervise.$$(echo $${dir} | ${SED} "s,/,-,g") \
-			$${dir}/supervise' \
-		SUPERVISE {} \;
+	@cd ${DESTDIR}${SVDIR} && ${FIND} -d . -type d | while read -r file; do \
+		dir=$${file#./*}; \
+		if [ "$${dir}" != "." ] && [ -x "$${dir}/run" ]; then \
+			${LN} -sf /var/run/runit/supervise.$$(echo $${dir} | ${SED} "s,/,-,g") \
+				$${dir}/supervise; \
+		fi; \
+	done
 # Point runit to the run directory (a necessity to let runit work on
 # read-only root filesystems) and make sure rebooting and powering off
 # can work correctly.
