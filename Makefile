@@ -93,15 +93,15 @@ install:
 	${LN} -s /var/run/runit/stopit ${DESTDIR}${RUNITDIR}/stopit
 
 format:
-	${SHFMT} -w -s -p bin runit sv
+	${SHFMT} -w -s -p bin etc/runit etc/sv
 
 manlint:
 	${MANDOC} -Tlint docs/runit-faster.7 docs/svclone.8 docs/svmod.8
 	${IGOR} docs/runit-faster.7 docs/svclone.8 docs/svmod.8
 
 lint:
-	${SHFMT} -d -s -p bin runit sv
-	${SHFMT} -p -f bin runit sv | ${XARGS} ${SHELLCHECK} -s sh -x -e SC1091,SC2039
+	${SHFMT} -d -s -p bin etc/runit etc/sv
+	${SHFMT} -p -f bin etc/runit etc/sv | ${XARGS} ${SHELLCHECK} -s sh -x -e SC1091,SC2039
 
 check:
 	cd runit && package/check

@@ -4,6 +4,7 @@
 case "$1" in
 0) # Certificates were changed
 	# Hiawatha needs everything in one file
+	# shellcheck disable=SC2154
 	cat "${SSLDIR}/${domain}/private/${domain}.pem" \
 		"${SSLDIR}/${domain}/cert.pem" \
 		>"${SSLDIR}/${domain}/private/hiawatha.crt"

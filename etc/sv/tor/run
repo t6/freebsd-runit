@@ -6,5 +6,5 @@
 : "${DATADIR:=/var/db/tor}"
 # shellcheck disable=SC2086
 exec chpst -u "${USER}:${GROUP}" \
-    /usr/local/bin/tor -f "${CONF}" --DataDirectory "${DATADIR}" \
-    --RunAsDaemon 0 ${OPTS}
+	/usr/local/bin/tor -f "${CONF}" --DataDirectory "${DATADIR}" \
+	--RunAsDaemon 0 ${OPTS}
