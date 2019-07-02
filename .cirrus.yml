@@ -1,0 +1,7 @@
+default_task:
+  freebsd_instance:
+    image: freebsd-12-0-release-amd64
+  install_script: pkg install -y hs-ShellCheck shfmt
+  check_script:
+    - make
+    - make lint
