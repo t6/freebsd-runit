@@ -16,4 +16,7 @@ detect_jail() {
 	if [ "$(sysctl -n security.jail.jailed)" -eq 1 ]; then
 		export JAILED=1
 	fi
+	if [ "$(sysctl -n security.jail.vnet)" -eq 1 ]; then
+		export VNET=1
+	fi
 }
