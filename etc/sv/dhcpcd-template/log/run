@@ -1,0 +1,4 @@
+#!/bin/sh
+intf=${PWD##*@}
+intf=${intf%*/log}
+exec logger -t "dhcpcd@${intf}"
