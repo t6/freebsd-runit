@@ -27,8 +27,8 @@ IFS="${myifs}"
 : "${bridge:=bhyve0}"
 : "${bootmethod:=uefi}"
 
-kldload -qn if_tuntap nmdm vmm
-kldload -qn if_tap
+kldload -qn if_tuntap nmdm vmm || true
+kldload -qn if_tap || true
 if ! ifconfig ${bridge} >/dev/null 2>&1; then
 	ifconfig bridge create name ${bridge} group runit-managed up
 fi
@@ -50,8 +50,8 @@ slots="${slots} -s 18,virtio-net,${intf}"
 slots="${slots} -s 31,lpc"
 
 case "${bootmethod}" in
-uefi) bootarg='-l "bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd"' ;;
-csm) bootarg='-l "bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI_CSM.fd"' ;;
+uefi) bootarg="-l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd" ;;
+csm) bootarg="-l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI_CSM.fd" ;;
 bhyveload)
 	bootarg=""
 	${BHYVELOAD} -c "/dev/nmdm${name}A" \
