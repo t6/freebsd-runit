@@ -1,4 +1,4 @@
 #!/bin/sh
 name=${PWD##*@}
 name=${name%*/log}
-exec logger -t "jail-${name}"
+exec /usr/local/etc/runit/logger -t "jail-${name}"

@@ -1,2 +1,2 @@
 #!/bin/sh
-exec logger -p daemon.notice -t smbd
+exec /usr/local/etc/runit/logger -p daemon.notice -t smbd

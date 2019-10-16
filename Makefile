@@ -61,11 +61,10 @@ install:
 		${DESTDIR}${PREFIX}/man/man8/svmod.8
 	@${TAR} -C etc/runit --exclude .gitkeep -cf - . | ${TAR} -C ${DESTDIR}${RUNITDIR} -xf -
 	@${TAR} -C etc/sv --exclude supervise -cf - . | ${TAR} -C ${DESTDIR}${SVDIR} -xf -
-	@${FIND} ${DESTDIR}${RUNITDIR} -type f -exec ${SED} -i '' \
+	@${FIND} ${DESTDIR}${RUNITDIR} ${DESTDIR}${SVDIR} -type f -exec ${SED} -i '' \
 		-e 's,/usr/local/etc/runit,${RUNITDIR},g' \
 		-e 's,//etc,/etc,' \
 		-e 's,/usr/local,${LOCALBASE},g' {} \;
-	@${FIND} ${DESTDIR}${SVDIR} -type f -exec ${SED} -i '' -e 's,/usr/local/,${LOCALBASE}/,g' {} \;
 # Create convenient getty services for every terminal device that is
 # by default in /etc/ttys
 .for tty in ${GETTYSV} ${GETTYSU}

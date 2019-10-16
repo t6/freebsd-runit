@@ -1,2 +1,2 @@
 #!/bin/sh
-exec logger -p daemon.notice -t nmbd
+exec /usr/local/etc/runit/logger -p daemon.notice -t nmbd

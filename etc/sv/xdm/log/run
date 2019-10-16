@@ -1,2 +1,2 @@
 #!/bin/sh
-exec logger -t xdm
+exec /usr/local/etc/runit/logger -t xdm

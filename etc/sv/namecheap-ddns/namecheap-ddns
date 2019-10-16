@@ -15,7 +15,7 @@ out=$(${FETCH} "https://dynamicdns.park-your-domain.com/update?host=${host}&doma
 grep -q "<ErrCount>0</ErrCount>" <<EOF && exit 0
 ${out}
 EOF
-cat <<EOF | logger -t namecheap-ddns
+cat <<EOF | /usr/local/etc/runit/logger -t namecheap-ddns
 ${out}
 EOF
 exit 1

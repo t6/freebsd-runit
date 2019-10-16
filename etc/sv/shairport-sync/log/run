@@ -1,2 +1,2 @@
 #!/bin/sh
-exec logger -t shairport-sync
+exec /usr/local/etc/runit/logger -t shairport-sync

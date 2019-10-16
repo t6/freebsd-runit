@@ -21,7 +21,7 @@ done
 IFS="${myifs}"
 : "${GIT:="/usr/local/bin/git"}"
 : "${GITUSER:="nobody:nobody"}"
-: "${LOGGER:="/usr/bin/logger"}"
+: "${LOGGER:="/usr/local/etc/runit/logger"}"
 : "${NQ:="/usr/local/bin/nq"}"
 : "${QUEUE:="${GITUSER}/${REPO_PATH}"}"
 : "${NQDIR:="/var/db/gitqueue/${QUEUE}"}"

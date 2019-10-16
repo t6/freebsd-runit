@@ -1,4 +1,4 @@
 #!/bin/sh
 [ -r ../conf ] && . ../conf
 : "${NAME:=kore-sample}"
-exec logger -t ${NAME}
+exec /usr/local/etc/runit/logger -t ${NAME}

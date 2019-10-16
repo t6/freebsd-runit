@@ -1,2 +1,2 @@
 #!/bin/sh
-exec logger -t syncthing
+exec /usr/local/etc/runit/logger -t syncthing

@@ -1,2 +1,2 @@
 #!/bin/sh
-exec logger -t openntpd -p daemon.notice
+exec /usr/local/etc/runit/logger -t openntpd -p daemon.notice

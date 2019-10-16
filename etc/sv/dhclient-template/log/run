@@ -1,4 +1,4 @@
 #!/bin/sh
 intf=${PWD##*@}
 intf=${intf%*/log}
-exec logger -t "dhclient@${intf}"
+exec /usr/local/etc/runit/logger -t "dhclient@${intf}"

@@ -1,2 +1,2 @@
 #!/bin/sh
-exec logger -t periodic-weekly
+exec /usr/local/etc/runit/logger -t periodic-weekly
