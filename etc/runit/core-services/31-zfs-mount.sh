@@ -2,6 +2,13 @@
 [ "$(sysctl -n hw.machine_arch)" = "powerpc" ] && return 0
 
 if [ -z "${JAILED}" ]; then
+	echo "=> Importing ZFS pools"
+	for cachefile in /etc/zfs/zpool.cache /boot/zfs/zpool.cache; do
+		if [ -r $cachefile ]; then
+			zpool import -c $cachefile -a -N && break
+		fi
+	done
+
 	echo "=> Mounting ZFS datasets"
 	zfs mount -va || emergency_shell
 
